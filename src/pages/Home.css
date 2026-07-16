@@ -1,0 +1,32 @@
+.home {
+  background-color: #fafafa;
+}
+
+.featured-section {
+  padding: 5rem 2rem;
+  text-align: center;
+  background: white;
+}
+
+.featured-section h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.featured-section p {
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.view-all {
+  color: #6c63ff;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: opacity 0.3s;
+}
+
+.view-all:hover {
+  opacity: 0.8;
+}
