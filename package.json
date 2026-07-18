@@ -4,16 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"vite\" \"node server.js\"",
+    "dev": "vite",
     "build": "vite build",
-    "start": "node server.js",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "server": "node server.js"
+    "preview": "vite preview"
   },
   "dependencies": {
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
     "jspdf": "^4.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -23,7 +19,6 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.2.0",
-    "concurrently": "^10.0.3",
     "vite": "^5.0.0"
   }
 }
