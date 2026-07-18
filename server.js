@@ -36,6 +36,8 @@ async function githubGet() {
 
 async function githubPut(content, sha, message) {
   if (!GITHUB_TOKEN) return null;
+  const body = { message, content };
+  if (sha) body.sha = sha;
   const res = await fetch(GITHUB_JSON_URL, {
     method: 'PUT',
     headers: {
@@ -43,9 +45,12 @@ async function githubPut(content, sha, message) {
       Accept: 'application/vnd.github+json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ message, content, sha }),
+    body: JSON.stringify(body),
   });
-  if (!res.ok) throw new Error(`GitHub PUT ${res.status}`);
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`GitHub PUT ${res.status}: ${errText}`);
+  }
   return res.json();
 }
 
@@ -125,6 +130,16 @@ app.get('/api/cv-downloads', async (req, res) => {
   res.json(await loadData());
 });
 
+app.get('/api/health', (req, res) => {
+  res.json({
+    server: 'running',
+    githubConfigured: !!GITHUB_TOKEN,
+    repo: GITHUB_REPO,
+    localFile: fs.existsSync(JSON_FILE),
+    records: inMemoryData ? inMemoryData.length : 0,
+  });
+});
+
 const distPath = path.join(__dirname, 'dist');
 if (fs.existsSync(distPath)) {
   app.use(express.static(distPath));
@@ -135,5 +150,9 @@ if (fs.existsSync(distPath)) {
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`GitHub persistence: ${GITHUB_TOKEN ? 'ENABLED' : 'DISABLED (local only)'}`);
+  if (GITHUB_TOKEN) {
+    console.log(`GitHub persistence: ENABLED (repo: ${GITHUB_REPO})`);
+  } else {
+    console.log('WARNING: GITHUB_TOKEN not set — data will NOT persist on Render. Set it in Render env vars.');
+  }
 });
