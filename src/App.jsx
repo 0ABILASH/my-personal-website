@@ -66,15 +66,8 @@ function Home() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
-    }).catch(() => {
-      setTimeout(() => {
-        fetch('/api/cv-download', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        }).catch(() => {});
-      }, 3000);
-    });
+      keepalive: true,
+    }).catch(() => {});
 
     downloadCV();
     setTimeout(() => {
