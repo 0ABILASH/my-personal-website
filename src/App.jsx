@@ -56,10 +56,12 @@ function Home() {
   const [showCvModal, setShowCvModal] = useState(false);
   const [cvName, setCvName] = useState('');
   const [cvSubmitting, setCvSubmitting] = useState(false);
+  const [cvStatus, setCvStatus] = useState('');
 
   const handleCvDownload = () => {
     if (!cvName.trim()) return;
     setCvSubmitting(true);
+    setCvStatus('');
     const now = new Date();
     const payload = {
       name: cvName.trim(),
@@ -68,20 +70,31 @@ function Home() {
     };
 
     const endpoint = import.meta.env.VITE_SHEETS_URL || '/api/cv-download';
+    console.log('[CV] endpoint:', endpoint);
+
     fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
       keepalive: true,
-      mode: 'cors',
-    }).catch(() => {});
+    })
+      .then(async (res) => {
+        const text = await res.text();
+        console.log('[CV] response:', res.status, text);
+        if (!res.ok) throw new Error(text || res.status);
+        setCvStatus('Saved ✓');
+      })
+      .catch((err) => {
+        console.error('[CV] failed:', err);
+        setCvStatus('Save failed ✗ (see console)');
+      });
 
     downloadCV();
     setTimeout(() => {
       setCvName('');
       setShowCvModal(false);
       setCvSubmitting(false);
-    }, 500);
+    }, 800);
   };
 
   const downloadCV = () => {
@@ -601,6 +614,7 @@ function Home() {
                 {cvSubmitting ? 'Saving...' : 'Download PDF'}
               </button>
             </div>
+            {cvStatus && <p className="cv-status">{cvStatus}</p>}
           </div>
         </div>
       )}

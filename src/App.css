@@ -685,6 +685,8 @@
 .cv-modal-btn.confirm:hover{opacity:0.88;transform:translateY(-1px)}
 .cv-modal-btn.confirm:disabled{opacity:0.5;cursor:not-allowed;transform:none}
 
+.cv-status{margin-top:0.75rem;font-size:0.8rem;font-weight:600;text-align:center;color:var(--blue)}
+
 .cv-form{margin-top:0.5rem}
 .cv-label{display:block;font-size:0.78rem;font-weight:600;color:var(--text);margin-bottom:0.35rem}
 .cv-required{color:var(--red)}
