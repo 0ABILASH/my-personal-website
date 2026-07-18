@@ -57,18 +57,25 @@ function Home() {
   const [cvName, setCvName] = useState('');
   const [cvSubmitting, setCvSubmitting] = useState(false);
 
-  const handleCvDownload = async () => {
+  const handleCvDownload = () => {
     if (!cvName.trim()) return;
     setCvSubmitting(true);
-    try {
-      await fetch('/api/cv-download', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: cvName.trim() }),
-      });
-    } catch (err) {
-      console.error(err);
-    }
+    const payload = { name: cvName.trim() };
+
+    fetch('/api/cv-download', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    }).catch(() => {
+      setTimeout(() => {
+        fetch('/api/cv-download', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        }).catch(() => {});
+      }, 3000);
+    });
+
     downloadCV();
     setTimeout(() => {
       setCvName('');
