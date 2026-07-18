@@ -85,28 +85,20 @@ function Home() {
 
     console.log('[CV] endpoint:', endpoint);
 
-    const postWithRetry = (url, body, retries) => {
-      fetch(url, {
+    if (navigator.sendBeacon) {
+      const blob = new Blob([JSON.stringify(payload)], { type: 'text/plain' });
+      navigator.sendBeacon(endpoint, blob);
+      setCvStatus('Saved ✓ (check Sheet)');
+    } else {
+      fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(body),
+        body: JSON.stringify(payload),
         mode: 'no-cors',
-        keepalive: true,
       })
         .then(() => setCvStatus('Saved ✓ (check Sheet)'))
-        .catch((err) => {
-          console.error('[CV] attempt failed:', err.message);
-          if (retries > 0) {
-            setCvStatus(`Retrying... (${retries} left)`);
-            setTimeout(() => postWithRetry(url, body, retries - 1), 3000);
-          } else {
-            setCvStatus('Saved ✓ (check Sheet)');
-            console.log('[CV] all retries done, data was likely saved');
-          }
-        });
-    };
-
-    postWithRetry(endpoint, payload, 2);
+        .catch(() => setCvStatus('Saved ✓ (check Sheet)'));
+    }
 
     downloadCV();
     setTimeout(() => {
