@@ -69,21 +69,30 @@ function Home() {
       time: now.toLocaleTimeString('en-IN'),
     };
 
-    const endpoint = import.meta.env.VITE_SHEETS_URL || '/api/cv-download';
+    const endpoint = import.meta.env.VITE_SHEETS_URL;
+
+    if (!endpoint) {
+      console.error('[CV] VITE_SHEETS_URL is not set!');
+      setCvStatus('Config missing: VITE_SHEETS_URL not set');
+      downloadCV();
+      setTimeout(() => {
+        setCvName('');
+        setShowCvModal(false);
+        setCvSubmitting(false);
+      }, 800);
+      return;
+    }
+
     console.log('[CV] endpoint:', endpoint);
 
     fetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(payload),
+      mode: 'no-cors',
       keepalive: true,
     })
-      .then(async (res) => {
-        const text = await res.text();
-        console.log('[CV] response:', res.status, text);
-        if (!res.ok) throw new Error(text || res.status);
-        setCvStatus('Saved ✓');
-      })
+      .then(() => setCvStatus('Saved ✓ (check Sheet)'))
       .catch((err) => {
         console.error('[CV] failed:', err);
         setCvStatus('Save failed ✗ (see console)');

@@ -9,7 +9,8 @@
 
 function doPost(e) {
   try {
-    const data = JSON.parse(e.postData.contents);
+    const raw = e.postData ? e.postData.getDataAsString() : '';
+    const data = JSON.parse(raw);
     const name = data.name;
     if (!name || !name.toString().trim()) {
       return json({ error: 'Name is required' });
