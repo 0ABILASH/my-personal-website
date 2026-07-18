@@ -30,13 +30,15 @@
 html{scroll-behavior:smooth}
 
 body{
-  font-family:'DM Sans',sans-serif;
+  font-family:'Nunito',sans-serif;
   background:var(--bg);
   color:var(--text);
   line-height:1.6;
   min-height:100vh;
 }
 
-code,.mono{font-family:'IBM Plex Mono',monospace}
+h1,h2,h3,h4,h5,h6{font-family:'Josefin Sans',sans-serif}
+
+code,.mono{font-family:'DM Sans',monospace}
 a{text-decoration:none;color:inherit}
 ::selection{background:var(--blue);color:white}

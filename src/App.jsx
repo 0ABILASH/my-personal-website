@@ -24,11 +24,34 @@ const HOBBY_ROUTES = {
   Running: '/hobby/running',
 };
 
+function ProfileStatus() {
+  const statuses = [
+    { emoji:'📍', label:'Location', val:'Coimbatore', color:'var(--blue)', bg:'var(--blue-bg)' },
+    { emoji:'💜', label:'Status', val:'Single', color:'var(--red)', bg:'var(--red-bg)' },
+    { emoji:'🔒', label:'Privacy', val:'Private', color:'var(--purple)', bg:'var(--purple-bg)' },
+    { emoji:'💼', label:'What\'s Happening', val:'Career', color:'var(--green)', bg:'var(--green-bg)' },
+  ];
+  return (
+    <div className="profile-status">
+      {statuses.map((s,i) => (
+        <div key={i} className="profile-status-item">
+          <span className="profile-status-emoji" style={{background:s.bg}}>{s.emoji}</span>
+          <div className="profile-status-info">
+            <span className="profile-status-label">{s.label}</span>
+            <span className="profile-status-val">{s.val}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function Home() {
   const [active, setActive] = useState('profile');
   const [blogFilter, setBlogFilter] = useState('all');
   const [openBlog, setOpenBlog] = useState(null);
   const [openCollection, setOpenCollection] = useState(null);
+  const [lightboxIdx, setLightboxIdx] = useState(null);
 
   const refs = {
     profile: useRef(null),
@@ -50,44 +73,62 @@ function Home() {
   };
 
   const hobbies = [
-    { emoji:'🎮', title:'Gaming', desc:'Strategy and adventure games.' },
-    { emoji:'📸', title:'Photography', desc:'Capturing moments and light.' },
-    { emoji:'🎵', title:'Music', desc:'Playing guitar and discovering artists.' },
-    { emoji:'📚', title:'Reading', desc:'Sci-fi novels and tech blogs.' },
-    { emoji:'✈️', title:'Travel', desc:'Exploring new places and cultures.' },
-    { emoji:'🏃', title:'Running', desc:'Early morning runs to stay focused.' },
+    { emoji:'🎮', title:'Gaming', desc:'Strategy and adventure games.', color:'#6366f1' },
+    { emoji:'📸', title:'Photography', desc:'Capturing moments and light.', color:'#ec4899' },
+    { emoji:'🎵', title:'Music', desc:'Playing guitar and discovering artists.', color:'#8b5cf6' },
+    { emoji:'📚', title:'Reading', desc:'Sci-fi novels and tech blogs.', color:'#f59e0b' },
+    { emoji:'✈️', title:'Travel', desc:'Exploring new places and cultures.', color:'#06b6d4' },
+    { emoji:'🏃', title:'Running', desc:'Early morning runs to stay focused.', color:'#10b981' },
   ];
 
   const collections = [
     { title:'Nature Walks', cat:'nature', photos:[
-      { src:'https://picsum.photos/seed/n1/600/400' },
-      { src:'https://picsum.photos/seed/n2/600/400' },
-      { src:'https://picsum.photos/seed/n3/600/400' },
+      { src:'https://picsum.photos/seed/n1/600/800' },
+      { src:'https://picsum.photos/seed/n2/800/600' },
+      { src:'https://picsum.photos/seed/n3/600/600' },
+      { src:'https://picsum.photos/seed/n4/800/800' },
+      { src:'https://picsum.photos/seed/n5/600/400' },
+      { src:'https://picsum.photos/seed/n6/800/600' },
     ]},
     { title:'City Vibes', cat:'urban', photos:[
-      { src:'https://picsum.photos/seed/u1/600/400' },
-      { src:'https://picsum.photos/seed/u2/600/400' },
-      { src:'https://picsum.photos/seed/u3/600/400' },
+      { src:'https://picsum.photos/seed/u1/800/600' },
+      { src:'https://picsum.photos/seed/u2/600/800' },
+      { src:'https://picsum.photos/seed/u3/600/600' },
+      { src:'https://picsum.photos/seed/u4/800/600' },
+      { src:'https://picsum.photos/seed/u5/600/800' },
+      { src:'https://picsum.photos/seed/u6/800/800' },
     ]},
     { title:'Travel Diaries', cat:'travel', photos:[
-      { src:'https://picsum.photos/seed/t1/600/400' },
-      { src:'https://picsum.photos/seed/t2/600/400' },
-      { src:'https://picsum.photos/seed/t3/600/400' },
+      { src:'https://picsum.photos/seed/t1/600/800' },
+      { src:'https://picsum.photos/seed/t2/800/600' },
+      { src:'https://picsum.photos/seed/t3/600/600' },
+      { src:'https://picsum.photos/seed/t4/800/800' },
+      { src:'https://picsum.photos/seed/t5/600/400' },
+      { src:'https://picsum.photos/seed/t6/800/600' },
     ]},
     { title:'Daily Life', cat:'lifestyle', photos:[
-      { src:'https://picsum.photos/seed/l1/600/400' },
-      { src:'https://picsum.photos/seed/l2/600/400' },
-      { src:'https://picsum.photos/seed/l3/600/400' },
+      { src:'https://picsum.photos/seed/l1/800/600' },
+      { src:'https://picsum.photos/seed/l2/600/800' },
+      { src:'https://picsum.photos/seed/l3/600/600' },
+      { src:'https://picsum.photos/seed/l4/800/600' },
+      { src:'https://picsum.photos/seed/l5/600/800' },
+      { src:'https://picsum.photos/seed/l6/800/800' },
     ]},
     { title:'Golden Hours', cat:'nature', photos:[
-      { src:'https://picsum.photos/seed/g1/600/400' },
-      { src:'https://picsum.photos/seed/g2/600/400' },
-      { src:'https://picsum.photos/seed/g3/600/400' },
+      { src:'https://picsum.photos/seed/g1/600/800' },
+      { src:'https://picsum.photos/seed/g2/800/600' },
+      { src:'https://picsum.photos/seed/g3/600/600' },
+      { src:'https://picsum.photos/seed/g4/800/800' },
+      { src:'https://picsum.photos/seed/g5/600/400' },
+      { src:'https://picsum.photos/seed/g6/800/600' },
     ]},
     { title:'Street Scenes', cat:'urban', photos:[
-      { src:'https://picsum.photos/seed/s1/600/400' },
-      { src:'https://picsum.photos/seed/s2/600/400' },
-      { src:'https://picsum.photos/seed/s3/600/400' },
+      { src:'https://picsum.photos/seed/s1/800/600' },
+      { src:'https://picsum.photos/seed/s2/600/800' },
+      { src:'https://picsum.photos/seed/s3/600/600' },
+      { src:'https://picsum.photos/seed/s4/800/600' },
+      { src:'https://picsum.photos/seed/s5/600/800' },
+      { src:'https://picsum.photos/seed/s6/800/800' },
     ]},
   ];
   const [photoFilter, setPhotoFilter] = useState('all');
@@ -125,18 +166,19 @@ function Home() {
 
         {/* PROFILE */}
         <section className="section" id="profile" ref={refs.profile}>
-          <div className="profile-hero">
+          <div className="profile-card-new">
             <div className="profile-cover">
               <img src="https://picsum.photos/seed/banner/1200/400" alt="Profile banner" />
+              <div className="profile-cover-fade" />
             </div>
-            <div className="profile-main">
+            <div className="profile-main-new">
               <div className="profile-avatar-wrap">
                 <div className="profile-avatar">👨‍💻</div>
-                <span className="profile-status" />
+                <span className="profile-online-dot" />
               </div>
-              <div className="profile-text">
+              <div className="profile-info">
                 <h1>Your Name</h1>
-                <p className="profile-role">ABILASH</p>
+                <span className="profile-role">ABILASH</span>
                 <p className="profile-bio">Building digital experiences with clean code and creative thinking.</p>
               </div>
               <div className="profile-actions">
@@ -146,53 +188,75 @@ function Home() {
             </div>
           </div>
 
-          <div className="profile-stats">
-            <div className="stat-card">
-              <span className="stat-num">2+</span>
-              <span className="stat-label">Years Exp</span>
-            </div>
-            <div className="stat-card">
-              <span className="stat-num">10+</span>
-              <span className="stat-label">Projects</span>
-            </div>
-            <div className="stat-card">
-              <span className="stat-num">5+</span>
-              <span className="stat-label">Technologies</span>
-            </div>
-            <div className="stat-card">
-              <span className="stat-num">∞</span>
-              <span className="stat-label">Curiosity</span>
-            </div>
-          </div>
+          <ProfileStatus />
 
-          <div className="profile-grid">
-            <div className="profile-about card">
-              <h3>About Me</h3>
-              <p>A passionate developer who loves building clean, meaningful digital experiences. I enjoy turning complex problems into simple, elegant solutions.</p>
+          <div className="profile-content">
+            <div className="profile-about-card card">
+              <div className="pabout-split">
+                <div className="pabout-left">
+                  <span className="pabout-quote">"</span>
+                  <p className="pabout-text">Hey! I'm Abilash — a curious soul who loves exploring things, building random projects at 2am, and getting way too deep into rabbit holes. I enjoy the simple stuff: good music, long walks, and conversations that go nowhere and everywhere at the same time.</p>
+                  <div className="pabout-location">
+                    <span className="pabout-loc-dot" />Based in India
+                  </div>
+                </div>
+                <div className="pabout-right">
+                  <div className="pabout-trait">
+                    <span className="pabout-trait-emoji">☕</span>
+                    <div><span className="pabout-trait-title">Chai Person</span><span className="pabout-trait-sub">over coffee, always</span></div>
+                  </div>
+                  <div className="pabout-trait">
+                    <span className="pabout-trait-emoji">🌙</span>
+                    <div><span className="pabout-trait-title">Night Owl</span><span className="pabout-trait-sub">2am coding sessions</span></div>
+                  </div>
+                  <div className="pabout-trait">
+                    <span className="pabout-trait-emoji">🎧</span>
+                    <div><span className="pabout-trait-title">Music Addict</span><span className="pabout-trait-sub">lo-fi & indie vibes</span></div>
+                  </div>
+                  <div className="pabout-trait">
+                    <span className="pabout-trait-emoji">🐕</span>
+                    <div><span className="pabout-trait-title">Dog Person</span><span className="pabout-trait-sub">no debate</span></div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="profile-details card">
-              <h3>Details</h3>
-              <div className="detail-row"><span className="detail-label">Location</span><span>Earth 🌍</span></div>
-              <div className="detail-row"><span className="detail-label">Role</span><span>Full Stack Developer</span></div>
-              <div className="detail-row"><span className="detail-label">Education</span><span>Computer Science</span></div>
-              <div className="detail-row"><span className="detail-label">Availability</span><span className="detail-green">Open to work</span></div>
+
+            <div className="profile-quotes card">
+              <div className="pabout-header">
+                <span className="pabout-badge" style={{background:'var(--purple)'}}>Quotes I Live By</span>
+              </div>
+              <div className="pquotes-list">
+                {[
+                  { text:'Be yourself; everyone else is already taken.', author:'Oscar Wilde' },
+                  { text:'The only way to do great work is to love what you do.', author:'Steve Jobs' },
+                  { text:'In the middle of difficulty lies opportunity.', author:'Albert Einstein' },
+                ].map((q,i) => (
+                  <div key={i} className="pquote">
+                    <span className="pquote-mark">"</span>
+                    <div className="pquote-content">
+                      <p className="pquote-text">{q.text}</p>
+                      <span className="pquote-author">— {q.author}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
         {/* HOBBIES */}
         <section className="section" id="hobbies" ref={refs.hobbies}>
-          <div className="section-head">
-            <span className="section-dot" style={{background:'var(--orange)'}} />
-            <span className="section-title">Hobbies</span>
-            <span className="section-count">6</span>
+          <div className="section-head" style={{'--accent':'var(--orange)'}}>
+            <span className="section-head-pill">Hobbies</span>
+            <span className="section-head-dots">•••</span>
           </div>
-          <div className="cards cards-3">
+          <div className="hobby-grid">
             {hobbies.map((h,i) => (
-              <Link key={i} to={HOBBY_ROUTES[h.title]} className="card hobby-card">
-                <span className="hobby-emoji">{h.emoji}</span>
+              <Link key={i} to={HOBBY_ROUTES[h.title]} className="hobby-card">
+                <div className="hobby-card-icon" style={{background:h.color+'14',color:h.color}}>{h.emoji}</div>
                 <h3>{h.title}</h3>
                 <p>{h.desc}</p>
+                <span className="hobby-card-arrow" style={{color:h.color}}>→</span>
               </Link>
             ))}
           </div>
@@ -200,10 +264,9 @@ function Home() {
 
         {/* GALLERY */}
         <section className="section" id="gallery" ref={refs.gallery}>
-          <div className="section-head">
-            <span className="section-dot" style={{background:'var(--purple)'}} />
-            <span className="section-title">Photo Collections</span>
-            <span className="section-count">{filteredCollections.length}</span>
+          <div className="section-head" style={{'--accent':'var(--purple)'}}>
+            <span className="section-head-pill">Photo Collections</span>
+            <span className="section-head-dots">•••</span>
           </div>
           <div className="game-tabs" style={{marginBottom:'0.75rem'}}>
             {cats.map(c => (
@@ -233,10 +296,9 @@ function Home() {
 
         {/* BLOGS */}
         <section className="section" id="blogs" ref={refs.blogs}>
-          <div className="section-head">
-            <span className="section-dot" style={{background:'var(--yellow)'}} />
-            <span className="section-title">Blogs</span>
-            <span className="section-count">{blogs.length}</span>
+          <div className="section-head" style={{'--accent':'var(--yellow)'}}>
+            <span className="section-head-pill">Blogs</span>
+            <span className="section-head-dots">•••</span>
           </div>
           <div className="game-tabs" style={{marginBottom:'0.75rem'}}>
             {['all','tutorial','thoughts','update'].map(t => (
@@ -245,24 +307,28 @@ function Home() {
               </button>
             ))}
           </div>
-          <div className="cards cards-2">
-            {blogs.map((b,i) => (
-              <div key={i} className="card blog-card"
-                onClick={() => setOpenBlog(b)}>
-                <div className="blog-head">
-                  <h3>{b.title}</h3>
-                  <span className="blog-tag" style={{
-                    background: b.tag==='tutorial'?'var(--blue-bg)':b.tag==='thoughts'?'var(--purple-bg)':'var(--green-bg)',
-                    color: b.tag==='tutorial'?'var(--blue)':b.tag==='thoughts'?'var(--purple)':'var(--green)',
-                  }}>{b.tag}</span>
+          <div className="blog-grid">
+            {blogs.map((b,i) => {
+              const tagColor = b.tag==='tutorial'?'var(--blue)':b.tag==='thoughts'?'var(--purple)':'var(--green)';
+              const tagBg = b.tag==='tutorial'?'var(--blue-bg)':b.tag==='thoughts'?'var(--purple-bg)':'var(--green-bg)';
+              return (
+                <div key={i} className="blog-card" onClick={() => setOpenBlog(b)}>
+                  <div className="blog-card-accent" style={{background:tagColor}} />
+                  <div className="blog-card-inner">
+                    <div className="blog-card-top">
+                      <span className="blog-card-tag" style={{background:tagBg,color:tagColor}}>{b.tag}</span>
+                      <span className="blog-card-read">{b.read} read</span>
+                    </div>
+                    <h3>{b.title}</h3>
+                    <p>{b.excerpt}</p>
+                    <div className="blog-card-foot">
+                      <span className="blog-card-date">{b.date}</span>
+                      <span className="blog-card-arrow">→</span>
+                    </div>
+                  </div>
                 </div>
-                <p>{b.excerpt}</p>
-                <div className="blog-card-foot">
-                  <span>{b.date}</span><span>·</span><span>{b.read} read</span>
-                  <span className="blog-toggle">▼ open</span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
@@ -270,53 +336,114 @@ function Home() {
 
       {/* BLOG READER - SLIDE PANEL */}
       {openBlog && (
-        <div className="blog-panel-backdrop" onClick={() => setOpenBlog(null)}>
-          <div className="blog-panel" onClick={e => e.stopPropagation()}>
-            <div className="blog-panel-hero">
-              <div className="blog-panel-hero-bg" />
-              <button className="blog-panel-close" onClick={() => setOpenBlog(null)}>✕</button>
-              <span className="blog-panel-tag" style={{
-                background: openBlog.tag==='tutorial'?'#2563eb':openBlog.tag==='thoughts'?'#9333ea':'#16a34a',
+        <div className="blog-reader">
+          <div className="blog-reader-topbar">
+            <button className="blog-reader-back" onClick={() => setOpenBlog(null)}>← Back</button>
+            <div className="blog-reader-topbar-info">
+              <span className="blog-reader-topbar-tag" style={{
+                background: openBlog.tag==='tutorial'?'var(--blue-bg)':openBlog.tag==='thoughts'?'var(--purple-bg)':'var(--green-bg)',
+                color: openBlog.tag==='tutorial'?'var(--blue)':openBlog.tag==='thoughts'?'var(--purple)':'var(--green)',
               }}>{openBlog.tag}</span>
-              <h1>{openBlog.title}</h1>
-              <div className="blog-panel-meta">
-                <span>{openBlog.date}</span>
-                <span className="meta-dot" />
-                <span>{openBlog.read} read</span>
-              </div>
+              <span className="blog-reader-topbar-read">{openBlog.read} read</span>
             </div>
-            <div className="blog-panel-body">
-              <div className="blog-panel-dropcap">T</div>
-              <p>{openBlog.body || 'This is a full blog post about ' + openBlog.title.toLowerCase() + '. It covers the key insights, lessons learned, and practical tips I gathered along the way.'}</p>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-              <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-              <div className="blog-panel-divider" />
-              <div className="blog-panel-footer">
-                <span className="blog-panel-author">Written by Your Name</span>
-                <button className="blog-panel-done" onClick={() => setOpenBlog(null)}>Done reading</button>
+            <span className="blog-reader-topbar-date">{openBlog.date}</span>
+          </div>
+
+          <div className="blog-reader-scroll">
+            <article className="blog-article">
+              <header className="blog-article-header">
+                <span className="blog-article-tag" style={{
+                  background: openBlog.tag==='tutorial'?'var(--blue-bg)':openBlog.tag==='thoughts'?'var(--purple-bg)':'var(--green-bg)',
+                  color: openBlog.tag==='tutorial'?'var(--blue)':openBlog.tag==='thoughts'?'var(--purple)':'var(--green)',
+                }}>{openBlog.tag}</span>
+                <h1>{openBlog.title}</h1>
+                <p className="blog-article-excerpt">{openBlog.excerpt}</p>
+                <div className="blog-article-meta">
+                  <div className="blog-article-author">
+                    <div className="blog-article-avatar">A</div>
+                    <div>
+                      <span className="blog-article-author-name">Abilash</span>
+                      <span className="blog-article-author-role">Developer & Writer</span>
+                    </div>
+                  </div>
+                  <div className="blog-article-meta-right">
+                    <span>{openBlog.date}</span>
+                    <span className="blog-article-meta-dot">·</span>
+                    <span>{openBlog.read} read</span>
+                  </div>
+                </div>
+              </header>
+
+              <div className="blog-article-divider" />
+
+              <div className="blog-article-body">
+                <p>{openBlog.body || 'This is a full blog post about ' + openBlog.title.toLowerCase() + '. It covers the key insights, lessons learned, and practical tips I gathered along the way.'}</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
               </div>
-            </div>
+
+              <div className="blog-article-divider" />
+
+              <footer className="blog-article-footer">
+                <div className="blog-article-author-card">
+                  <div className="blog-article-author-card-avatar">A</div>
+                  <div>
+                    <span className="blog-article-author-card-name">Written by Abilash</span>
+                    <span className="blog-article-author-card-bio">Building digital experiences with clean code and creative thinking.</span>
+                  </div>
+                </div>
+                <button className="blog-reader-done" onClick={() => setOpenBlog(null)}>Done reading</button>
+              </footer>
+            </article>
           </div>
         </div>
       )}
 
       {/* COLLECTION - FULLSCREEN GALLERY */}
       {openCollection && (
-        <div className="gallery-fullscreen">
-          <div className="gallery-fs-topbar">
-            <div className="gallery-fs-info">
+        <div className="gallery-fs">
+          <div className="gallery-fs-top">
+            <button className="gallery-fs-back" onClick={() => { setOpenCollection(null); setLightboxIdx(null); }}>← Back</button>
+            <div className="gallery-fs-title">
               <h2>{openCollection.title}</h2>
               <span>{openCollection.photos.length} photos · {openCollection.cat}</span>
             </div>
-            <button className="gallery-fs-close" onClick={() => setOpenCollection(null)}>✕</button>
+            <span className="gallery-fs-badge">{openCollection.photos.length} shots</span>
           </div>
-          <div className="gallery-fs-grid">
-            {openCollection.photos.map((p,i) => (
-              <div key={i} className="gallery-fs-item">
-                <img src={p.src} alt="" />
-                <span className="gallery-fs-num">{String(i+1).padStart(2,'0')}</span>
-              </div>
-            ))}
+          <div className="gallery-fs-scroll">
+            <div className="gallery-masonry">
+              {openCollection.photos.map((p,i) => (
+                <div key={i} className="gallery-m-item" onClick={() => setLightboxIdx(i)}>
+                  <img src={p.src} alt="" loading="lazy" />
+                  <div className="gallery-m-info">
+                    <span className="gallery-m-idx">{String(i+1).padStart(2,'0')}</span>
+                    <span className="gallery-m-cap">{openCollection.title} #{i+1}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="gallery-fs-bottom">
+            <button className="gallery-fs-back-btn" onClick={() => { setOpenCollection(null); setLightboxIdx(null); }}>← Back to collections</button>
+          </div>
+        </div>
+      )}
+
+      {lightboxIdx !== null && openCollection && (
+        <div className="lightbox" onClick={() => setLightboxIdx(null)}>
+          <button className="lightbox-close" onClick={() => setLightboxIdx(null)}>✕</button>
+          {lightboxIdx > 0 && (
+            <button className="lightbox-prev" onClick={(e) => { e.stopPropagation(); setLightboxIdx(lightboxIdx - 1); }}>‹</button>
+          )}
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <img src={openCollection.photos[lightboxIdx].src} alt="" />
+          </div>
+          {lightboxIdx < openCollection.photos.length - 1 && (
+            <button className="lightbox-next" onClick={(e) => { e.stopPropagation(); setLightboxIdx(lightboxIdx + 1); }}>›</button>
+          )}
+          <div className="lightbox-footer">
+            <span>{lightboxIdx + 1} / {openCollection.photos.length}</span>
+            <span>{openCollection.title}</span>
           </div>
         </div>
       )}
@@ -324,30 +451,32 @@ function Home() {
       {/* FOOTER */}
       <footer className="footer">
         <div className="footer-inner">
-          <div className="footer-top">
-            <div className="footer-brand">
-              <span className="footer-logo">yourname</span>
-              <p>Building digital experiences with passion and purpose.</p>
+          <div className="footer-cta">
+            <span className="footer-cta-label">Let's Connect</span>
+            <p className="footer-cta-text">Got something cool in mind? Let's make it happen.</p>
+            <a href="mailto:hello@example.com" className="footer-cta-btn">Say Hello ✉</a>
+          </div>
+          <div className="footer-mid">
+            <div className="footer-links-row">
+              <button onClick={() => scrollTo('profile')}>Profile</button>
+              <span className="footer-links-dot">·</span>
+              <button onClick={() => scrollTo('hobbies')}>Hobbies</button>
+              <span className="footer-links-dot">·</span>
+              <button onClick={() => scrollTo('gallery')}>Gallery</button>
+              <span className="footer-links-dot">·</span>
+              <button onClick={() => scrollTo('blogs')}>Blogs</button>
             </div>
-            <div className="footer-links">
-              <div className="footer-col">
-                <h4>Menu</h4>
-                <button onClick={() => scrollTo('profile')}>Profile</button>
-                <button onClick={() => scrollTo('hobbies')}>Hobbies</button>
-                <button onClick={() => scrollTo('gallery')}>Gallery</button>
-                <button onClick={() => scrollTo('blogs')}>Blogs</button>
-              </div>
-              <div className="footer-col">
-                <h4>Social</h4>
-                <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
-                <a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
-                <a href="https://twitter.com" target="_blank" rel="noreferrer">Twitter</a>
-              </div>
+            <div className="footer-socials">
+              <a href="https://github.com" target="_blank" rel="noreferrer" className="footer-social" title="GitHub">⌨</a>
+              <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="footer-social" title="LinkedIn">💼</a>
+              <a href="https://twitter.com" target="_blank" rel="noreferrer" className="footer-social" title="Twitter">𝕏</a>
+              <a href="mailto:hello@example.com" className="footer-social" title="Email">✉</a>
             </div>
           </div>
+          <div className="footer-divider" />
           <div className="footer-bottom">
-            <p>© {new Date().getFullYear()} Your Name. All rights reserved.</p>
-            <p className="footer-license">Licensed under MIT License · Built with React</p>
+            <span>© {new Date().getFullYear()} Abilash. Made with React & Vite</span>
+            <button className="footer-top-btn" onClick={() => scrollTo('profile')} title="Back to top">↑ Top</button>
           </div>
         </div>
       </footer>
@@ -358,7 +487,13 @@ function Home() {
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const handler = () => { sessionStorage.setItem('scroll_' + pathname, window.scrollY); };
+    window.addEventListener('scroll', handler, { passive: true });
+    return () => window.removeEventListener('scroll', handler);
+  }, [pathname]);
+  useEffect(() => {
+    const pos = sessionStorage.getItem('scroll_' + pathname);
+    window.scrollTo(0, pos ? Number(pos) : 0);
   }, [pathname]);
   return null;
 }

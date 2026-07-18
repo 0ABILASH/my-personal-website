@@ -2,52 +2,49 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import '../App.css';
 
+const games = [
+  { icon:'⚔️', name:'The Witcher 3', genre:'RPG', hours:'340h', pct:85 },
+  { icon:'🧩', name:'Portal 2', genre:'Puzzle', hours:'28h', pct:40 },
+  { icon:'🗺️', name:'Elden Ring', genre:'Adventure', hours:'120h', pct:65 },
+];
+
 export default function Gaming() {
   const navigate = useNavigate();
-  const [lines, setLines] = useState([]);
-  const bootLines = [
-    '> SYSTEM BOOT...',
-    '> LOADING KERNEL ████████████ OK',
-    '> GPU: NVIDIA RTX 4090 DETECTED',
-    '> RAM: 32GB DDR5 ALLOCATED',
-    '> DISPLAY: 4K 144Hz READY',
-    '> CONTROLLER: CONNECTED',
-    '> READY TO PLAY.',
-  ];
-  useEffect(() => {
-    let i = 0;
-    const timer = setInterval(() => {
-      if (i < bootLines.length) {
-        setLines(prev => [...prev, bootLines[i]]);
-        i++;
-      } else clearInterval(timer);
-    }, 400);
-    return () => clearInterval(timer);
-  }, []);
+  const [ready, setReady] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setReady(true), 100); return () => clearTimeout(t); }, []);
   return (
-    <div className="g-terminal">
-      <div className="g-scanlines" />
-      <button className="g-back" onClick={() => navigate('/')}>← EXIT</button>
-      <div className="g-screen">
-        <div className="g-header">
-          <span className="g-dot g-red" /><span className="g-dot g-yellow" /><span className="g-dot g-green" />
-          <span className="g-title">gaming.exe</span>
+    <div className="hp-wrap">
+      <nav className="hp-nav"><button onClick={() => navigate('/')}>← Back</button><span>Gaming</span></nav>
+      <div className={`hp-hero hp-hero-gaming ${ready?'hp-show':''}`}>
+        <div className="hp-hero-content">
+          <span className="hp-badge hp-badge-gaming">Hobby</span>
+          <h1>Gaming</h1>
+          <p>Strategy and adventure games — love the challenge.</p>
         </div>
-        <div className="g-body">
-          {lines.map((l,i) => <div key={i} className="g-line">{l}</div>)}
-          <span className="g-cursor">█</span>
+        <div className="hp-hero-icon">🎮</div>
+      </div>
+      <div className="hp-body">
+        <div className={`hp-stats hp-stagger ${ready?'hp-show':''}`}>
+          <div className="hp-stat"><span className="hp-stat-num hp-color-gaming">2000+</span><span className="hp-stat-label">Hours Played</span></div>
+          <div className="hp-stat"><span className="hp-stat-num hp-color-gaming">50+</span><span className="hp-stat-label">Games Finished</span></div>
+          <div className="hp-stat"><span className="hp-stat-num hp-color-gaming">Lv.99</span><span className="hp-stat-label">Max Level</span></div>
         </div>
-        <div className="g-stats-row">
-          <div className="g-stat-card"><span className="g-stat-val">🎮</span><span>2000+ hrs</span></div>
-          <div className="g-stat-card"><span className="g-stat-val">🏆</span><span>50 wins</span></div>
-          <div className="g-stat-card"><span className="g-stat-val">⭐</span><span>Lv.99</span></div>
+        <div className={`hp-section hp-stagger ${ready?'hp-show':''}`}>
+          <h2>Library</h2>
+          {games.map((g,i) => (
+            <div key={i} className="hp-list-item">
+              <span className="hp-list-icon">{g.icon}</span>
+              <div className="hp-list-info">
+                <strong>{g.name}</strong>
+                <span>{g.genre} · {g.hours}</span>
+              </div>
+              <div className="hp-mini-bar"><div className="hp-mini-fill hp-bg-gaming" style={{width:`${g.pct}%`}} /></div>
+            </div>
+          ))}
         </div>
-        <div className="g-games">
-          <h3>Recent Activity</h3>
-          <div className="g-game"><span className="g-game-icon">⚔️</span><div><strong>The Witcher 3</strong><span>RPG · 340h</span></div></div>
-          <div className="g-game"><span className="g-game-icon">🧩</span><div><strong>Portal 2</strong><span>Puzzle · 28h</span></div></div>
-          <div className="g-game"><span className="g-game-icon">🗺️</span><div><strong>Elden Ring</strong><span>Adventure · 120h</span></div></div>
-        </div>
+      </div>
+      <div className="hp-bottom">
+        <button className="hp-back-btn" onClick={() => navigate('/')}>← Back to home</button>
       </div>
     </div>
   );
