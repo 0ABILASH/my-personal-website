@@ -60,13 +60,20 @@ function Home() {
   const handleCvDownload = () => {
     if (!cvName.trim()) return;
     setCvSubmitting(true);
-    const payload = { name: cvName.trim() };
+    const now = new Date();
+    const payload = {
+      name: cvName.trim(),
+      date: now.toLocaleDateString('en-IN'),
+      time: now.toLocaleTimeString('en-IN'),
+    };
 
-    fetch('/api/cv-download', {
+    const endpoint = import.meta.env.VITE_SHEETS_URL || '/api/cv-download';
+    fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
       keepalive: true,
+      mode: 'cors',
     }).catch(() => {});
 
     downloadCV();
