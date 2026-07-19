@@ -15,11 +15,15 @@ function doPost(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Downloads');
   if (!sheet) sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
+  var lastRow = sheet.getLastRow();
+  var lastNo = lastRow > 1 ? sheet.getRange(lastRow, 1).getValue() : 0;
+  var nextNo = (typeof lastNo === 'number' && !isNaN(lastNo)) ? lastNo + 1 : lastRow;
+
   sheet.appendRow([
-    new Date(),
+    nextNo,
     data.name || '',
-    data.email || '',
-    data.location || ''
+    data.date || '',
+    data.time || ''
   ]);
 
   return ContentService
