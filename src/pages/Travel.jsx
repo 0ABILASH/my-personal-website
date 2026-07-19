@@ -21,12 +21,37 @@ const FALLBACK_PLACES = [
 
 const ROUTE_COLOR = '#3b82f6';
 
+function renderLayers(map, places) {
+  map.eachLayer(layer => {
+    if (!(layer instanceof L.TileLayer)) map.removeLayer(layer);
+  });
+
+  for (let i = 0; i < places.length - 1; i++) {
+    L.polyline([[places[i].lat, places[i].lng], [places[i + 1].lat, places[i + 1].lng]], {
+      color: ROUTE_COLOR, weight: 2, opacity: 0.8, dashArray: '6, 4',
+    }).addTo(map);
+  }
+
+  places.forEach((p, i) => {
+    const radius = i === 0 ? 10 : 4;
+    const weight = i === 0 ? 3 : 1.5;
+    const marker = L.circleMarker([p.lat, p.lng], {
+      radius, color: ROUTE_COLOR, fillColor: ROUTE_COLOR, fillOpacity: 1, weight,
+    }).addTo(map);
+    marker.bindPopup(
+      `<div style="text-align:center;font-family:Nunito,sans-serif;padding:2px 6px"><span style="font-size:1.2rem">${p.emoji}</span><br/><strong style="font-size:0.85rem">${p.city}</strong><br/><span style="font-size:0.7rem;color:#6b7280">${p.country} · ${p.date}</span></div>`,
+      { closeButton: false, offset: [0, -8] }
+    );
+  });
+}
+
 export default function Travel() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
   const [sheetData, setSheetData] = useState(null);
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
+  const mapReady = useRef(false);
 
   const places = sheetData
     ? (sheetData.places || []).filter(p => p.lat && p.lng)
@@ -45,45 +70,32 @@ export default function Travel() {
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
 
-    const timer = setTimeout(() => {
-      if (!mapRef.current || mapInstance.current) return;
+    const map = L.map(mapRef.current, { scrollWheelZoom: true, zoomControl: true }).setView([11.5, 78.5], 5.5);
 
-      const map = L.map(mapRef.current, { scrollWheelZoom: true, zoomControl: true }).setView([11.5, 78.5], 5.5);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap',
+      maxZoom: 19,
+    }).addTo(map);
 
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap',
-        maxZoom: 19,
-      }).addTo(map);
-
-      for (let i = 0; i < places.length - 1; i++) {
-        L.polyline([[places[i].lat, places[i].lng], [places[i + 1].lat, places[i + 1].lng]], {
-          color: ROUTE_COLOR, weight: 2, opacity: 0.8, dashArray: '6, 4',
-        }).addTo(map);
-      }
-
-      setTimeout(() => {
-        map.flyTo([places[0].lat, places[0].lng], 8, { duration: 2 });
-      }, 500);
-
-      places.forEach((p, i) => {
-        const radius = i === 0 ? 10 : 4;
-        const weight = i === 0 ? 3 : 1.5;
-        const marker = L.circleMarker([p.lat, p.lng], {
-          radius, color: ROUTE_COLOR, fillColor: ROUTE_COLOR, fillOpacity: 1, weight,
-        }).addTo(map);
-        marker.bindPopup(
-          `<div style="text-align:center;font-family:Nunito,sans-serif;padding:2px 6px"><span style="font-size:1.2rem">${p.emoji}</span><br/><strong style="font-size:0.85rem">${p.city}</strong><br/><span style="font-size:0.7rem;color:#6b7280">${p.country} · ${p.date}</span></div>`,
-          { closeButton: false, offset: [0, -8] }
-        );
-      });
-
-      mapInstance.current = map;
-    }, 1000);
+    mapInstance.current = map;
+    mapReady.current = true;
 
     return () => {
-      clearTimeout(timer);
-      if (mapInstance.current) { mapInstance.current.remove(); mapInstance.current = null; }
+      if (mapInstance.current) { mapInstance.current.remove(); mapInstance.current = null; mapReady.current = false; }
     };
+  }, []);
+
+  useEffect(() => {
+    if (!mapReady.current || !mapInstance.current) return;
+    renderLayers(mapInstance.current, places);
+  }, [places]);
+
+  useEffect(() => {
+    if (!mapReady.current || !mapInstance.current || places.length === 0) return;
+    const timer = setTimeout(() => {
+      mapInstance.current.flyTo([places[0].lat, places[0].lng], 8, { duration: 2 });
+    }, 500);
+    return () => clearTimeout(timer);
   }, [sheetData]);
 
   const uniqueCountries = new Set(places.map(p => p.country)).size;
