@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import maplibregl from 'maplibre-gl';
-import 'maplibre-gl/dist/maplibre-gl.css';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import '../App.css';
 
 const SHEETS_URL = import.meta.env.VITE_SHEETS_URL || 'https://script.google.com/macros/s/AKfycbwcFe2sB0xmbOPtZDbcXj77RGgdFNRGXWq_BbaCW_7uWPv86VPj1qBl52lCxyqW4mJBxA/exec';
@@ -21,36 +21,11 @@ const FALLBACK_PLACES = [
 
 const ROUTE_COLOR = '#3b82f6';
 
-function buildRouteGeoJSON(places) {
-  const features = [];
-  for (let i = 0; i < places.length - 1; i++) {
-    features.push({
-      type: 'Feature',
-      geometry: {
-        type: 'LineString',
-        coordinates: [[places[i].lng, places[i].lat], [places[i + 1].lng, places[i + 1].lat]],
-      },
-    });
-  }
-  return { type: 'FeatureCollection', features };
-}
-
-function buildPointsGeoJSON(places) {
-  return {
-    type: 'FeatureCollection',
-    features: places.map((p, i) => ({
-      type: 'Feature',
-      geometry: { type: 'Point', coordinates: [p.lng, p.lat] },
-      properties: { city: p.city, country: p.country, emoji: p.emoji, date: p.date, index: i },
-    })),
-  };
-}
-
 export default function Travel() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
   const [sheetData, setSheetData] = useState(null);
-  const mapContainer = useRef(null);
+  const mapRef = useRef(null);
   const mapInstance = useRef(null);
 
   const places = sheetData
@@ -68,75 +43,34 @@ export default function Travel() {
   }, []);
 
   useEffect(() => {
-    if (!mapContainer.current || mapInstance.current) return;
+    if (!mapRef.current || mapInstance.current) return;
 
     const timer = setTimeout(() => {
-      if (!mapContainer.current || mapInstance.current) return;
+      if (!mapRef.current || mapInstance.current) return;
 
-      const routeGeoJSON = buildRouteGeoJSON(places);
-      const pointsGeoJSON = buildPointsGeoJSON(places);
+      const map = L.map(mapRef.current, { scrollWheelZoom: true, zoomControl: true }).setView([11.5, 78.5], 5.5);
 
-      const map = new maplibregl.Map({
-        container: mapContainer.current,
-        style: 'https://tiles.openfreemap.org/styles/liberty',
-        center: [78.5, 11.5],
-        zoom: 5.5,
-      });
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap',
+        maxZoom: 19,
+      }).addTo(map);
 
-      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+      for (let i = 0; i < places.length - 1; i++) {
+        L.polyline([[places[i].lat, places[i].lng], [places[i + 1].lat, places[i + 1].lng]], {
+          color: ROUTE_COLOR, weight: 2, opacity: 0.8, dashArray: '6, 4',
+        }).addTo(map);
+      }
 
-      map.on('load', () => {
-        map.addSource('route', { type: 'geojson', data: routeGeoJSON });
-        map.addSource('points', { type: 'geojson', data: pointsGeoJSON });
-
-        map.addLayer({
-          id: 'route-line',
-          type: 'line',
-          source: 'route',
-          layout: { 'line-join': 'round', 'line-cap': 'round' },
-          paint: { 'line-color': ROUTE_COLOR, 'line-width': 2, 'line-opacity': 0.8, 'line-dasharray': [6, 4] },
-        });
-
-        map.addLayer({
-          id: 'points-layer',
-          type: 'circle',
-          source: 'points',
-          paint: {
-            'circle-radius': 4,
-            'circle-color': ROUTE_COLOR,
-            'circle-stroke-color': 'white',
-            'circle-stroke-width': 1.5,
-          },
-        });
-
-        map.addLayer({
-          id: 'start-point',
-          type: 'circle',
-          source: 'points',
-          filter: ['==', 'index', 0],
-          paint: {
-            'circle-radius': 10,
-            'circle-color': ROUTE_COLOR,
-            'circle-stroke-color': 'white',
-            'circle-stroke-width': 3,
-          },
-        });
-
-        const popup = new maplibregl.Popup({ closeButton: false, offset: 12 });
-
-        map.on('mouseenter', 'points-layer', (e) => {
-          map.getCanvas().style.cursor = 'pointer';
-          const props = e.features[0].properties;
-          popup
-            .setLngLat(e.lngLat)
-            .setHTML(`<div style="text-align:center;font-family:Nunito,sans-serif;padding:4px 8px"><span style="font-size:1.3rem">${props.emoji}</span><br/><strong style="font-size:0.9rem">${props.city}</strong><br/><span style="font-size:0.75rem;color:#6b7280">${props.country} · ${props.date}</span></div>`)
-            .addTo(map);
-        });
-
-        map.on('mouseleave', 'points-layer', () => {
-          map.getCanvas().style.cursor = '';
-          popup.remove();
-        });
+      places.forEach((p, i) => {
+        const radius = i === 0 ? 10 : 4;
+        const weight = i === 0 ? 3 : 1.5;
+        const marker = L.circleMarker([p.lat, p.lng], {
+          radius, color: ROUTE_COLOR, fillColor: ROUTE_COLOR, fillOpacity: 1, weight,
+        }).addTo(map);
+        marker.bindPopup(
+          `<div style="text-align:center;font-family:Nunito,sans-serif;padding:2px 6px"><span style="font-size:1.2rem">${p.emoji}</span><br/><strong style="font-size:0.85rem">${p.city}</strong><br/><span style="font-size:0.7rem;color:#6b7280">${p.country} · ${p.date}</span></div>`,
+          { closeButton: false, offset: [0, -8] }
+        );
       });
 
       mapInstance.current = map;
@@ -172,7 +106,7 @@ export default function Travel() {
         </div>
 
         <div className="travel-map-wrap">
-          <div ref={mapContainer} className="travel-map" />
+          <div ref={mapRef} className="travel-map" />
         </div>
       </div>
 
