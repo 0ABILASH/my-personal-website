@@ -1,51 +1,233 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import '../App.css';
 
-const destinations = [
-  { city:'Tokyo', country:'Japan', emoji:'🗼', date:'Mar 2024', color:'#ef4444' },
-  { city:'Paris', country:'France', emoji:'🏛️', date:'Jun 2024', color:'#3b82f6' },
-  { city:'New York', country:'USA', emoji:'🗽', date:'Sep 2024', color:'#22c55e' },
-  { city:'Reykjavik', country:'Iceland', emoji:'🌋', date:'Jan 2025', color:'#8b5cf6' },
-  { city:'Bali', country:'Indonesia', emoji:'🌴', date:'Apr 2025', color:'#f97316' },
-  { city:'Kyoto', country:'Japan', emoji:'⛩️', date:'Jun 2025', color:'#e11d48' },
+const SHEETS_URL = import.meta.env.VITE_SHEETS_URL || '';
+
+const FALLBACK_PLACES = [
+  { city:'Bangalore', country:'India', lat:12.9716, lng:77.5946, emoji:'🏙️', date:'Home Base' },
+  { city:'Chennai', country:'India', lat:13.0827, lng:80.2707, emoji:'🌊', date:'Visited' },
+  { city:'Kanyakumari', country:'India', lat:8.0883, lng:77.5385, emoji:'🌅', date:'Visited' },
+  { city:'Madurai', country:'India', lat:9.9252, lng:78.1198, emoji:'🛕', date:'Visited' },
+  { city:'Tokyo', country:'Japan', lat:35.6762, lng:139.6503, emoji:'🗼', date:'Mar 2024' },
+  { city:'Paris', country:'France', lat:48.8566, lng:2.3522, emoji:'🏛️', date:'Jun 2024' },
+  { city:'New York', country:'USA', lat:40.7128, lng:-74.006, emoji:'🗽', date:'Sep 2024' },
+  { city:'Reykjavik', country:'Iceland', lat:64.1466, lng:-21.9426, emoji:'🌋', date:'Jan 2025' },
+  { city:'Bali', country:'Indonesia', lat:-8.3405, lng:115.092, emoji:'🌴', date:'Apr 2025' },
+  { city:'Kyoto', country:'Japan', lat:35.0116, lng:135.7681, emoji:'⛩️', date:'Jun 2025' },
 ];
+
+const FALLBACK_ROUTES = [
+  {
+    name: 'Bangalore → Kanyakumari',
+    color: '#a855f7',
+    points: [
+      [12.9716, 77.5946],
+      [12.2958, 79.1553],
+      [11.2282, 78.1694],
+      [9.9252, 78.1198],
+      [8.0883, 77.5385],
+    ],
+  },
+];
+
+const bikeIcon = L.divIcon({
+  html: `<div style="
+    width:44px;height:44px;border-radius:14px;
+    background:linear-gradient(135deg,rgba(15,23,42,0.9),rgba(30,41,59,0.85));
+    backdrop-filter:blur(8px);border:1.5px solid rgba(139,92,246,0.6);
+    box-shadow:0 0 12px rgba(139,92,246,0.35),0 4px 12px rgba(0,0,0,0.3);
+    display:flex;align-items:center;justify-content:center;
+  ">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="5.5" cy="17.5" r="3.5"/>
+      <circle cx="18.5" cy="17.5" r="3.5"/>
+      <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h3"/>
+    </svg>
+  </div>`,
+  className: '',
+  iconSize: [44, 44],
+  iconAnchor: [22, 44],
+  popupAnchor: [0, -36],
+});
+
+function drawRoutes(map, routes) {
+  routes.forEach(route => {
+    L.polyline(route.points, {
+      color: route.color,
+      weight: 20,
+      opacity: 0.1,
+      lineCap: 'round',
+      lineJoin: 'round',
+    }).addTo(map);
+
+    L.polyline(route.points, {
+      color: route.color,
+      weight: 6,
+      opacity: 0.5,
+      lineCap: 'round',
+      lineJoin: 'round',
+    }).addTo(map);
+
+    const pts = route.points;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const [lat1, lng1] = pts[i];
+      const [lat2, lng2] = pts[i + 1];
+      const segs = 12;
+      for (let j = 1; j < segs; j++) {
+        const t = j / segs;
+        const lat = lat1 + (lat2 - lat1) * t;
+        const lng = lng1 + (lng2 - lng1) * t;
+        L.circleMarker([lat, lng], {
+          radius: 1.5,
+          fillColor: '#e9d5ff',
+          fillOpacity: 0.8,
+          color: 'transparent',
+          weight: 0,
+        }).addTo(map);
+      }
+    }
+
+    L.circleMarker(pts[0], {
+      radius: 6,
+      fillColor: route.color || '#a855f7',
+      fillOpacity: 1,
+      color: 'white',
+      weight: 3,
+    }).addTo(map);
+
+    L.circleMarker(pts[pts.length - 1], {
+      radius: 6,
+      fillColor: '#ec4899',
+      fillOpacity: 1,
+      color: 'white',
+      weight: 3,
+    }).addTo(map);
+  });
+}
+
+function drawPlaces(map, places) {
+  places.forEach(p => {
+    L.marker([p.lat, p.lng], { icon: bikeIcon })
+      .addTo(map)
+      .bindPopup(
+        `<div style="text-align:center;font-family:Nunito,sans-serif;padding:4px 2px">
+          <span style="font-size:1.4rem">${p.emoji}</span><br/>
+          <strong style="font-size:0.95rem">${p.city}</strong><br/>
+          <span style="font-size:0.78rem;color:#6b7280">${p.country} · ${p.date}</span>
+        </div>`,
+        { className: 'travel-popup' }
+      );
+  });
+}
 
 export default function Travel() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [places, setPlaces] = useState(FALLBACK_PLACES);
+  const [routes, setRoutes] = useState(FALLBACK_ROUTES);
+  const [countries, setCountries] = useState(6);
+  const [loading, setLoading] = useState(!!SHEETS_URL);
+  const mapRef = useRef(null);
+  const mapInstance = useRef(null);
+
   useEffect(() => { const t = setTimeout(() => setReady(true), 100); return () => clearTimeout(t); }, []);
+
+  useEffect(() => {
+    if (!SHEETS_URL) return;
+    fetch(`${SHEETS_URL}?action=travel`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.places && data.places.length) setPlaces(data.places);
+        if (data.routes && data.routes.length) setRoutes(data.routes);
+        const uniqueCountries = new Set((data.places || []).map(p => p.country));
+        if (uniqueCountries.size) setCountries(uniqueCountries.size);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (!mapRef.current || mapInstance.current) return;
+
+    const map = L.map(mapRef.current, {
+      center: [11.5, 78.5],
+      zoom: 6,
+      scrollWheelZoom: true,
+      zoomControl: false,
+    });
+
+    L.control.zoom({ position: 'topright' }).addTo(map);
+
+    L.tileLayer('https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+      attribution: '&copy; Google',
+      maxZoom: 20,
+      subdomains: '0123',
+    }).addTo(map);
+
+    drawRoutes(map, routes);
+    drawPlaces(map, places);
+
+    mapInstance.current = map;
+
+    setTimeout(() => map.invalidateSize(), 500);
+
+    return () => { map.remove(); mapInstance.current = null; };
+  }, [places, routes]);
+
+  useEffect(() => {
+    if (!mapInstance.current) return;
+    if (selected) {
+      mapInstance.current.flyTo([selected.lat, selected.lng], 8, { duration: 1.2 });
+    } else {
+      mapInstance.current.flyTo([11.5, 78.5], 6, { duration: 1.2 });
+    }
+  }, [selected]);
+
+  const uniqueCities = new Set(places.map(p => p.city)).size;
+
   return (
     <div className="hp-wrap">
       <nav className="hp-nav"><button onClick={() => navigate('/')}>← Back</button><span>Travel</span></nav>
+
       <div className={`hp-hero hp-hero-travel ${ready?'hp-show':''}`}>
         <div className="hp-hero-content">
           <span className="hp-badge hp-badge-travel">Hobby</span>
-          <h1>Travel</h1>
-          <p>Exploring new places and cultures.</p>
+          <h1>Travel Tracker</h1>
+          <p>Places I've been — click a destination to fly there on the map.</p>
         </div>
-        <div className="hp-hero-icon">✈️</div>
+        <div className="hp-hero-icon">🗺️</div>
       </div>
+
       <div className="hp-body">
         <div className={`hp-stats hp-stagger ${ready?'hp-show':''}`}>
-          <div className="hp-stat"><span className="hp-stat-num hp-color-travel">6</span><span className="hp-stat-label">Countries</span></div>
-          <div className="hp-stat"><span className="hp-stat-num hp-color-travel">15</span><span className="hp-stat-label">Cities</span></div>
-          <div className="hp-stat"><span className="hp-stat-num hp-color-travel">42</span><span className="hp-stat-label">Days Abroad</span></div>
+          <div className="hp-stat"><span className="hp-stat-num hp-color-travel">{countries}</span><span className="hp-stat-label">Countries</span></div>
+          <div className="hp-stat"><span className="hp-stat-num hp-color-travel">{uniqueCities}</span><span className="hp-stat-label">Cities</span></div>
+          <div className="hp-stat"><span className="hp-stat-num hp-color-travel">{places.length}</span><span className="hp-stat-label">Destinations</span></div>
         </div>
+
+        <div className="travel-map-wrap">
+          <div ref={mapRef} className="travel-map" />
+        </div>
+
         <div className={`hp-section hp-stagger ${ready?'hp-show':''}`}>
-          <h2>Destinations</h2>
-          {destinations.map((d,i) => (
-            <div key={i} className="hp-list-item">
-              <div className="hp-dest-dot" style={{background:d.color+'18',color:d.color}}><span>{d.emoji}</span></div>
-              <div className="hp-list-info">
-                <strong>{d.city}</strong>
-                <span>{d.country} · {d.date}</span>
-              </div>
-              <span className="hp-list-arrow">→</span>
-            </div>
-          ))}
+          <div className="travel-dest-grid">
+            {places.map((d,i) => (
+              <button key={i} className={`travel-dest-card ${selected?.city===d.city?'active':''}`} onClick={() => setSelected(d)}>
+                <span className="travel-dest-emoji">{d.emoji}</span>
+                <div className="travel-dest-info">
+                  <strong>{d.city}</strong>
+                  <span>{d.country} · {d.date}</span>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
+
       <div className="hp-bottom">
         <button className="hp-back-btn" onClick={() => navigate('/')}>← Back to home</button>
       </div>

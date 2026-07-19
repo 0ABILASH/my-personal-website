@@ -3,6 +3,7 @@ import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { jsPDF } from 'jspdf';
 import './App.css';
 import Gaming from './pages/Gaming';
+import GameDetail from './pages/GameDetail';
 import Photography from './pages/Photography';
 import Music from './pages/Music';
 import Reading from './pages/Reading';
@@ -654,6 +655,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/hobby/gaming" element={<Gaming />} />
+        <Route path="/hobby/gaming/game/:slug" element={<GameDetail />} />
         <Route path="/hobby/photography" element={<Photography />} />
         <Route path="/hobby/music" element={<Music />} />
         <Route path="/hobby/reading" element={<Reading />} />
