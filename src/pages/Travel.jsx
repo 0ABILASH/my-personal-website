@@ -112,6 +112,7 @@ export default function Travel() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
   const [places, setPlaces] = useState(FALLBACK_PLACES);
+  const [dataReady, setDataReady] = useState(!SHEETS_URL);
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
 
@@ -127,42 +128,36 @@ export default function Travel() {
           if (valid.length) setPlaces(valid);
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setDataReady(true));
   }, []);
 
   useEffect(() => {
-    if (!mapRef.current || mapInstance.current) return;
+    if (!dataReady || !mapRef.current || mapInstance.current) return;
 
-    const timer = setTimeout(() => {
-      if (!mapRef.current || mapInstance.current) return;
+    const map = L.map(mapRef.current, {
+      center: [11.5, 78.5],
+      zoom: 6,
+      scrollWheelZoom: true,
+      zoomControl: false,
+    });
 
-      const map = L.map(mapRef.current, {
-        center: [11.5, 78.5],
-        zoom: 6,
-        scrollWheelZoom: true,
-        zoomControl: false,
-      });
+    L.control.zoom({ position: 'topright' }).addTo(map);
 
-      L.control.zoom({ position: 'topright' }).addTo(map);
+    L.tileLayer('https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+      attribution: '&copy; Google',
+      maxZoom: 20,
+      subdomains: '0123',
+    }).addTo(map);
 
-      L.tileLayer('https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-        attribution: '&copy; Google',
-        maxZoom: 20,
-        subdomains: '0123',
-      }).addTo(map);
+    const routes = buildRoutesFromPlaces(places);
+    drawRoutes(map, routes);
 
-      const routes = buildRoutesFromPlaces(places);
-      drawRoutes(map, routes);
+    mapInstance.current = map;
+    setTimeout(() => map.invalidateSize(), 300);
 
-      mapInstance.current = map;
-      setTimeout(() => map.invalidateSize(), 100);
-    }, 800);
-
-    return () => {
-      clearTimeout(timer);
-      if (mapInstance.current) { mapInstance.current.remove(); mapInstance.current = null; }
-    };
-  }, []);
+    return () => { map.remove(); mapInstance.current = null; };
+  }, [dataReady]);
 
   const uniqueCountries = new Set(places.map(p => p.country)).size;
   const uniqueCities = new Set(places.map(p => p.city)).size;
