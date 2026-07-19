@@ -33,26 +33,6 @@ const FALLBACK_ROUTES = [
   },
 ];
 
-const bikeIcon = L.divIcon({
-  html: `<div style="
-    width:44px;height:44px;border-radius:14px;
-    background:linear-gradient(135deg,rgba(15,23,42,0.9),rgba(30,41,59,0.85));
-    backdrop-filter:blur(8px);border:1.5px solid rgba(139,92,246,0.6);
-    box-shadow:0 0 12px rgba(139,92,246,0.35),0 4px 12px rgba(0,0,0,0.3);
-    display:flex;align-items:center;justify-content:center;
-  ">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="5.5" cy="17.5" r="3.5"/>
-      <circle cx="18.5" cy="17.5" r="3.5"/>
-      <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h3"/>
-    </svg>
-  </div>`,
-  className: '',
-  iconSize: [44, 44],
-  iconAnchor: [22, 44],
-  popupAnchor: [0, -36],
-});
-
 function drawRoutes(map, routes) {
   routes.forEach(route => {
     L.polyline(route.points, {
@@ -90,43 +70,47 @@ function drawRoutes(map, routes) {
       }
     }
 
-    L.circleMarker(pts[0], {
-      radius: 6,
-      fillColor: route.color || '#a855f7',
-      fillOpacity: 1,
-      color: 'white',
-      weight: 3,
-    }).addTo(map);
+    const startIcon = L.divIcon({
+      html: `<div style="
+        width:20px;height:20px;border-radius:50%;
+        background:${route.color};border:3px solid white;
+        box-shadow:0 0 0 2px ${route.color},0 0 16px ${route.color}80,0 2px 8px rgba(0,0,0,0.3);
+      "></div>`,
+      className: '',
+      iconSize: [20, 20],
+      iconAnchor: [10, 10],
+    });
 
-    L.circleMarker(pts[pts.length - 1], {
-      radius: 6,
-      fillColor: '#ec4899',
-      fillOpacity: 1,
-      color: 'white',
-      weight: 3,
-    }).addTo(map);
-  });
-}
+    const endIcon = L.divIcon({
+      html: `<div style="
+        width:28px;height:28px;border-radius:50%;
+        background:#ec4899;border:3px solid white;
+        box-shadow:0 0 0 2px #ec4899,0 0 20px #ec489980,0 0 32px #ec489940,0 2px 8px rgba(0,0,0,0.3);
+        display:flex;align-items:center;justify-content:center;
+      ">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>`,
+      className: '',
+      iconSize: [28, 28],
+      iconAnchor: [14, 14],
+    });
 
-function drawPlaces(map, places) {
-  places.forEach(p => {
-    L.marker([p.lat, p.lng], { icon: bikeIcon })
+    L.marker(pts[0], { icon: startIcon })
       .addTo(map)
-      .bindPopup(
-        `<div style="text-align:center;font-family:Nunito,sans-serif;padding:4px 2px">
-          <span style="font-size:1.4rem">${p.emoji}</span><br/>
-          <strong style="font-size:0.95rem">${p.city}</strong><br/>
-          <span style="font-size:0.78rem;color:#6b7280">${p.country} · ${p.date}</span>
-        </div>`,
-        { className: 'travel-popup' }
-      );
+      .bindPopup(`<div style="text-align:center;font-family:Nunito,sans-serif"><strong style="font-size:1rem">${route.name.split(' → ')[0]}</strong><br/><span style="font-size:0.78rem;color:#6b7280">Start</span></div>`);
+
+    L.marker(pts[pts.length - 1], { icon: endIcon })
+      .addTo(map)
+      .bindPopup(`<div style="text-align:center;font-family:Nunito,sans-serif"><strong style="font-size:1rem">${route.name.split(' → ')[1]}</strong><br/><span style="font-size:0.78rem;color:#6b7280">End</span></div>`);
   });
 }
 
 export default function Travel() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
-  const [selected, setSelected] = useState(null);
   const [places, setPlaces] = useState(FALLBACK_PLACES);
   const [routes, setRoutes] = useState(FALLBACK_ROUTES);
   const [countries, setCountries] = useState(6);
@@ -169,7 +153,6 @@ export default function Travel() {
     }).addTo(map);
 
     drawRoutes(map, routes);
-    drawPlaces(map, places);
 
     mapInstance.current = map;
 
@@ -177,15 +160,6 @@ export default function Travel() {
 
     return () => { map.remove(); mapInstance.current = null; };
   }, [places, routes]);
-
-  useEffect(() => {
-    if (!mapInstance.current) return;
-    if (selected) {
-      mapInstance.current.flyTo([selected.lat, selected.lng], 8, { duration: 1.2 });
-    } else {
-      mapInstance.current.flyTo([11.5, 78.5], 6, { duration: 1.2 });
-    }
-  }, [selected]);
 
   const uniqueCities = new Set(places.map(p => p.city)).size;
 
@@ -213,19 +187,6 @@ export default function Travel() {
           <div ref={mapRef} className="travel-map" />
         </div>
 
-        <div className={`hp-section hp-stagger ${ready?'hp-show':''}`}>
-          <div className="travel-dest-grid">
-            {places.map((d,i) => (
-              <button key={i} className={`travel-dest-card ${selected?.city===d.city?'active':''}`} onClick={() => setSelected(d)}>
-                <span className="travel-dest-emoji">{d.emoji}</span>
-                <div className="travel-dest-info">
-                  <strong>{d.city}</strong>
-                  <span>{d.country} · {d.date}</span>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
 
       <div className="hp-bottom">
