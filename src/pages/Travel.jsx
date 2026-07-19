@@ -19,22 +19,22 @@ const FALLBACK_PLACES = [
   { city:'Kyoto', country:'Japan', lat:35.0116, lng:135.7681, emoji:'⛩️', date:'Jun 2025' },
 ];
 
-const FALLBACK_ROUTES = [
-  {
-    name: 'Bangalore → Kanyakumari',
-    color: '#a855f7',
-    points: [
-      [12.9716, 77.5946],
-      [12.2958, 79.1553],
-      [11.2282, 78.1694],
-      [9.9252, 78.1198],
-      [8.0883, 77.5385],
-    ],
-  },
-];
+const ROUTE_COLOR = '#a855f7';
+
+function buildRoutesFromPlaces(places) {
+  if (places.length < 2) return [];
+  const points = places.map(p => [p.lat, p.lng]);
+  return [{
+    name: places[0].city + ' → ' + places[places.length - 1].city,
+    color: ROUTE_COLOR,
+    points,
+  }];
+}
 
 function drawRoutes(map, routes) {
   routes.forEach(route => {
+    if (!route.points || route.points.length < 2) return;
+
     L.polyline(route.points, {
       color: route.color,
       weight: 20,
@@ -112,9 +112,6 @@ export default function Travel() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
   const [places, setPlaces] = useState(FALLBACK_PLACES);
-  const [routes, setRoutes] = useState(FALLBACK_ROUTES);
-  const [countries, setCountries] = useState(6);
-  const [loading, setLoading] = useState(!!SHEETS_URL);
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
 
@@ -125,43 +122,49 @@ export default function Travel() {
     fetch(`${SHEETS_URL}?action=travel`)
       .then(r => r.json())
       .then(data => {
-        console.log('[Travel] Sheet data:', data);
-        if (data.places && data.places.length) setPlaces(data.places);
-        if (data.routes && data.routes.length) setRoutes(data.routes);
-        const uniqueCountries = new Set((data.places || []).map(p => p.country));
-        if (uniqueCountries.size) setCountries(uniqueCountries.size);
+        if (data.places && data.places.length) {
+          const valid = data.places.filter(p => p.lat && p.lng);
+          if (valid.length) setPlaces(valid);
+        }
       })
-      .catch(err => console.error('[Travel] Fetch error:', err))
-      .finally(() => setLoading(false));
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
 
-    const map = L.map(mapRef.current, {
-      center: [11.5, 78.5],
-      zoom: 6,
-      scrollWheelZoom: true,
-      zoomControl: false,
-    });
+    const timer = setTimeout(() => {
+      if (!mapRef.current || mapInstance.current) return;
 
-    L.control.zoom({ position: 'topright' }).addTo(map);
+      const map = L.map(mapRef.current, {
+        center: [11.5, 78.5],
+        zoom: 6,
+        scrollWheelZoom: true,
+        zoomControl: false,
+      });
 
-    L.tileLayer('https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-      attribution: '&copy; Google',
-      maxZoom: 20,
-      subdomains: '0123',
-    }).addTo(map);
+      L.control.zoom({ position: 'topright' }).addTo(map);
 
-    drawRoutes(map, routes);
+      L.tileLayer('https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+        attribution: '&copy; Google',
+        maxZoom: 20,
+        subdomains: '0123',
+      }).addTo(map);
 
-    mapInstance.current = map;
+      const routes = buildRoutesFromPlaces(places);
+      drawRoutes(map, routes);
 
-    setTimeout(() => map.invalidateSize(), 500);
+      mapInstance.current = map;
+      setTimeout(() => map.invalidateSize(), 100);
+    }, 800);
 
-    return () => { map.remove(); mapInstance.current = null; };
-  }, [places, routes]);
+    return () => {
+      clearTimeout(timer);
+      if (mapInstance.current) { mapInstance.current.remove(); mapInstance.current = null; }
+    };
+  }, []);
 
+  const uniqueCountries = new Set(places.map(p => p.country)).size;
   const uniqueCities = new Set(places.map(p => p.city)).size;
 
   return (
@@ -179,7 +182,7 @@ export default function Travel() {
 
       <div className="hp-body">
         <div className={`hp-stats hp-stagger ${ready?'hp-show':''}`}>
-          <div className="hp-stat"><span className="hp-stat-num hp-color-travel">{countries}</span><span className="hp-stat-label">Countries</span></div>
+          <div className="hp-stat"><span className="hp-stat-num hp-color-travel">{uniqueCountries}</span><span className="hp-stat-label">Countries</span></div>
           <div className="hp-stat"><span className="hp-stat-num hp-color-travel">{uniqueCities}</span><span className="hp-stat-label">Cities</span></div>
           <div className="hp-stat"><span className="hp-stat-num hp-color-travel">{places.length}</span><span className="hp-stat-label">Destinations</span></div>
         </div>
@@ -187,7 +190,6 @@ export default function Travel() {
         <div className="travel-map-wrap">
           <div ref={mapRef} className="travel-map" />
         </div>
-
       </div>
 
       <div className="hp-bottom">
