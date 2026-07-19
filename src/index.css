@@ -1,19 +1,19 @@
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --bg:#f0f2f5;
+  --bg:#f8fafc;
   --card:#ffffff;
-  --text:#1a1a2e;
-  --text-dim:#6b7280;
-  --border:#e5e7eb;
+  --text:#0f172a;
+  --text-dim:#64748b;
+  --border:#e2e8f0;
   --blue:#2563eb;
   --blue-bg:#eff6ff;
   --green:#16a34a;
   --green-bg:#f0fdf4;
   --orange:#ea580c;
   --orange-bg:#fff7ed;
-  --purple:#9333ea;
-  --purple-bg:#faf5ff;
+  --purple:#7c3aed;
+  --purple-bg:#f5f3ff;
   --cyan:#0891b2;
   --cyan-bg:#ecfeff;
   --red:#dc2626;
@@ -22,9 +22,9 @@
   --yellow-bg:#fefce8;
   --radius:16px;
   --radius-sm:10px;
-  --shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md:0 4px 12px rgba(0,0,0,0.07),0 2px 4px rgba(0,0,0,0.04);
-  --shadow-lg:0 10px 30px rgba(0,0,0,0.08);
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 1px 2px rgba(0,0,0,0.02);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.06),0 1px 3px rgba(0,0,0,0.03);
+  --shadow-lg:0 12px 40px rgba(0,0,0,0.08);
 }
 
 html{scroll-behavior:smooth}
@@ -35,6 +35,7 @@ body{
   color:var(--text);
   line-height:1.6;
   min-height:100vh;
+  -webkit-font-smoothing:antialiased;
 }
 
 h1,h2,h3,h4,h5,h6{font-family:'Josefin Sans',sans-serif}
@@ -42,3 +43,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Josefin Sans',sans-serif}
 code,.mono{font-family:'DM Sans',monospace}
 a{text-decoration:none;color:inherit}
 ::selection{background:var(--blue);color:white}
+
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
