@@ -32,19 +32,19 @@ const FALLBACK_PLACES = [
 const ROUTE_COLOR = '#3b82f6';
 
 const startStyle = new Style({
-  image: new CircleStyle({ radius: 9, fill: new Fill({ color: ROUTE_COLOR }), stroke: new Stroke({ color: 'white', width: 3 }) }),
+  image: new CircleStyle({ radius: 10, fill: new Fill({ color: ROUTE_COLOR }), stroke: new Stroke({ color: 'white', width: 3 }) }),
 });
 const pointStyle = new Style({
-  image: new CircleStyle({ radius: 5, fill: new Fill({ color: ROUTE_COLOR }), stroke: new Stroke({ color: 'white', width: 2 }) }),
+  image: new CircleStyle({ radius: 4, fill: new Fill({ color: ROUTE_COLOR }), stroke: new Stroke({ color: 'white', width: 1.5 }) }),
 });
-const lineGlowStyle = new Style({ stroke: new Stroke({ color: ROUTE_COLOR, width: 8, opacity: 0.2 }) });
-const lineStyle = new Style({ stroke: new Stroke({ color: ROUTE_COLOR, width: 3, lineDash: [8, 6] }) });
+const lineStyle = new Style({ stroke: new Stroke({ color: ROUTE_COLOR, width: 2, lineDash: [6, 4], lineDashOffset: 0 }) });
 
 function buildFeatures(places) {
   const features = [];
-  if (places.length >= 2) {
-    const coords = places.map(p => fromLonLat([p.lng, p.lat]));
-    features.push(new Feature({ geometry: new LineString(coords), type: 'line' }));
+  for (let i = 0; i < places.length - 1; i++) {
+    const a = fromLonLat([places[i].lng, places[i].lat]);
+    const b = fromLonLat([places[i + 1].lng, places[i + 1].lat]);
+    features.push(new Feature({ geometry: new LineString([a, b]), type: 'line' }));
   }
   places.forEach((p, i) => {
     features.push(new Feature({
@@ -98,7 +98,7 @@ export default function Travel() {
           }),
           new VectorLayer({ source, style: (feature) => {
             const t = feature.get('type');
-            if (t === 'line') return [lineGlowStyle, lineStyle];
+            if (t === 'line') return lineStyle;
             return feature.get('isStart') ? startStyle : pointStyle;
           }}),
         ],
