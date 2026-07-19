@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 import '../App.css';
 
 const SHEETS_URL = import.meta.env.VITE_SHEETS_URL || 'https://script.google.com/macros/s/AKfycbwcFe2sB0xmbOPtZDbcXj77RGgdFNRGXWq_BbaCW_7uWPv86VPj1qBl52lCxyqW4mJBxA/exec';
@@ -21,65 +21,33 @@ const FALLBACK_PLACES = [
 
 const ROUTE_COLOR = '#3b82f6';
 
-function buildRoutesFromPlaces(places) {
-  if (places.length < 2) return [];
-  const points = places.map(p => [p.lat, p.lng]);
-  return [{
-    name: places[0].city + ' → ' + places[places.length - 1].city,
-    color: ROUTE_COLOR,
-    points,
-  }];
+function buildRouteGeoJSON(places) {
+  const coords = places.map(p => [p.lng, p.lat]);
+  return {
+    type: 'FeatureCollection',
+    features: coords.length >= 2 ? [{
+      type: 'Feature',
+      geometry: { type: 'LineString', coordinates: coords },
+    }] : [],
+  };
 }
 
-function drawRoutes(map, routes) {
-  routes.forEach(route => {
-    if (!route.points || route.points.length < 2) return;
-    const pts = route.points;
-
-    for (let i = 0; i < pts.length - 1; i++) {
-      L.polyline([pts[i], pts[i + 1]], {
-        color: route.color,
-        weight: 3,
-        opacity: 0.7,
-        dashArray: '6 4',
-        lineCap: 'round',
-        lineJoin: 'round',
-      }).addTo(map);
-    }
-
-    pts.forEach((coord, i) => {
-      if (i === 0) {
-        const startIcon = L.divIcon({
-          html: `<div style="
-            width:18px;height:18px;border-radius:50%;
-            background:${route.color};border:3px solid white;
-            box-shadow:0 0 0 2px ${route.color},0 0 12px ${route.color}80;
-          "></div>`,
-          className: '',
-          iconSize: [18, 18],
-          iconAnchor: [9, 9],
-        });
-        L.marker(coord, { icon: startIcon })
-          .addTo(map)
-          .bindPopup(`<div style="text-align:center;font-family:Nunito,sans-serif"><strong style="font-size:1rem">${route.name.split(' → ')[0]}</strong><br/><span style="font-size:0.78rem;color:#6b7280">Start</span></div>`);
-      } else {
-        L.circleMarker(coord, {
-          radius: 4,
-          fillColor: route.color,
-          fillOpacity: 0.9,
-          color: 'white',
-          weight: 2,
-        }).addTo(map);
-      }
-    });
-  });
+function buildPointsGeoJSON(places) {
+  return {
+    type: 'FeatureCollection',
+    features: places.map((p, i) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [p.lng, p.lat] },
+      properties: { city: p.city, country: p.country, emoji: p.emoji, date: p.date, index: i },
+    })),
+  };
 }
 
 export default function Travel() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
   const [sheetData, setSheetData] = useState(null);
-  const mapRef = useRef(null);
+  const mapContainer = useRef(null);
   const mapInstance = useRef(null);
 
   const places = sheetData
@@ -92,37 +60,94 @@ export default function Travel() {
     if (!SHEETS_URL) return;
     fetch(`${SHEETS_URL}?action=travel`)
       .then(r => r.json())
-      .then(data => {
-        setSheetData(data);
-      })
+      .then(data => setSheetData(data))
       .catch(() => {});
   }, []);
 
   useEffect(() => {
-    if (!mapRef.current || mapInstance.current) return;
+    if (!mapContainer.current || mapInstance.current) return;
 
     const timer = setTimeout(() => {
-      if (!mapRef.current || mapInstance.current) return;
+      if (!mapContainer.current || mapInstance.current) return;
 
-      const map = L.map(mapRef.current, {
-        center: [11.5, 78.5],
-        zoom: 6,
-        scrollWheelZoom: true,
-        zoomControl: false,
+      const routeGeoJSON = buildRouteGeoJSON(places);
+      const pointsGeoJSON = buildPointsGeoJSON(places);
+
+      const map = new maplibregl.Map({
+        container: mapContainer.current,
+        style: 'https://tiles.openfreemap.org/styles/liberty',
+        center: [78.5, 11.5],
+        zoom: 5.5,
+        scrollZoom: true,
       });
 
-      L.control.zoom({ position: 'topright' }).addTo(map);
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
-        maxZoom: 19,
-      }).addTo(map);
+      map.on('load', () => {
+        map.addSource('route', { type: 'geojson', data: routeGeoJSON });
+        map.addSource('points', { type: 'geojson', data: pointsGeoJSON });
 
-      const routes = buildRoutesFromPlaces(places);
-      drawRoutes(map, routes);
+        map.addLayer({
+          id: 'route-glow',
+          type: 'line',
+          source: 'route',
+          layout: { 'line-join': 'round', 'line-cap': 'round' },
+          paint: { 'line-color': ROUTE_COLOR, 'line-width': 8, 'line-opacity': 0.2 },
+        });
+
+        map.addLayer({
+          id: 'route-line',
+          type: 'line',
+          source: 'route',
+          layout: { 'line-join': 'round', 'line-cap': 'round' },
+          paint: { 'line-color': ROUTE_COLOR, 'line-width': 3, 'line-opacity': 0.8, 'line-dasharray': [2, 1.5] },
+        });
+
+        map.addLayer({
+          id: 'points-layer',
+          type: 'circle',
+          source: 'points',
+          paint: {
+            'circle-radius': 5,
+            'circle-color': ROUTE_COLOR,
+            'circle-stroke-color': 'white',
+            'circle-stroke-width': 2,
+          },
+        });
+
+        map.addLayer({
+          id: 'start-point',
+          type: 'circle',
+          source: 'points',
+          filter: ['==', 'index', 0],
+          paint: {
+            'circle-radius': 9,
+            'circle-color': ROUTE_COLOR,
+            'circle-stroke-color': 'white',
+            'circle-stroke-width': 3,
+            'circle-translate': [0, 0],
+          },
+        });
+
+        const popup = new maplibregl.Popup({ closeButton: false, offset: 12 });
+
+        map.on('mouseenter', 'points-layer', (e) => {
+          map.getCanvas().style.cursor = 'pointer';
+          const props = e.features[0].properties;
+          popup
+            .setLngLat(e.lngLat)
+            .setHTML(`<div style="text-align:center;font-family:Nunito,sans-serif;padding:4px 8px"><span style="font-size:1.3rem">${props.emoji}</span><br/><strong style="font-size:0.9rem">${props.city}</strong><br/><span style="font-size:0.75rem;color:#6b7280">${props.country} · ${props.date}</span></div>`)
+            .addTo(map);
+        });
+
+        map.on('mouseleave', 'points-layer', () => {
+          map.getCanvas().style.cursor = '';
+          popup.remove();
+        });
+
+      });
 
       mapInstance.current = map;
-      setTimeout(() => map.invalidateSize(), 300);
     }, 1000);
 
     return () => {
@@ -155,7 +180,7 @@ export default function Travel() {
         </div>
 
         <div className="travel-map-wrap">
-          <div ref={mapRef} className="travel-map" />
+          <div ref={mapContainer} className="travel-map" />
         </div>
       </div>
 
