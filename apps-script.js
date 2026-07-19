@@ -11,24 +11,43 @@ function doGet(e) {
 }
 
 function doPost(e) {
-  var data = JSON.parse(e.postData.contents);
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Downloads');
-  if (!sheet) sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('Downloads');
 
-  var lastRow = sheet.getLastRow();
-  var lastNo = lastRow > 1 ? sheet.getRange(lastRow, 1).getValue() : 0;
-  var nextNo = (typeof lastNo === 'number' && !isNaN(lastNo)) ? lastNo + 1 : lastRow;
+    if (!sheet) {
+      sheet = ss.insertSheet('Downloads');
+      sheet.appendRow(['No', 'Name', 'Date', 'Time']);
+      sheet.getRange('1:1').setFontWeight('bold');
+    }
 
-  sheet.appendRow([
-    nextNo,
-    data.name || '',
-    data.date || '',
-    data.time || ''
-  ]);
+    var lastRow = sheet.getLastRow();
+    var nextNo = lastRow > 0 ? lastRow : 1;
+    if (lastRow >= 1) {
+      var lastNo = sheet.getRange(lastRow, 1).getValue();
+      if (typeof lastNo === 'number' && !isNaN(lastNo)) {
+        nextNo = lastNo + 1;
+      } else {
+        nextNo = lastRow + 1;
+      }
+    }
 
-  return ContentService
-    .createTextOutput(JSON.stringify({ success: true }))
-    .setMimeType(ContentService.MimeType.JSON);
+    sheet.appendRow([
+      nextNo,
+      data.name || '',
+      data.date || '',
+      data.time || ''
+    ]);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: false, error: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
 function getTravelData() {
