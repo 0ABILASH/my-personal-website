@@ -111,10 +111,13 @@ function drawRoutes(map, routes) {
 export default function Travel() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
-  const [places, setPlaces] = useState(FALLBACK_PLACES);
-  const [dataReady, setDataReady] = useState(!SHEETS_URL);
+  const [sheetData, setSheetData] = useState(null);
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
+
+  const places = sheetData
+    ? (sheetData.places || []).filter(p => p.lat && p.lng)
+    : FALLBACK_PLACES;
 
   useEffect(() => { const t = setTimeout(() => setReady(true), 100); return () => clearTimeout(t); }, []);
 
@@ -123,40 +126,43 @@ export default function Travel() {
     fetch(`${SHEETS_URL}?action=travel`)
       .then(r => r.json())
       .then(data => {
-        if (data.places && data.places.length) {
-          const valid = data.places.filter(p => p.lat && p.lng);
-          if (valid.length) setPlaces(valid);
-        }
+        setSheetData(data);
       })
-      .catch(() => {})
-      .finally(() => setDataReady(true));
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
-    if (!dataReady || !mapRef.current || mapInstance.current) return;
+    if (!mapRef.current || mapInstance.current) return;
 
-    const map = L.map(mapRef.current, {
-      center: [11.5, 78.5],
-      zoom: 6,
-      scrollWheelZoom: true,
-      zoomControl: false,
-    });
+    const timer = setTimeout(() => {
+      if (!mapRef.current || mapInstance.current) return;
 
-    L.control.zoom({ position: 'topright' }).addTo(map);
+      const map = L.map(mapRef.current, {
+        center: [11.5, 78.5],
+        zoom: 6,
+        scrollWheelZoom: true,
+        zoomControl: false,
+      });
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors',
-      maxZoom: 19,
-    }).addTo(map);
+      L.control.zoom({ position: 'topright' }).addTo(map);
 
-    const routes = buildRoutesFromPlaces(places);
-    drawRoutes(map, routes);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19,
+      }).addTo(map);
 
-    mapInstance.current = map;
-    setTimeout(() => map.invalidateSize(), 300);
+      const routes = buildRoutesFromPlaces(places);
+      drawRoutes(map, routes);
 
-    return () => { map.remove(); mapInstance.current = null; };
-  }, [dataReady]);
+      mapInstance.current = map;
+      setTimeout(() => map.invalidateSize(), 300);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timer);
+      if (mapInstance.current) { mapInstance.current.remove(); mapInstance.current = null; }
+    };
+  }, [sheetData]);
 
   const uniqueCountries = new Set(places.map(p => p.country)).size;
   const uniqueCities = new Set(places.map(p => p.city)).size;
