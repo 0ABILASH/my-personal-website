@@ -4,7 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '../App.css';
 
-const SHEETS_URL = import.meta.env.VITE_SHEETS_URL || '';
+const SHEETS_URL = import.meta.env.VITE_SHEETS_URL || 'https://script.google.com/macros/s/AKfycbwcFe2sB0xmbOPtZDbcXj77RGgdFNRGXWq_BbaCW_7uWPv86VPj1qBl52lCxyqW4mJBxA/exec';
 
 const FALLBACK_PLACES = [
   { city:'Bangalore', country:'India', lat:12.9716, lng:77.5946, emoji:'🏙️', date:'Home Base' },
@@ -125,12 +125,13 @@ export default function Travel() {
     fetch(`${SHEETS_URL}?action=travel`)
       .then(r => r.json())
       .then(data => {
+        console.log('[Travel] Sheet data:', data);
         if (data.places && data.places.length) setPlaces(data.places);
         if (data.routes && data.routes.length) setRoutes(data.routes);
         const uniqueCountries = new Set((data.places || []).map(p => p.country));
         if (uniqueCountries.size) setCountries(uniqueCountries.size);
       })
-      .catch(() => {})
+      .catch(err => console.error('[Travel] Fetch error:', err))
       .finally(() => setLoading(false));
   }, []);
 
