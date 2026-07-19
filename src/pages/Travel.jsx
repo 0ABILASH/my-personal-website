@@ -19,7 +19,7 @@ const FALLBACK_PLACES = [
   { city:'Kyoto', country:'Japan', lat:35.0116, lng:135.7681, emoji:'⛩️', date:'Jun 2025' },
 ];
 
-const ROUTE_COLOR = '#a855f7';
+const ROUTE_COLOR = '#3b82f6';
 
 function buildRoutesFromPlaces(places) {
   if (places.length < 2) return [];
@@ -62,7 +62,7 @@ function drawRoutes(map, routes) {
         const lng = lng1 + (lng2 - lng1) * t;
         L.circleMarker([lat, lng], {
           radius: 1.5,
-          fillColor: '#e9d5ff',
+          fillColor: '#93c5fd',
           fillOpacity: 0.8,
           color: 'transparent',
           weight: 0,
@@ -144,10 +144,9 @@ export default function Travel() {
 
     L.control.zoom({ position: 'topright' }).addTo(map);
 
-    L.tileLayer('https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-      attribution: '&copy; Google',
-      maxZoom: 20,
-      subdomains: '0123',
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 19,
     }).addTo(map);
 
     const routes = buildRoutesFromPlaces(places);
