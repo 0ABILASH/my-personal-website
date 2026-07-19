@@ -61,6 +61,10 @@ export default function Travel() {
         }).addTo(map);
       }
 
+      setTimeout(() => {
+        map.flyTo([places[0].lat, places[0].lng], 8, { duration: 2 });
+      }, 500);
+
       places.forEach((p, i) => {
         const radius = i === 0 ? 10 : 4;
         const weight = i === 0 ? 3 : 1.5;
