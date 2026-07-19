@@ -86,20 +86,19 @@ function Home() {
 
     console.log('[CV] endpoint:', endpoint);
 
-    if (navigator.sendBeacon) {
-      const blob = new Blob([JSON.stringify(payload)], { type: 'text/plain' });
-      navigator.sendBeacon(endpoint, blob);
-      setCvStatus('Saved ✓ (check Sheet)');
-    } else {
-      fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(payload),
-        mode: 'no-cors',
-      })
-        .then(() => setCvStatus('Saved ✓ (check Sheet)'))
-        .catch(() => setCvStatus('Saved ✓ (check Sheet)'));
-    }
+    fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+      body: JSON.stringify(payload),
+    })
+      .then(() => setCvStatus('Saved ✓'))
+      .catch(() => {
+        if (navigator.sendBeacon) {
+          const blob = new Blob([JSON.stringify(payload)], { type: 'text/plain;charset=UTF-8' });
+          navigator.sendBeacon(endpoint, blob);
+        }
+        setCvStatus('Saved ✓');
+      });
 
     downloadCV();
     setTimeout(() => {
