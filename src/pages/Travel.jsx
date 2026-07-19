@@ -34,77 +34,44 @@ function buildRoutesFromPlaces(places) {
 function drawRoutes(map, routes) {
   routes.forEach(route => {
     if (!route.points || route.points.length < 2) return;
-
-    L.polyline(route.points, {
-      color: route.color,
-      weight: 20,
-      opacity: 0.1,
-      lineCap: 'round',
-      lineJoin: 'round',
-    }).addTo(map);
-
-    L.polyline(route.points, {
-      color: route.color,
-      weight: 6,
-      opacity: 0.5,
-      lineCap: 'round',
-      lineJoin: 'round',
-    }).addTo(map);
-
     const pts = route.points;
+
     for (let i = 0; i < pts.length - 1; i++) {
-      const [lat1, lng1] = pts[i];
-      const [lat2, lng2] = pts[i + 1];
-      const segs = 12;
-      for (let j = 1; j < segs; j++) {
-        const t = j / segs;
-        const lat = lat1 + (lat2 - lat1) * t;
-        const lng = lng1 + (lng2 - lng1) * t;
-        L.circleMarker([lat, lng], {
-          radius: 1.5,
-          fillColor: '#93c5fd',
-          fillOpacity: 0.8,
-          color: 'transparent',
-          weight: 0,
-        }).addTo(map);
-      }
+      L.polyline([pts[i], pts[i + 1]], {
+        color: route.color,
+        weight: 3,
+        opacity: 0.7,
+        dashArray: '6 4',
+        lineCap: 'round',
+        lineJoin: 'round',
+      }).addTo(map);
     }
 
-    const startIcon = L.divIcon({
-      html: `<div style="
-        width:20px;height:20px;border-radius:50%;
-        background:${route.color};border:3px solid white;
-        box-shadow:0 0 0 2px ${route.color},0 0 16px ${route.color}80,0 2px 8px rgba(0,0,0,0.3);
-      "></div>`,
-      className: '',
-      iconSize: [20, 20],
-      iconAnchor: [10, 10],
+    pts.forEach((coord, i) => {
+      if (i === 0) {
+        const startIcon = L.divIcon({
+          html: `<div style="
+            width:18px;height:18px;border-radius:50%;
+            background:${route.color};border:3px solid white;
+            box-shadow:0 0 0 2px ${route.color},0 0 12px ${route.color}80;
+          "></div>`,
+          className: '',
+          iconSize: [18, 18],
+          iconAnchor: [9, 9],
+        });
+        L.marker(coord, { icon: startIcon })
+          .addTo(map)
+          .bindPopup(`<div style="text-align:center;font-family:Nunito,sans-serif"><strong style="font-size:1rem">${route.name.split(' → ')[0]}</strong><br/><span style="font-size:0.78rem;color:#6b7280">Start</span></div>`);
+      } else {
+        L.circleMarker(coord, {
+          radius: 4,
+          fillColor: route.color,
+          fillOpacity: 0.9,
+          color: 'white',
+          weight: 2,
+        }).addTo(map);
+      }
     });
-
-    const endIcon = L.divIcon({
-      html: `<div style="
-        width:28px;height:28px;border-radius:50%;
-        background:#ec4899;border:3px solid white;
-        box-shadow:0 0 0 2px #ec4899,0 0 20px #ec489980,0 0 32px #ec489940,0 2px 8px rgba(0,0,0,0.3);
-        display:flex;align-items:center;justify-content:center;
-      ">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <polyline points="12 6 12 12 16 14"/>
-        </svg>
-      </div>`,
-      className: '',
-      iconSize: [28, 28],
-      iconAnchor: [14, 14],
-    });
-
-    L.marker(pts[0], { icon: startIcon })
-      .addTo(map)
-      .bindPopup(`<div style="text-align:center;font-family:Nunito,sans-serif"><strong style="font-size:1rem">${route.name.split(' → ')[0]}</strong><br/><span style="font-size:0.78rem;color:#6b7280">Start</span></div>`);
-
-    L.marker(pts[pts.length - 1], { icon: endIcon })
-      .addTo(map)
-      .bindPopup(`<div style="text-align:center;font-family:Nunito,sans-serif"><strong style="font-size:1rem">${route.name.split(' → ')[1]}</strong><br/><span style="font-size:0.78rem;color:#6b7280">End</span></div>`);
   });
 }
 
