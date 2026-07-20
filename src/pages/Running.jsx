@@ -10,56 +10,94 @@ const recent = [
   { name:'Recovery Run', dist:'3.8 km', time:'22 min', when:'2 days ago' },
 ];
 
+const stats = [
+  { label:'km This Week', value:'36.6', bar:70 },
+  { label:'min/km Avg', value:'5:30', bar:55 },
+  { label:'Day Streak', value:'30', bar:90 },
+];
+
 export default function Running() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
   useEffect(() => { const t = setTimeout(() => setReady(true), 100); return () => clearTimeout(t); }, []);
   const max = Math.max(...weekly);
+
   return (
-    <div className="hp-wrap">
-      <nav className="hp-nav"><button onClick={() => navigate('/')}>← Back</button><span>Running</span></nav>
-      <div className={`hp-hero hp-hero-running ${ready?'hp-show':''}`}>
-        <div className="hp-hero-content">
-          <span className="hp-badge hp-badge-running">Hobby</span>
-          <h1>Running</h1>
-          <p>Early morning runs to stay focused and energized.</p>
-        </div>
-        <div className="hp-hero-icon">🏃</div>
-      </div>
-      <div className="hp-body">
-        <div className={`hp-stats hp-stagger ${ready?'hp-show':''}`}>
-          <div className="hp-stat"><span className="hp-stat-num hp-color-running">36.6</span><span className="hp-stat-label">km This Week</span></div>
-          <div className="hp-stat"><span className="hp-stat-num hp-color-running">5:30</span><span className="hp-stat-label">min/km Avg</span></div>
-          <div className="hp-stat"><span className="hp-stat-num hp-color-running">30</span><span className="hp-stat-label">Day Streak</span></div>
-        </div>
-        <div className={`hp-section hp-stagger ${ready?'hp-show':''}`}>
-          <h2>Weekly Activity</h2>
-          <div className="hp-chart">
-            {weekly.map((v,i) => (
-              <div key={i} className="hp-chart-col">
-                <div className="hp-chart-track"><div className="hp-chart-fill hp-bg-running" style={{height:`${(v/max)*100}%`}} /></div>
-                <span className="hp-chart-val">{v}</span>
-                <span className="hp-chart-day">{days[i]}</span>
-              </div>
-            ))}
+    <div className="cy-wrap">
+      <nav className="cy-nav">
+        <button className="cy-nav-back" onClick={() => navigate('/')}>← Back</button>
+        <span className="cy-nav-tag">Running</span>
+      </nav>
+
+      <div className={`cy-hero ${ready?'cy-show':''}`}>
+        <div className="cy-scanlines" />
+        <div className="cy-hero-inner">
+          <div className="cy-hero-left">
+            <span className="cy-tag">HOBBY</span>
+            <h1 className="cy-hero-title">Running</h1>
+            <p className="cy-hero-desc">Early morning runs to stay focused and energized.</p>
+          </div>
+          <div className="cy-hero-right">
+            <div className="cy-hero-icon-box">
+              <span className="cy-hero-emoji">🏃</span>
+              <div className="cy-hero-ring" />
+            </div>
           </div>
         </div>
-        <div className={`hp-section hp-stagger ${ready?'hp-show':''}`}>
-          <h2>Recent Runs</h2>
-          {recent.map((r,i) => (
-            <div key={i} className="hp-list-item">
-              <span className="hp-list-icon">🏃</span>
-              <div className="hp-list-info">
-                <strong>{r.name}</strong>
-                <span>{r.dist} · {r.time}</span>
+      </div>
+
+      <div className={`cy-stats ${ready?'cy-show':''}`}>
+        {stats.map((s,i) => (
+          <div key={i} className="cy-stat">
+            <div className="cy-stat-top">
+              <span className="cy-stat-label">{s.label}</span>
+              <span className="cy-stat-value">{s.value}</span>
+            </div>
+            <div className="cy-stat-bar">
+              <div className="cy-stat-fill" style={{width: s.bar + '%'}} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className={`cy-panel ${ready?'cy-show':''}`} style={{maxWidth:800,margin:'1.5rem auto 0',padding:'0 1.4rem'}}>
+        <div className="cy-panel-header">
+          <h2>Weekly Activity</h2>
+        </div>
+        <div className="cy-chart">
+          {weekly.map((v,i) => (
+            <div key={i} className="cy-chart-col">
+              <div className="cy-chart-track">
+                <div className="cy-chart-fill" style={{height: `${(v/max)*100}%`}} />
               </div>
-              <span className="hp-list-dur">{r.when}</span>
+              <span className="cy-chart-val">{v}</span>
+              <span className="cy-chart-day">{days[i]}</span>
             </div>
           ))}
         </div>
       </div>
-      <div className="hp-bottom">
-        <button className="hp-back-btn" onClick={() => navigate('/')}>← Back to home</button>
+
+      <div className={`cy-panel ${ready?'cy-show':''}`} style={{maxWidth:800,margin:'1.5rem auto 0',padding:'0 1.4rem'}}>
+        <div className="cy-panel-header">
+          <h2>Recent Runs</h2>
+          <span className="cy-panel-count">{recent.length} runs</span>
+        </div>
+        <div className="cy-run-list">
+          {recent.map((r,i) => (
+            <div key={i} className="cy-run-card">
+              <div className="cy-run-icon">🏃</div>
+              <div className="cy-run-body">
+                <h3>{r.name}</h3>
+                <p>{r.dist} · {r.time}</p>
+              </div>
+              <span className="cy-run-when">{r.when}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="cy-bottom">
+        <button className="cy-back-btn" onClick={() => navigate('/')}>← Back to home</button>
       </div>
     </div>
   );

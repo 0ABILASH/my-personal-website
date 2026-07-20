@@ -19,7 +19,7 @@ const FALLBACK_PLACES = [
   { city:'Kyoto', country:'Japan', lat:35.0116, lng:135.7681, emoji:'⛩️', date:'Jun 2025' },
 ];
 
-const ROUTE_COLOR = '#3b82f6';
+const ROUTE_COLOR = '#00ffc8';
 
 function renderLayers(map, places) {
   map.eachLayer(layer => {
@@ -101,33 +101,62 @@ export default function Travel() {
   const uniqueCountries = new Set(places.map(p => p.country)).size;
   const uniqueCities = new Set(places.map(p => p.city)).size;
 
+  const stats = [
+    { label:'Countries', value:String(uniqueCountries), bar: uniqueCountries * 20 },
+    { label:'Cities', value:String(uniqueCities), bar: uniqueCities * 10 },
+    { label:'Destinations', value:String(places.length), bar: places.length * 8 },
+  ];
+
   return (
-    <div className="hp-wrap">
-      <nav className="hp-nav"><button onClick={() => navigate('/')}>← Back</button><span>Travel</span></nav>
+    <div className="cy-wrap">
+      <nav className="cy-nav">
+        <button className="cy-nav-back" onClick={() => navigate('/')}>← Back</button>
+        <span className="cy-nav-tag">Travel</span>
+      </nav>
 
-      <div className={`hp-hero hp-hero-travel ${ready?'hp-show':''}`}>
-        <div className="hp-hero-content">
-          <span className="hp-badge hp-badge-travel">Hobby</span>
-          <h1>Travel Tracker</h1>
-          <p>Places I've been — click a destination to fly there on the map.</p>
+      <div className={`cy-hero ${ready?'cy-show':''}`}>
+        <div className="cy-scanlines" />
+        <div className="cy-hero-inner">
+          <div className="cy-hero-left">
+            <span className="cy-tag">HOBBY</span>
+            <h1 className="cy-hero-title">Travel Tracker</h1>
+            <p className="cy-hero-desc">Places I've been — click a destination to fly there on the map.</p>
+          </div>
+          <div className="cy-hero-right">
+            <div className="cy-hero-icon-box">
+              <span className="cy-hero-emoji">🗺️</span>
+              <div className="cy-hero-ring" />
+            </div>
+          </div>
         </div>
-        <div className="hp-hero-icon">🗺️</div>
       </div>
 
-      <div className="hp-body">
-        <div className={`hp-stats hp-stagger ${ready?'hp-show':''}`}>
-          <div className="hp-stat"><span className="hp-stat-num hp-color-travel">{uniqueCountries}</span><span className="hp-stat-label">Countries</span></div>
-          <div className="hp-stat"><span className="hp-stat-num hp-color-travel">{uniqueCities}</span><span className="hp-stat-label">Cities</span></div>
-          <div className="hp-stat"><span className="hp-stat-num hp-color-travel">{places.length}</span><span className="hp-stat-label">Destinations</span></div>
-        </div>
+      <div className={`cy-stats ${ready?'cy-show':''}`}>
+        {stats.map((s,i) => (
+          <div key={i} className="cy-stat">
+            <div className="cy-stat-top">
+              <span className="cy-stat-label">{s.label}</span>
+              <span className="cy-stat-value">{s.value}</span>
+            </div>
+            <div className="cy-stat-bar">
+              <div className="cy-stat-fill" style={{width: Math.min(s.bar, 100) + '%'}} />
+            </div>
+          </div>
+        ))}
+      </div>
 
-        <div className="travel-map-wrap">
-          <div ref={mapRef} className="travel-map" />
+      <div className={`cy-panel ${ready?'cy-show':''}`} style={{maxWidth:800,margin:'1.5rem auto 0',padding:'0 1.4rem'}}>
+        <div className="cy-panel-header">
+          <h2>Route Map</h2>
+          <span className="cy-panel-count">{places.length} places</span>
+        </div>
+        <div className="cy-map-wrap">
+          <div ref={mapRef} className="cy-map" />
         </div>
       </div>
 
-      <div className="hp-bottom">
-        <button className="hp-back-btn" onClick={() => navigate('/')}>← Back to home</button>
+      <div className="cy-bottom">
+        <button className="cy-back-btn" onClick={() => navigate('/')}>← Back to home</button>
       </div>
     </div>
   );

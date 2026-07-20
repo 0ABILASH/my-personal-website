@@ -1128,6 +1128,158 @@
 }
 .cy-back-btn:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);border-color:rgba(0,255,200,0.15)}
 
+/* ─── CYBER PHOTO GRID ─── */
+.cy-photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.55rem}
+.cy-photo-card{
+  position:relative;border-radius:10px;overflow:hidden;
+  cursor:pointer;transition:all 0.3s var(--ease-spring);
+  border:1px solid rgba(255,255,255,0.04);
+}
+.cy-photo-card:hover{transform:translateY(-3px);border-color:rgba(0,255,200,0.15);box-shadow:0 8px 32px rgba(0,255,200,0.08)}
+.cy-photo-card img{width:100%;aspect-ratio:3/2;object-fit:cover;display:block;transition:transform 0.4s var(--ease)}
+.cy-photo-card:hover img{transform:scale(1.04)}
+.cy-photo-overlay{
+  position:absolute;bottom:0;left:0;right:0;padding:1.2rem 0.65rem 0.45rem;
+  background:linear-gradient(0deg,rgba(0,0,0,0.7) 0%,transparent 100%);
+  display:flex;align-items:end;gap:0.35rem;
+}
+.cy-photo-idx{
+  font-family:'Barlow',sans-serif;font-size:0.53rem;font-weight:700;color:rgba(0,255,200,0.6);
+  background:rgba(0,255,200,0.08);padding:0.08rem 0.25rem;border-radius:3px;
+}
+.cy-photo-cap{font-size:0.68rem;font-weight:600;color:white}
+
+/* ─── CYBER BOOK LIST ─── */
+.cy-book-list{display:flex;flex-direction:column;gap:0.5rem}
+.cy-book-card{
+  display:flex;gap:0;position:relative;
+  background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.04);
+  border-radius:10px;overflow:hidden;
+  transition:all 0.3s var(--ease-spring);
+}
+.cy-book-card:hover{background:rgba(255,255,255,0.03);border-color:rgba(0,255,200,0.1);transform:translateX(4px)}
+.cy-book-accent{width:3px;flex-shrink:0}
+.cy-book-left{
+  width:44px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;background:rgba(255,255,255,0.02);
+}
+.cy-book-dot{width:10px;height:10px;border-radius:50%}
+.cy-book-body{flex:1;padding:0.75rem 0.85rem}
+.cy-book-row{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.15rem}
+.cy-book-row h3{font-size:0.84rem;font-weight:700;color:rgba(255,255,255,0.85);margin:0}
+.cy-book-genre{
+  font-size:0.5rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;
+  padding:0.1rem 0.4rem;border-radius:3px;
+}
+.cy-book-body p{font-size:0.7rem;color:rgba(255,255,255,0.3);margin:0 0 0.45rem}
+.cy-book-progress{display:flex;align-items:center;gap:0.5rem}
+.cy-book-bar{flex:1;height:4px;background:rgba(255,255,255,0.04);border-radius:2px;overflow:hidden}
+.cy-book-fill{height:100%;border-radius:2px;transition:width 1s var(--ease-spring)}
+.cy-book-pct{font-size:0.6rem;font-weight:700;color:rgba(255,255,255,0.4);font-family:'Barlow',sans-serif;min-width:28px;text-align:right}
+
+/* ─── CYBER CHART ─── */
+.cy-chart{
+  display:flex;align-items:end;gap:0.5rem;height:180px;
+  padding:1rem;background:rgba(255,255,255,0.015);
+  border:1px solid rgba(255,255,255,0.04);border-radius:10px;
+}
+.cy-chart-col{flex:1;display:flex;flex-direction:column;align-items:center;height:100%}
+.cy-chart-track{flex:1;width:100%;background:rgba(255,255,255,0.03);border-radius:5px;display:flex;align-items:end;overflow:hidden}
+.cy-chart-fill{width:100%;border-radius:5px;background:linear-gradient(180deg,#00ffc8,#7c3aed);transition:height 0.8s var(--ease-spring) 0.2s}
+.cy-chart-val{font-size:0.58rem;font-weight:700;color:rgba(255,255,255,0.4);margin-top:0.3rem}
+.cy-chart-day{font-size:0.54rem;color:rgba(255,255,255,0.25);font-weight:600}
+
+/* ─── CYBER RUN LIST ─── */
+.cy-run-list{display:flex;flex-direction:column;gap:0.5rem}
+.cy-run-card{
+  display:flex;align-items:center;gap:0.75rem;
+  background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.04);
+  border-radius:10px;padding:0.75rem 0.85rem;
+  transition:all 0.3s var(--ease-spring);
+}
+.cy-run-card:hover{background:rgba(255,255,255,0.03);transform:translateX(4px)}
+.cy-run-icon{
+  width:38px;height:38px;border-radius:8px;flex-shrink:0;
+  background:rgba(255,255,255,0.04);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;
+}
+.cy-run-body{flex:1}
+.cy-run-body h3{font-size:0.82rem;font-weight:700;color:rgba(255,255,255,0.8);margin:0 0 0.1rem}
+.cy-run-body p{font-size:0.68rem;color:rgba(255,255,255,0.3);margin:0}
+.cy-run-when{
+  font-size:0.6rem;font-weight:600;color:rgba(0,255,200,0.5);
+  background:rgba(0,255,200,0.06);padding:0.15rem 0.5rem;border-radius:100px;
+}
+
+/* ─── CYBER MAP ─── */
+.cy-map-wrap{
+  border-radius:10px;overflow:hidden;
+  border:1px solid rgba(255,255,255,0.06);
+}
+.cy-map{width:100%;height:400px;background:#0a0a14}
+
+/* ─── CYBER TABS ─── */
+.cy-tabs{display:flex;gap:0.35rem}
+.cy-tab-btn{
+  display:flex;align-items:center;gap:0.4rem;
+  padding:0.5rem 0.85rem;border-radius:8px;border:1px solid rgba(255,255,255,0.04);
+  background:rgba(255,255,255,0.02);color:rgba(255,255,255,0.3);
+  font-size:0.72rem;font-weight:600;cursor:pointer;
+  transition:all 0.2s var(--ease);
+}
+.cy-tab-btn:hover{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.6)}
+.cy-tab-active{background:rgba(0,255,200,0.06)!important;color:#00ffc8!important;border-color:rgba(0,255,200,0.15)!important}
+
+/* ─── CYBER SONG LIST ─── */
+.cy-song-list{display:flex;flex-direction:column;gap:0.35rem}
+.cy-song-card{
+  display:flex;align-items:center;gap:0.65rem;
+  padding:0.55rem 0.7rem;border-radius:8px;
+  background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.03);
+  cursor:pointer;transition:all 0.2s var(--ease);
+}
+.cy-song-card:hover{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.06)}
+.cy-song-active{background:rgba(0,255,200,0.04)!important;border-color:rgba(0,255,200,0.1)!important}
+.cy-song-num{
+  width:34px;height:34px;border-radius:6px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.62rem;font-weight:700;color:white;
+}
+.cy-song-rank{
+  width:34px;height:34px;border-radius:6px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,0.04);
+  font-size:0.78rem;font-weight:800;color:rgba(255,255,255,0.3);
+}
+.cy-song-body{flex:1;min-width:0}
+.cy-song-body h3{font-size:0.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0}
+.cy-song-body p{font-size:0.66rem;color:rgba(255,255,255,0.3);margin:0}
+.cy-song-link{
+  color:rgba(255,255,255,0.2);transition:all 0.2s var(--ease);flex-shrink:0;padding:0.18rem;
+}
+.cy-song-link:hover{color:#1db954}
+.cy-song-dur{font-size:0.64rem;color:rgba(255,255,255,0.25);font-family:'Barlow',sans-serif;font-weight:600;flex-shrink:0;min-width:28px;text-align:right}
+
+/* ─── CYBER PLAYLIST GRID ─── */
+.cy-pl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:0.55rem}
+.cy-pl-card{
+  display:flex;align-items:center;gap:0.65rem;padding:0.75rem 0.8rem;
+  background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.04);
+  border-radius:10px;text-decoration:none;color:rgba(255,255,255,0.8);
+  transition:all 0.25s var(--ease);cursor:pointer;
+}
+.cy-pl-card:hover{transform:translateY(-2px);border-color:rgba(0,255,200,0.15);background:rgba(255,255,255,0.03)}
+.cy-pl-emoji{
+  font-size:1.35rem;width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,0.04);border-radius:8px;flex-shrink:0;
+}
+.cy-pl-info{flex:1;min-width:0}
+.cy-pl-info strong{display:block;font-size:0.82rem;font-weight:700;margin-bottom:0.01rem}
+.cy-pl-info span{display:block;font-size:0.66rem;color:rgba(255,255,255,0.3);line-height:1.3}
+.cy-pl-count{color:#00ffc8!important;font-weight:600}
+.cy-pl-arrow{font-size:0.9rem;color:rgba(255,255,255,0.2);flex-shrink:0;transition:transform 0.2s var(--ease)}
+.cy-pl-card:hover .cy-pl-arrow{transform:translate(2px,-2px);color:#00ffc8}
+
 /* ─── CYBER RESPONSIVE ─── */
 @media(max-width:768px){
   .cy-layout{grid-template-columns:1fr}
