@@ -265,15 +265,21 @@ function Home() {
 
   const blogs = blogFilter==='all'?posts:posts.filter(p=>p.tag===blogFilter);
 
-  const dockItems = [
-    { id:'profile', emoji:'👤' },
-    { id:'hobbies', emoji:'🎯' },
-    { id:'gallery', emoji:'🖼️' },
-    { id:'blogs',   emoji:'✏️' },
-  ];
-
   return (
     <div className="app">
+      {/* CENTERED PILL NAV */}
+      <nav className="pnav">
+        <span className="pnav-logo">abi<span>lash</span></span>
+        <div className="pnav-tabs">
+          {NAV.map(n => (
+            <button key={n.id}
+              className={`pnav-tab ${active===n.id?'active':''}`}
+              onClick={() => scrollTo(n.id)}
+            >{n.label}</button>
+          ))}
+        </div>
+      </nav>
+
       <main className="main">
 
         {/* PROFILE */}
@@ -622,18 +628,6 @@ function Home() {
         </div>
       )}
 
-      {/* FLOATING DOCK NAV */}
-      <nav className="dock">
-        {dockItems.map(n => (
-          <button key={n.id}
-            className={`dock-item ${active===n.id?'active':''}`}
-            onClick={() => scrollTo(n.id)}
-          >
-            <span className="dock-item-icon">{n.emoji}</span>
-            <span className="dock-item-label">{NAV.find(x=>x.id===n.id).label}</span>
-          </button>
-        ))}
-      </nav>
     </div>
   );
 }
