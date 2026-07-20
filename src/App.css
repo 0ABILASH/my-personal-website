@@ -892,6 +892,258 @@
 }
 
 /* ═══════════════════════════════════════════
+   CYBER GAMING — NEON ARCADE
+   ═══════════════════════════════════════════ */
+.cy-wrap{min-height:100vh;background:#0a0a14;color:#e0e0e0;padding-bottom:4rem}
+.cy-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.6rem 1.4rem;
+  background:rgba(10,10,20,0.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  position:sticky;top:0;z-index:100;
+}
+.cy-nav-back{
+  background:none;border:1px solid rgba(0,255,200,0.15);
+  color:rgba(0,255,200,0.7);padding:0.25rem 0.6rem;border-radius:6px;
+  font-size:0.7rem;font-weight:600;cursor:pointer;
+  transition:all 0.2s var(--ease);
+}
+.cy-nav-back:hover{background:rgba(0,255,200,0.06);color:#00ffc8;border-color:rgba(0,255,200,0.3)}
+.cy-nav-tag{font-size:0.72rem;font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:1px;text-transform:uppercase}
+
+/* ─── HERO ─── */
+.cy-hero{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#0d0d1a 0%,#1a0a2e 50%,#0a1628 100%);
+  padding:2.5rem 1.4rem;
+  opacity:0;transform:translateY(12px);
+  transition:all 0.5s var(--ease-spring);
+}
+.cy-hero.cy-show{opacity:1;transform:translateY(0)}
+.cy-scanlines{
+  position:absolute;inset:0;pointer-events:none;z-index:1;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,200,0.01) 2px,rgba(0,255,200,0.01) 4px);
+}
+.cy-hero-inner{
+  max-width:800px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;gap:2rem;
+  position:relative;z-index:2;
+}
+.cy-hero-left{flex:1}
+.cy-tag{
+  display:inline-block;padding:0.2rem 0.6rem;border-radius:4px;
+  font-size:0.55rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  background:rgba(0,255,200,0.08);color:#00ffc8;border:1px solid rgba(0,255,200,0.15);
+  margin-bottom:0.6rem;
+}
+.cy-hero-title{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:clamp(2rem,5vw,3rem);font-weight:800;
+  background:linear-gradient(135deg,#00ffc8 0%,#7c3aed 50%,#ec4899 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:0.3rem;line-height:1.1;letter-spacing:-0.5px;
+}
+.cy-hero-desc{font-size:0.88rem;color:rgba(255,255,255,0.45);line-height:1.5}
+.cy-hero-right{flex-shrink:0}
+.cy-hero-icon-box{
+  width:80px;height:80px;position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.cy-hero-emoji{font-size:2.2rem;position:relative;z-index:1}
+.cy-hero-ring{
+  position:absolute;inset:-4px;
+  border:2px solid rgba(0,255,200,0.15);border-radius:var(--radius);
+  animation:cyPulse 3s ease-in-out infinite;
+}
+@keyframes cyPulse{
+  0%,100%{transform:scale(1);opacity:0.3}
+  50%{transform:scale(1.1);opacity:0.6}
+}
+
+/* ─── STATS ─── */
+.cy-stats{
+  max-width:800px;margin:1.5rem auto 0;padding:0 1.4rem;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;
+  opacity:0;transform:translateY(12px);
+  transition:all 0.5s var(--ease-spring) 0.1s;
+}
+.cy-stats.cy-show{opacity:1;transform:translateY(0)}
+.cy-stat{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.04);
+  border-radius:10px;padding:0.85rem;
+  transition:all 0.25s var(--ease);
+}
+.cy-stat:hover{background:rgba(255,255,255,0.04);border-color:rgba(0,255,200,0.1)}
+.cy-stat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem}
+.cy-stat-label{font-size:0.62rem;color:rgba(255,255,255,0.3);font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.cy-stat-value{font-size:0.92rem;font-weight:800;color:#00ffc8;font-family:'Josefin Sans',sans-serif}
+.cy-stat-bar{height:4px;background:rgba(255,255,255,0.04);border-radius:2px;overflow:hidden}
+.cy-stat-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#00ffc8,#7c3aed);transition:width 1s var(--ease-spring) 0.3s}
+
+/* ─── LAYOUT: SIDEBAR + CONTENT ─── */
+.cy-layout{
+  max-width:800px;margin:1.5rem auto 0;padding:0 1.4rem;
+  display:grid;grid-template-columns:140px 1fr;gap:0.75rem;
+  opacity:0;transform:translateY(12px);
+  transition:all 0.5s var(--ease-spring) 0.2s;
+}
+.cy-layout.cy-show{opacity:1;transform:translateY(0)}
+.cy-sidebar{
+  display:flex;flex-direction:column;gap:0.3rem;
+  position:sticky;top:3.5rem;align-self:start;
+}
+.cy-side-btn{
+  display:flex;align-items:center;gap:0.5rem;
+  padding:0.55rem 0.7rem;border-radius:8px;border:none;
+  background:rgba(255,255,255,0.02);color:rgba(255,255,255,0.3);
+  font-size:0.72rem;font-weight:600;cursor:pointer;
+  transition:all 0.2s var(--ease);position:relative;
+  text-align:left;
+}
+.cy-side-btn:hover{background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.6)}
+.cy-side-active{background:rgba(0,255,200,0.06)!important;color:#00ffc8!important;border:1px solid rgba(0,255,200,0.1)}
+.cy-side-icon{font-size:0.9rem;flex-shrink:0}
+.cy-side-label{font-weight:600}
+.cy-side-dot{
+  position:absolute;right:0.4rem;top:50%;transform:translateY(-50%);
+  width:5px;height:5px;border-radius:50%;background:#00ffc8;
+}
+
+/* ─── CONTENT PANELS ─── */
+.cy-content{min-width:0}
+.cy-panel{
+  opacity:0;transform:translateY(8px);
+  transition:all 0.4s var(--ease-spring);
+}
+.cy-panel.cy-show{opacity:1;transform:translateY(0)}
+.cy-panel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:0.75rem;
+}
+.cy-panel-header h2{
+  font-family:'Josefin Sans',sans-serif;
+  font-size:1rem;font-weight:700;color:rgba(255,255,255,0.8);
+}
+.cy-panel-count{
+  font-size:0.6rem;font-weight:600;
+  color:rgba(0,255,200,0.5);background:rgba(0,255,200,0.06);
+  padding:0.15rem 0.5rem;border-radius:100px;
+}
+
+/* ─── GAME CARDS ─── */
+.cy-game-list{display:flex;flex-direction:column;gap:0.55rem}
+.cy-game-card{
+  display:flex;gap:0;position:relative;
+  background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.04);
+  border-radius:10px;overflow:hidden;text-decoration:none;
+  transition:all 0.3s var(--ease-spring);
+}
+.cy-game-card:hover{background:rgba(255,255,255,0.03);border-color:rgba(0,255,200,0.1);transform:translateX(4px)}
+.cy-game-accent{width:3px;flex-shrink:0;background:linear-gradient(180deg,#00ffc8,#7c3aed)}
+.cy-game-left{
+  width:54px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;background:rgba(255,255,255,0.02);
+}
+.cy-game-icon{font-size:1.4rem}
+.cy-game-body{flex:1;padding:0.85rem 1rem}
+.cy-game-row{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem}
+.cy-game-row h3{font-size:0.88rem;font-weight:700;color:rgba(255,255,255,0.85);margin:0}
+.cy-game-genre{
+  font-size:0.5rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;
+  color:#7c3aed;background:rgba(124,58,237,0.08);padding:0.1rem 0.4rem;border-radius:3px;
+}
+.cy-game-body p{font-size:0.73rem;color:rgba(255,255,255,0.3);line-height:1.5;margin:0.2rem 0 0.5rem}
+.cy-game-footer{display:flex;align-items:center;justify-content:space-between}
+.cy-game-rating{display:flex;align-items:center;gap:0.4rem}
+.cy-game-rating-bar{width:50px;height:3px;background:rgba(255,255,255,0.04);border-radius:2px;overflow:hidden}
+.cy-game-rating-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#00ffc8,#7c3aed)}
+.cy-game-rating span{font-size:0.58rem;color:rgba(255,255,255,0.25);font-weight:600}
+.cy-game-link{font-size:0.64rem;color:#00ffc8;font-weight:600;opacity:0;transition:all 0.2s var(--ease)}
+.cy-game-card:hover .cy-game-link{opacity:1}
+
+/* ─── SPORTS CARDS ─── */
+.cy-sport-list{display:flex;flex-direction:column;gap:0.5rem}
+.cy-sport-card{
+  position:relative;display:flex;align-items:center;gap:0.75rem;
+  background:rgba(255,255,255,0.015);border:1px solid rgba(255,255,255,0.04);
+  border-radius:10px;padding:0.85rem;overflow:hidden;
+  transition:all 0.3s var(--ease-spring);
+}
+.cy-sport-card:hover{background:rgba(255,255,255,0.03);transform:translateX(4px)}
+.cy-sport-glow{
+  position:absolute;top:-20px;right:-20px;width:60px;height:60px;
+  border-radius:50%;opacity:0.06;filter:blur(20px);pointer-events:none;
+}
+.cy-sport-icon{
+  width:40px;height:40px;border-radius:8px;flex-shrink:0;
+  background:rgba(255,255,255,0.04);
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+}
+.cy-sport-body{flex:1}
+.cy-sport-body h3{font-size:0.82rem;font-weight:700;color:rgba(255,255,255,0.8);margin:0 0 0.1rem}
+.cy-sport-body p{font-size:0.7rem;color:rgba(255,255,255,0.3);line-height:1.5;margin:0}
+.cy-sport-line{
+  position:absolute;left:0;top:0;bottom:0;width:2px;opacity:0.4;
+}
+
+/* ─── TERMINAL INFO ─── */
+.cy-terminal{
+  background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px;overflow:hidden;
+}
+.cy-terminal-bar{
+  display:flex;align-items:center;gap:0.35rem;
+  padding:0.5rem 0.75rem;
+  background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.cy-terminal-dot{width:7px;height:7px;border-radius:50%}
+.cy-dot-red{background:#ef4444}
+.cy-dot-yellow{background:#f59e0b}
+.cy-dot-green{background:#10b981}
+.cy-terminal-title{
+  margin-left:0.5rem;font-size:0.6rem;color:rgba(255,255,255,0.25);
+  font-family:'DM Sans',monospace;font-weight:600;
+}
+.cy-terminal-body{padding:1rem 1.25rem}
+.cy-terminal-line{
+  font-family:'DM Sans',monospace;font-size:0.76rem;
+  color:rgba(255,255,255,0.4);line-height:1.7;margin-bottom:0.4rem;
+}
+.cy-t-prompt{color:#00ffc8;font-weight:700;margin-right:0.3rem}
+.cy-terminal-cursor{
+  display:inline-block;width:7px;height:14px;
+  background:#00ffc8;animation:cyBlink 1s step-end infinite;
+  vertical-align:middle;margin-left:0.3rem;
+}
+@keyframes cyBlink{50%{opacity:0}}
+
+/* ─── BOTTOM ─── */
+.cy-bottom{max-width:800px;margin:2rem auto 0;padding:0 1.4rem;display:flex;justify-content:center}
+.cy-back-btn{
+  padding:0.5rem 1.1rem;border-radius:8px;
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  color:rgba(255,255,255,0.35);font-size:0.76rem;font-weight:600;
+  cursor:pointer;transition:all 0.2s var(--ease);
+}
+.cy-back-btn:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);border-color:rgba(0,255,200,0.15)}
+
+/* ─── CYBER RESPONSIVE ─── */
+@media(max-width:768px){
+  .cy-layout{grid-template-columns:1fr}
+  .cy-sidebar{flex-direction:row;position:static;overflow-x:auto;gap:0.25rem}
+  .cy-side-btn{white-space:nowrap;padding:0.45rem 0.6rem}
+  .cy-side-dot{display:none}
+  .cy-stats{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:500px){
+  .cy-stats{grid-template-columns:1fr}
+  .cy-hero{padding:1.5rem 1rem}
+  .cy-hero-inner{flex-direction:column;text-align:center;gap:1rem}
+  .cy-layout{padding:0 1rem}
+}
+
+/* ═══════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════ */
 @keyframes pageIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}

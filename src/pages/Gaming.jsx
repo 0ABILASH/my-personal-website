@@ -1,114 +1,174 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import '../App.css';
 
 const games = [
-  { icon:'♟️', name:'Chess.com', genre:'Strategy', desc:'Play chess online against millions of players worldwide. From casual matches to puzzles and lessons — the best platform for chess lovers.', url:'https://www.chess.com' },
-  { icon:'⚔️', name:'Clash of Clans', genre:'Strategy', desc:'Build your village, train your troops, and battle players worldwide in this epic mobile strategy game by Supercell.', url:'https://www.clashofclans.com' },
+  { icon:'♟️', name:'Chess.com', genre:'Strategy', desc:'Play chess online against millions of players worldwide. From casual matches to puzzles and lessons — the best platform for chess lovers.', url:'https://www.chess.com', rating:9.5 },
+  { icon:'⚔️', name:'Clash of Clans', genre:'Strategy', desc:'Build your village, train your troops, and battle players worldwide in this epic mobile strategy game by Supercell.', url:'https://www.clashofclans.com', rating:8.8 },
 ];
 
 const sports = [
-  { icon:'🏏', name:'Cricket', desc:'Watching IPL and international matches. Love the strategy and tension of Test cricket.' },
-  { icon:'⚽', name:'Football', desc:'Premier League weekends are sacred. The beautiful game at its finest.' },
-  { icon:'🏀', name:'Basketball', desc:'NBA playoffs are unmatched. Fast-paced, high-energy, and always dramatic.' },
-  { icon:'🎾', name:'Tennis', desc:'Grand Slam finals — the mental endurance and precision is incredible to watch.' },
+  { icon:'🏏', name:'Cricket', desc:'Watching IPL and international matches. Love the strategy and tension of Test cricket.', color:'#f59e0b' },
+  { icon:'⚽', name:'Football', desc:'Premier League weekends are sacred. The beautiful game at its finest.', color:'#10b981' },
+  { icon:'🏀', name:'Basketball', desc:'NBA playoffs are unmatched. Fast-paced, high-energy, and always dramatic.', color:'#ef4444' },
+  { icon:'🎾', name:'Tennis', desc:'Grand Slam finals — the mental endurance and precision is incredible to watch.', color:'#8b5cf6' },
+];
+
+const stats = [
+  { label:'Hours Played', value:'2000+', bar:85 },
+  { label:'Games Finished', value:'50+', bar:65 },
+  { label:'Max Level', value:'Lv.99', bar:99 },
 ];
 
 export default function Gaming() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
   const [activeTab, setActiveTab] = useState('library');
-  const tabRef = useRef(null);
-  const [indicatorStyle, setIndicatorStyle] = useState({});
 
   useEffect(() => { const t = setTimeout(() => setReady(true), 100); return () => clearTimeout(t); }, []);
 
-  useEffect(() => {
-    if (tabRef.current) {
-      const active = tabRef.current.querySelector('.gtab-item.active');
-      if (active) {
-        setIndicatorStyle({ width: active.offsetWidth, left: active.offsetLeft });
-      }
-    }
-  }, [activeTab]);
-
   return (
-    <div className="hp-wrap">
-      <nav className="hp-nav"><button onClick={() => navigate('/')}>← Back</button><span>Gaming</span></nav>
+    <div className="cy-wrap">
+      <nav className="cy-nav">
+        <button className="cy-nav-back" onClick={() => navigate('/')}>← Back</button>
+        <span className="cy-nav-tag">Gaming</span>
+      </nav>
 
-      <div className={`hp-hero hp-hero-gaming ${ready?'hp-show':''}`}>
-        <div className="hp-hero-content">
-          <span className="hp-badge hp-badge-gaming">Hobby</span>
-          <h1>Gaming</h1>
-          <p>Strategy and adventure games — love the challenge.</p>
+      <div className={`cy-hero ${ready?'cy-show':''}`}>
+        <div className="cy-scanlines" />
+        <div className="cy-hero-inner">
+          <div className="cy-hero-left">
+            <span className="cy-tag">HOBBY</span>
+            <h1 className="cy-hero-title">Gaming</h1>
+            <p className="cy-hero-desc">Strategy and adventure games — love the challenge.</p>
+          </div>
+          <div className="cy-hero-right">
+            <div className="cy-hero-icon-box">
+              <span className="cy-hero-emoji">🎮</span>
+              <div className="cy-hero-ring" />
+            </div>
+          </div>
         </div>
-        <div className="hp-hero-icon">🎮</div>
       </div>
 
-      <div className="hp-body">
-        <div className={`hp-stats hp-stagger ${ready?'hp-show':''}`}>
-          <div className="hp-stat"><span className="hp-stat-num hp-color-gaming">2000+</span><span className="hp-stat-label">Hours Played</span></div>
-          <div className="hp-stat"><span className="hp-stat-num hp-color-gaming">50+</span><span className="hp-stat-label">Games Finished</span></div>
-          <div className="hp-stat"><span className="hp-stat-num hp-color-gaming">Lv.99</span><span className="hp-stat-label">Max Level</span></div>
-        </div>
-
-        <div className="gtab-bar" ref={tabRef}>
-          <div className="gtab-indicator" style={indicatorStyle} />
-          <button className={`gtab-item ${activeTab==='library'?'active':''}`} onClick={() => setActiveTab('library')}>🎮 Library</button>
-          <button className={`gtab-item ${activeTab==='sports'?'active':''}`} onClick={() => setActiveTab('sports')}>⚽ Sports</button>
-          <button className={`gtab-item ${activeTab==='info'?'active':''}`} onClick={() => setActiveTab('info')}>📄 Detail Info</button>
-        </div>
-
-        {activeTab === 'library' && (
-          <div className={`hp-section hp-stagger ${ready?'hp-show':''}`}>
-            <div className="gmodern-grid">
-              {games.map((g,i) => (
-                <a key={i} href={g.url} target="_blank" rel="noreferrer" className="gmodern-card">
-                  <div className="gmodern-card-glow" />
-                  <div className="gmodern-card-top">
-                    <span className="gmodern-card-icon">{g.icon}</span>
-                    <span className="gmodern-card-arrow">↗</span>
-                  </div>
-                  <div className="gmodern-card-body">
-                    <h3 className="gmodern-card-name">{g.name}</h3>
-                    <span className="gmodern-card-genre">{g.genre}</span>
-                    <p className="gmodern-card-desc">{g.desc}</p>
-                  </div>
-                </a>
-              ))}
+      <div className={`cy-stats ${ready?'cy-show':''}`}>
+        {stats.map((s,i) => (
+          <div key={i} className="cy-stat">
+            <div className="cy-stat-top">
+              <span className="cy-stat-label">{s.label}</span>
+              <span className="cy-stat-value">{s.value}</span>
+            </div>
+            <div className="cy-stat-bar">
+              <div className="cy-stat-fill" style={{width: s.bar + '%'}} />
             </div>
           </div>
-        )}
+        ))}
+      </div>
 
-        {activeTab === 'info' && (
-          <div className={`hp-section hp-stagger ${ready?'hp-show':''}`}>
-            <div className="gmodern-info">
-              <div className="gmodern-info-glow" />
-              <p className="gmodern-info-text">Gaming has been a huge part of my life for as long as I can remember. It started with simple platformers as a kid, and over the years I've explored everything from story-driven RPGs to competitive multiplayer games. What I love most is how games combine storytelling, strategy, and skill into one experience. Whether I'm diving into an open-world adventure, solving puzzles in a co-op session, or grinding through a tough boss fight — gaming is where I unwind, challenge myself, and discover new worlds. It's not just a hobby; it's a way of thinking, learning, and having fun.</p>
+      <div className={`cy-layout ${ready?'cy-show':''}`}>
+        <aside className="cy-sidebar">
+          {[
+            { id:'library', icon:'🎮', label:'Library' },
+            { id:'sports', icon:'⚽', label:'Sports' },
+            { id:'info', icon:'📄', label:'Detail Info' },
+          ].map(t => (
+            <button key={t.id}
+              className={`cy-side-btn ${activeTab===t.id?'cy-side-active':''}`}
+              onClick={() => setActiveTab(t.id)}
+            >
+              <span className="cy-side-icon">{t.icon}</span>
+              <span className="cy-side-label">{t.label}</span>
+              {activeTab===t.id && <span className="cy-side-dot" />}
+            </button>
+          ))}
+        </aside>
+
+        <div className="cy-content">
+          {activeTab === 'library' && (
+            <div className={`cy-panel ${ready?'cy-show':''}`}>
+              <div className="cy-panel-header">
+                <h2>Game Library</h2>
+                <span className="cy-panel-count">{games.length} games</span>
+              </div>
+              <div className="cy-game-list">
+                {games.map((g,i) => (
+                  <a key={i} href={g.url} target="_blank" rel="noreferrer" className="cy-game-card">
+                    <div className="cy-game-accent" />
+                    <div className="cy-game-left">
+                      <span className="cy-game-icon">{g.icon}</span>
+                    </div>
+                    <div className="cy-game-body">
+                      <div className="cy-game-row">
+                        <h3>{g.name}</h3>
+                        <span className="cy-game-genre">{g.genre}</span>
+                      </div>
+                      <p>{g.desc}</p>
+                      <div className="cy-game-footer">
+                        <div className="cy-game-rating">
+                          <div className="cy-game-rating-bar">
+                            <div className="cy-game-rating-fill" style={{width: g.rating*10+'%'}} />
+                          </div>
+                          <span>{g.rating}/10</span>
+                        </div>
+                        <span className="cy-game-link">Play now ↗</span>
+                      </div>
+                    </div>
+                  </a>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {activeTab === 'sports' && (
-          <div className={`hp-section hp-stagger ${ready?'hp-show':''}`}>
-            <div className="gsport-list">
-              {sports.map((s,i) => (
-                <div key={i} className="gsport-card">
-                  <div className="gsport-card-glow" />
-                  <div className="gsport-card-icon">{s.icon}</div>
-                  <div className="gsport-card-body">
-                    <h3 className="gsport-card-name">{s.name}</h3>
-                    <p className="gsport-card-desc">{s.desc}</p>
+          {activeTab === 'sports' && (
+            <div className={`cy-panel ${ready?'cy-show':''}`}>
+              <div className="cy-panel-header">
+                <h2>Sports I Follow</h2>
+                <span className="cy-panel-count">{sports.length} sports</span>
+              </div>
+              <div className="cy-sport-list">
+                {sports.map((s,i) => (
+                  <div key={i} className="cy-sport-card">
+                    <div className="cy-sport-glow" style={{background: s.color}} />
+                    <div className="cy-sport-icon">{s.icon}</div>
+                    <div className="cy-sport-body">
+                      <h3>{s.name}</h3>
+                      <p>{s.desc}</p>
+                    </div>
+                    <div className="cy-sport-line" style={{background: s.color}} />
                   </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'info' && (
+            <div className={`cy-panel ${ready?'cy-show':''}`}>
+              <div className="cy-panel-header">
+                <h2>About Gaming</h2>
+              </div>
+              <div className="cy-terminal">
+                <div className="cy-terminal-bar">
+                  <span className="cy-terminal-dot cy-dot-red" />
+                  <span className="cy-terminal-dot cy-dot-yellow" />
+                  <span className="cy-terminal-dot cy-dot-green" />
+                  <span className="cy-terminal-title">about_gaming.md</span>
                 </div>
-              ))}
+                <div className="cy-terminal-body">
+                  <p className="cy-terminal-line"><span className="cy-t-prompt">&gt;</span> Gaming has been a huge part of my life for as long as I can remember.</p>
+                  <p className="cy-terminal-line"><span className="cy-t-prompt">&gt;</span> It started with simple platformers as a kid, and over the years I've explored everything from story-driven RPGs to competitive multiplayer games.</p>
+                  <p className="cy-terminal-line"><span className="cy-t-prompt">&gt;</span> What I love most is how games combine storytelling, strategy, and skill into one experience.</p>
+                  <p className="cy-terminal-line"><span className="cy-t-prompt">&gt;</span> Whether I'm diving into an open-world adventure, solving puzzles in a co-op session, or grinding through a tough boss fight — gaming is where I unwind, challenge myself, and discover new worlds.</p>
+                  <p className="cy-terminal-line"><span className="cy-t-prompt">&gt;</span> It's not just a hobby; it's a way of thinking, learning, and having fun.</p>
+                  <p className="cy-terminal-cursor">_</p>
+                </div>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      <div className="hp-bottom">
-        <button className="hp-back-btn" onClick={() => navigate('/')}>← Back to home</button>
+      <div className="cy-bottom">
+        <button className="cy-back-btn" onClick={() => navigate('/')}>← Back to home</button>
       </div>
     </div>
   );
