@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '../App.css';
 
 const playlist = [
@@ -10,10 +10,32 @@ const playlist = [
   { title:'Last Summer', artist:'Jazz Café', dur:'4:01' },
 ];
 
+const topSongs = [
+  { title:'Blinding Lights', artist:'The Weeknd', dur:'3:20', genre:'Pop' },
+  { title:'Levitating', artist:'Dua Lipa', dur:'3:23', genre:'Pop' },
+  { title:'Bohemian Rhapsody', artist:'Queen', dur:'5:55', genre:'Rock' },
+  { title:'Shape of You', artist:'Ed Sheeran', dur:'3:53', genre:'Pop' },
+  { title:'Starboy', artist:'The Weeknd', dur:'3:50', genre:'R&B' },
+];
+
 export default function Music() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
+  const [activeTab, setActiveTab] = useState('playlist');
+  const tabRef = useRef(null);
+  const [indicatorStyle, setIndicatorStyle] = useState({});
+
   useEffect(() => { const t = setTimeout(() => setReady(true), 100); return () => clearTimeout(t); }, []);
+
+  useEffect(() => {
+    if (tabRef.current) {
+      const active = tabRef.current.querySelector('.gtab-item.active');
+      if (active) {
+        setIndicatorStyle({ width: active.offsetWidth, left: active.offsetLeft });
+      }
+    }
+  }, [activeTab]);
+
   return (
     <div className="hp-wrap">
       <nav className="hp-nav"><button onClick={() => navigate('/')}>← Back</button><span>Music</span></nav>
@@ -44,19 +66,44 @@ export default function Music() {
             </div>
           </div>
         </div>
-        <div className={`hp-section hp-stagger ${ready?'hp-show':''}`}>
-          <h2>Playlist</h2>
-          {playlist.map((t,i) => (
-            <div key={i} className={`hp-list-item ${t.active?'hp-list-active':''}`}>
-              <span className="hp-list-num">{t.active?'▶':String(i+1).padStart(2,'0')}</span>
-              <div className="hp-list-info">
-                <strong>{t.title}</strong>
-                <span>{t.artist}</span>
-              </div>
-              <span className="hp-list-dur">{t.dur}</span>
-            </div>
-          ))}
+
+        <div className="gtab-bar" ref={tabRef}>
+          <div className="gtab-indicator" style={indicatorStyle} />
+          <button className={`gtab-item ${activeTab==='playlist'?'active':''}`} onClick={() => setActiveTab('playlist')}>🎵 Playlist</button>
+          <button className={`gtab-item ${activeTab==='top5'?'active':''}`} onClick={() => setActiveTab('top5')}>🎶 Top 5 Songs</button>
         </div>
+
+        {activeTab === 'playlist' && (
+          <div className={`hp-section hp-stagger ${ready?'hp-show':''}`}>
+            <h2>Playlist</h2>
+            {playlist.map((t,i) => (
+              <div key={i} className={`hp-list-item ${t.active?'hp-list-active':''}`}>
+                <span className="hp-list-num">{t.active?'▶':String(i+1).padStart(2,'0')}</span>
+                <div className="hp-list-info">
+                  <strong>{t.title}</strong>
+                  <span>{t.artist}</span>
+                </div>
+                <span className="hp-list-dur">{t.dur}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {activeTab === 'top5' && (
+          <div className={`hp-section hp-stagger ${ready?'hp-show':''}`}>
+            <h2>Top 5 Songs</h2>
+            {topSongs.map((t,i) => (
+              <div key={i} className="hp-list-item">
+                <span className="hp-list-num">{String(i+1).padStart(2,'0')}</span>
+                <div className="hp-list-info">
+                  <strong>{t.title}</strong>
+                  <span>{t.artist} · {t.genre}</span>
+                </div>
+                <span className="hp-list-dur">{t.dur}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <div className="hp-bottom">
         <button className="hp-back-btn" onClick={() => navigate('/')}>← Back to home</button>
