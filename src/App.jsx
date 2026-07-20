@@ -270,7 +270,7 @@ function Home() {
       {/* TOP NAV */}
       <header className="topbar">
         <div className="topbar-inner">
-          <span className="topbar-logo">yourname</span>
+          <span className="topbar-logo">abi<span>lash</span></span>
           <nav className="topbar-links">
             {NAV.map(n => (
               <button key={n.id}
@@ -297,7 +297,7 @@ function Home() {
                 <span className="profile-online-dot" />
               </div>
               <div className="profile-info">
-                <h1>Your Name</h1>
+                <h1>Abilash</h1>
                 <span className="profile-role">ABILASH</span>
                 <p className="profile-bio">Building digital experiences with clean code and creative thinking.</p>
               </div>
@@ -342,7 +342,7 @@ function Home() {
 
             <div className="profile-quotes card">
               <div className="pabout-header">
-                <span className="pabout-badge" style={{background:'var(--purple)'}}>Quotes I Live By</span>
+                <span className="pabout-badge" style={{background:'var(--purple)',color:'white'}}>Quotes I Live By</span>
               </div>
               <div className="pquotes-list">
                 {[

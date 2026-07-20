@@ -1,30 +1,53 @@
 *{margin:0;padding:0;box-sizing:border-box}
 
 :root{
-  --bg:#f8fafc;
-  --card:#ffffff;
-  --text:#0f172a;
-  --text-dim:#64748b;
-  --border:#e2e8f0;
-  --blue:#2563eb;
-  --blue-bg:#eff6ff;
-  --green:#16a34a;
-  --green-bg:#f0fdf4;
-  --orange:#ea580c;
-  --orange-bg:#fff7ed;
-  --purple:#7c3aed;
-  --purple-bg:#f5f3ff;
-  --cyan:#0891b2;
-  --cyan-bg:#ecfeff;
-  --red:#dc2626;
-  --red-bg:#fef2f2;
-  --yellow:#ca8a04;
-  --yellow-bg:#fefce8;
-  --radius:16px;
+  --bg:#0a0e1a;
+  --bg2:#111827;
+  --card:#151c2e;
+  --card2:#1a2238;
+  --card-hover:#1e2740;
+  --text:#e8eaf0;
+  --text-dim:#7a839b;
+  --text-muted:#4a5168;
+  --border:#1e2740;
+  --border2:#263050;
+
+  --blue:#4f8cff;
+  --blue-glow:rgba(79,140,255,0.15);
+  --green:#34d399;
+  --green-glow:rgba(52,211,153,0.12);
+  --orange:#fb923c;
+  --orange-glow:rgba(251,146,60,0.12);
+  --purple:#a78bfa;
+  --purple-glow:rgba(167,139,250,0.12);
+  --cyan:#22d3ee;
+  --cyan-glow:rgba(34,211,238,0.12);
+  --red:#f87171;
+  --red-glow:rgba(248,113,113,0.12);
+  --yellow:#fbbf24;
+  --yellow-glow:rgba(251,191,36,0.12);
+  --pink:#f472b6;
+  --pink-glow:rgba(244,114,182,0.12);
+
+  --blue-bg:rgba(79,140,255,0.1);
+  --green-bg:rgba(52,211,153,0.1);
+  --orange-bg:rgba(251,146,60,0.1);
+  --purple-bg:rgba(167,139,250,0.1);
+  --cyan-bg:rgba(34,211,238,0.1);
+  --red-bg:rgba(248,113,113,0.1);
+  --yellow-bg:rgba(251,191,36,0.1);
+
+  --radius:14px;
   --radius-sm:10px;
-  --shadow:0 1px 3px rgba(0,0,0,0.04),0 1px 2px rgba(0,0,0,0.02);
-  --shadow-md:0 4px 16px rgba(0,0,0,0.06),0 1px 3px rgba(0,0,0,0.03);
-  --shadow-lg:0 12px 40px rgba(0,0,0,0.08);
+  --radius-xs:8px;
+
+  --shadow:0 1px 3px rgba(0,0,0,0.25);
+  --shadow-md:0 4px 20px rgba(0,0,0,0.3);
+  --shadow-lg:0 12px 48px rgba(0,0,0,0.4);
+  --shadow-glow:0 0 30px rgba(79,140,255,0.08);
+
+  --ease:cubic-bezier(0.4,0,0.2,1);
+  --ease-spring:cubic-bezier(0.16,1,0.3,1);
 }
 
 html{scroll-behavior:smooth}
@@ -36,14 +59,17 @@ body{
   line-height:1.6;
   min-height:100vh;
   -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-h1,h2,h3,h4,h5,h6{font-family:'Josefin Sans',sans-serif}
+h1,h2,h3,h4,h5,h6{font-family:'Josefin Sans',sans-serif;font-weight:700}
 
 code,.mono{font-family:'DM Sans',monospace}
 a{text-decoration:none;color:inherit}
-::selection{background:var(--blue);color:white}
+button{font-family:inherit}
+::selection{background:var(--blue);color:#0a0e1a}
 
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
