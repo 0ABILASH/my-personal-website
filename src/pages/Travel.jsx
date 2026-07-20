@@ -19,7 +19,7 @@ const FALLBACK_PLACES = [
   { city:'Kyoto', country:'Japan', lat:35.0116, lng:135.7681, emoji:'⛩️', date:'Jun 2025' },
 ];
 
-const ROUTE_COLOR = '#00ffc8';
+const ROUTE_COLOR = '#ffffff';
 
 function renderLayers(map, places) {
   map.eachLayer(layer => {

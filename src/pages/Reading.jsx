@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react';
 import '../App.css';
 
 const books = [
-  { title:'The Dark Valley', author:'Sarah Chen', pages:340, read:340, color:'#ef4444', genre:'Sci-Fi' },
-  { title:'Code Complete', author:'Steve McConnell', pages:520, read:410, color:'#3b82f6', genre:'Tech' },
-  { title:'The Garden', author:'Ruth Ozeki', pages:280, read:120, color:'#22c55e', genre:'Fiction' },
-  { title:'Atomic Habits', author:'James Clear', pages:320, read:320, color:'#f97316', genre:'Self-Help' },
+  { title:'The Dark Valley', author:'Sarah Chen', pages:340, read:340, color:'#ffffff', genre:'Sci-Fi' },
+  { title:'Code Complete', author:'Steve McConnell', pages:520, read:410, color:'#cccccc', genre:'Tech' },
+  { title:'The Garden', author:'Ruth Ozeki', pages:280, read:120, color:'#999999', genre:'Fiction' },
+  { title:'Atomic Habits', author:'James Clear', pages:320, read:320, color:'#e0e0e0', genre:'Self-Help' },
 ];
 
 const stats = [

@@ -193,12 +193,12 @@ function Home() {
   };
 
   const hobbies = [
-    { emoji:'🎮', title:'Gaming', desc:'Strategy and adventure games.', color:'#6366f1' },
-    { emoji:'📸', title:'Photography', desc:'Capturing moments and light.', color:'#ec4899' },
-    { emoji:'🎵', title:'Music', desc:'Playing guitar and discovering artists.', color:'#8b5cf6' },
-    { emoji:'📚', title:'Reading', desc:'Sci-fi novels and tech blogs.', color:'#f59e0b' },
-    { emoji:'✈️', title:'Travel', desc:'Exploring new places and cultures.', color:'#06b6d4' },
-    { emoji:'🏃', title:'Running', desc:'Early morning runs to stay focused.', color:'#10b981' },
+    { emoji:'🎮', title:'Gaming', desc:'Strategy and adventure games.', color:'#ffffff' },
+    { emoji:'📸', title:'Photography', desc:'Capturing moments and light.', color:'#cccccc' },
+    { emoji:'🎵', title:'Music', desc:'Playing guitar and discovering artists.', color:'#aaaaaa' },
+    { emoji:'📚', title:'Reading', desc:'Sci-fi novels and tech blogs.', color:'#e0e0e0' },
+    { emoji:'✈️', title:'Travel', desc:'Exploring new places and cultures.', color:'#bbbbbb' },
+    { emoji:'🏃', title:'Running', desc:'Early morning runs to stay focused.', color:'#dddddd' },
   ];
 
   const collections = [
