@@ -18,6 +18,15 @@ const topSongs = [
   { title:'Starboy', artist:'The Weeknd', dur:'3:50', genre:'R&B', link:'https://open.spotify.com/search/Starboy%20The%20Weeknd' },
 ];
 
+const playlists = [
+  { name:'Lo-Fi Chill Beats', desc:'Relaxing lo-fi for coding and studying', emoji:'🎧', songs:24, link:'https://open.spotify.com/playlist/37i9dQZF1DX4dyzvZRCJMC' },
+  { name:'Indie Acoustic', desc:'Acoustic guitar vibes and folk tunes', emoji:'🎸', songs:18, link:'https://open.spotify.com/playlist/37i9dQZF1DWXRqgorJj26U' },
+  { name:'Jazz Café Evenings', desc:'Smooth jazz for late night sessions', emoji:'🎷', songs:30, link:'https://open.spotify.com/playlist/37i9dQZF1DWV7EzJMK2FUI' },
+  { name:'Bollywood Classics', desc:'Timeless Indian music favourites', emoji:'🎶', songs:45, link:'https://open.spotify.com/playlist/37i9dQZF1DX0XUsuxWHRQd' },
+  { name:'Workout Energy', desc:'High energy tracks to keep you going', emoji:'💪', songs:35, link:'https://open.spotify.com/playlist/37i9dQZF1DX76Wlfdnj7AP' },
+  { name:'Late Night Drive', desc:'Perfect songs for midnight road trips', emoji:'🌙', songs:20, link:'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M' },
+];
+
 export default function Music() {
   const navigate = useNavigate();
   const [ready, setReady] = useState(false);
@@ -28,10 +37,9 @@ export default function Music() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [volume, setVolume] = useState(80);
+  const [volume, setVolume] = useState(100);
   const progressTimer = useRef(null);
 
-  const currentList = activeTab === 'playlist' ? playlist : topSongs;
   const current = playlist[currentIdx];
 
   useEffect(() => { const t = setTimeout(() => setReady(true), 100); return () => clearTimeout(t); }, []);
@@ -83,6 +91,7 @@ export default function Music() {
   };
 
   const pct = (progress / current.durSec) * 100;
+  const volIcon = volume === 0 ? '🔇' : volume < 40 ? '🔉' : '🔊';
 
   return (
     <div className="hp-wrap">
@@ -138,12 +147,13 @@ export default function Music() {
               </div>
             </div>
             <div className="mp3-right">
-              <span className="mp3-vol-icon">🔊</span>
+              <span className="mp3-vol-icon">{volIcon}</span>
               <input
                 type="range" min="0" max="100" value={volume}
                 onChange={e => setVolume(Number(e.target.value))}
                 className="mp3-vol-slider"
               />
+              <span className="mp3-vol-num">{volume}%</span>
             </div>
           </div>
         </div>
@@ -153,6 +163,7 @@ export default function Music() {
           <div className="gtab-indicator" style={indicatorStyle} />
           <button className={`gtab-item ${activeTab==='playlist'?'active':''}`} onClick={() => setActiveTab('playlist')}>🎵 Playlist</button>
           <button className={`gtab-item ${activeTab==='top5'?'active':''}`} onClick={() => setActiveTab('top5')}>🎶 Top 5 Songs</button>
+          <button className={`gtab-item ${activeTab==='links'?'active':''}`} onClick={() => setActiveTab('links')}>🔗 Playlists</button>
         </div>
 
         {activeTab === 'playlist' && (
@@ -186,6 +197,25 @@ export default function Music() {
                 <span className="hp-list-dur">{t.dur}</span>
               </div>
             ))}
+          </div>
+        )}
+
+        {activeTab === 'links' && (
+          <div className={`hp-section hp-stagger ${ready?'hp-show':''}`}>
+            <h2>Playlist Links</h2>
+            <div className="mp3-playlist-grid">
+              {playlists.map((pl,i) => (
+                <a key={i} href={pl.link} target="_blank" rel="noreferrer" className="mp3-playlist-card">
+                  <div className="mp3-playlist-emoji">{pl.emoji}</div>
+                  <div className="mp3-playlist-info">
+                    <strong>{pl.name}</strong>
+                    <span>{pl.desc}</span>
+                    <span className="mp3-playlist-count">{pl.songs} songs</span>
+                  </div>
+                  <span className="mp3-playlist-arrow">↗</span>
+                </a>
+              ))}
+            </div>
           </div>
         )}
       </div>
