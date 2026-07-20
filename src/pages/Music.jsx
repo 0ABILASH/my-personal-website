@@ -156,7 +156,7 @@ export default function Music() {
       </div>
 
       {/* NOW PLAYING PLAYER */}
-      <div className={`cy-panel ${ready?'cy-show':''}`} style={{maxWidth:800,margin:'1.5rem auto 0',padding:'0 1.4rem'}}>
+      <div className={`cy-panel ${ready?'cy-show':''}`} style={{width:'100%',margin:'1.5rem 0 0',padding:0}}>
         <div className="np-player" style={{ '--np-c1': current.colors[0], '--np-c2': current.colors[1] }}>
           <div className="np-art">
             <div className={`np-art-inner ${isPlaying ? 'np-spin' : ''}`}>
@@ -215,7 +215,7 @@ export default function Music() {
       </div>
 
       {/* TABS */}
-      <div className="cy-tabs" style={{maxWidth:800,margin:'1.5rem auto 0',padding:'0 1.4rem'}}>
+      <div className="cy-tabs" style={{width:'100%',margin:'1.5rem 0 0',padding:0}}>
         {[
           { id:'playlist', icon:'🎵', label:'Playlist' },
           { id:'top5', icon:'🎶', label:'Top 5 Songs' },
@@ -232,7 +232,7 @@ export default function Music() {
       </div>
 
       {activeTab === 'playlist' && (
-        <div className={`cy-panel ${ready?'cy-show':''}`} style={{maxWidth:800,margin:'1rem auto 0',padding:'0 1.4rem'}}>
+        <div className={`cy-panel ${ready?'cy-show':''}`} style={{width:'100%',margin:'1rem 0 0',padding:0}}>
           <div className="cy-panel-header">
             <h2>Playlist</h2>
             <span className="cy-panel-count">{SONGS.length} songs</span>
@@ -261,7 +261,7 @@ export default function Music() {
       )}
 
       {activeTab === 'top5' && (
-        <div className={`cy-panel ${ready?'cy-show':''}`} style={{maxWidth:800,margin:'1rem auto 0',padding:'0 1.4rem'}}>
+        <div className={`cy-panel ${ready?'cy-show':''}`} style={{width:'100%',margin:'1rem 0 0',padding:0}}>
           <div className="cy-panel-header">
             <h2>Top 5 Songs</h2>
           </div>
@@ -284,7 +284,7 @@ export default function Music() {
       )}
 
       {activeTab === 'links' && (
-        <div className={`cy-panel ${ready?'cy-show':''}`} style={{maxWidth:800,margin:'1rem auto 0',padding:'0 1.4rem'}}>
+        <div className={`cy-panel ${ready?'cy-show':''}`} style={{width:'100%',margin:'1rem 0 0',padding:0}}>
           <div className="cy-panel-header">
             <h2>Playlist Links</h2>
           </div>

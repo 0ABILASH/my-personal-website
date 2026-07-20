@@ -145,7 +145,7 @@ export default function Travel() {
         ))}
       </div>
 
-      <div className={`cy-panel ${ready?'cy-show':''}`} style={{maxWidth:800,margin:'1.5rem auto 0',padding:'0 1.4rem'}}>
+      <div className={`cy-panel ${ready?'cy-show':''}`} style={{width:'100%',margin:'1.5rem 0 0',padding:0}}>
         <div className="cy-panel-header">
           <h2>Route Map</h2>
           <span className="cy-panel-count">{places.length} places</span>

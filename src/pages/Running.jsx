@@ -60,7 +60,7 @@ export default function Running() {
         ))}
       </div>
 
-      <div className={`cy-panel ${ready?'cy-show':''}`} style={{maxWidth:800,margin:'1.5rem auto 0',padding:'0 1.4rem'}}>
+      <div className={`cy-panel ${ready?'cy-show':''}`} style={{width:'100%',margin:'1.5rem 0 0',padding:0}}>
         <div className="cy-panel-header">
           <h2>Weekly Activity</h2>
         </div>
@@ -77,7 +77,7 @@ export default function Running() {
         </div>
       </div>
 
-      <div className={`cy-panel ${ready?'cy-show':''}`} style={{maxWidth:800,margin:'1.5rem auto 0',padding:'0 1.4rem'}}>
+      <div className={`cy-panel ${ready?'cy-show':''}`} style={{width:'100%',margin:'1.5rem 0 0',padding:0}}>
         <div className="cy-panel-header">
           <h2>Recent Runs</h2>
           <span className="cy-panel-count">{recent.length} runs</span>
