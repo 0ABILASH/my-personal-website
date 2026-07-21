@@ -1,7 +1,5 @@
 import L from 'leaflet'
 
-export const SHEETS_URL = import.meta.env.VITE_SHEETS_URL || ''
-
 export const FALLBACK_PLACES = [
   { city: 'Coimbatore', country: 'India', lat: 11.0168, lng: 76.9558, emoji: '\u{1F3D9}\u{FE0F}', date: 'Home Base' },
 ]

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { Globe } from 'lucide-react'
-import { SHEETS_URL, FALLBACK_PLACES, renderLayers } from '../services/map'
+import { FALLBACK_PLACES, renderLayers } from '../services/map'
 
 export default function Space() {
   const [places, setPlaces] = useState(FALLBACK_PLACES)
@@ -13,8 +13,7 @@ export default function Space() {
   const mapReady = useRef(false)
 
   useEffect(() => {
-    if (!SHEETS_URL) return
-    fetch(SHEETS_URL + '?action=travel')
+    fetch('/api/travel')
       .then(function (r) { return r.json() })
       .then(function (data) {
         if (data.places && data.places.length > 0) {

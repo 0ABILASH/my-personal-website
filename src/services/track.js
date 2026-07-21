@@ -1,4 +1,4 @@
-var SHEETS_URL = import.meta.env.VITE_SHEETS_URL || 'https://script.google.com/macros/s/AKfycbwhnLnBeAyWammouZHO-z41b5fGDG-MNEZtMOPoPYKAs218QokxLzkOVzrW5fiUN3gW5g/exec'
+var API_URL = '/api/track'
 
 function formatDate(d) {
   var dd = String(d.getDate()).padStart(2, '0')
@@ -14,45 +14,21 @@ function formatTime(d) {
   return hh + ':' + mm + ':' + ss
 }
 
-var _lastSendTime = 0
-
 function send(fields) {
-  if (!SHEETS_URL) return
+  var payload = Object.assign({}, fields, { _: Date.now().toString() })
 
-  var now = Date.now()
-  if (now - _lastSendTime < 2000) return
-  _lastSendTime = now
+  if (navigator.sendBeacon) {
+    var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' })
+    var sent = navigator.sendBeacon(API_URL, blob)
+    if (sent) return
+  }
 
-  var params = new URLSearchParams(fields)
-  params.append('_', now.toString())
-
-  var iframeName = '_track_' + now
-  var iframe = document.createElement('iframe')
-  iframe.name = iframeName
-  iframe.style.display = 'none'
-  document.body.appendChild(iframe)
-
-  var form = document.createElement('form')
-  form.method = 'GET'
-  form.action = SHEETS_URL
-  form.target = iframeName
-  form.style.display = 'none'
-
-  params.forEach(function (value, key) {
-    var input = document.createElement('input')
-    input.type = 'hidden'
-    input.name = key
-    input.value = value
-    form.appendChild(input)
-  })
-
-  document.body.appendChild(form)
-  form.submit()
-
-  setTimeout(function () {
-    if (form.parentNode) form.parentNode.removeChild(form)
-    if (iframe.parentNode) iframe.parentNode.removeChild(iframe)
-  }, 5000)
+  fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    keepalive: true,
+  }).catch(function () {})
 }
 
 function getBrowser() {

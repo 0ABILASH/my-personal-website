@@ -6,12 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "start": "npx serve dist -s",
+    "start": "node server.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "express": "^4.22.2",
     "framer-motion": "^12.42.2",
     "jspdf": "^4.2.1",
     "leaflet": "^1.9.4",
