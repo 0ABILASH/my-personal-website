@@ -48,6 +48,8 @@ const TRAITS = [
   { icon: "\u{1F319}", name: "Im Batman", sub: "Night Person" },
   { icon: "\u{1F3A7}", name: "Music Addict", sub: "Yes I'm" },
   { icon: "\u{1F415}", name: "Pet", sub: "Soon" },
+  { icon: "\u{1F30D}", name: "Traveler", sub: "Wanderlust" },
+  { icon: "\u{1F6B4}", name: "Biker", sub: "Two Wheels Freedom" },
 ];
 
 export default function Home({ onCvOpen }) {
@@ -311,7 +313,7 @@ export default function Home({ onCvOpen }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
               >
-                Hai!
+                Hey there! What's up?
               </motion.h1>
 
               <motion.p
