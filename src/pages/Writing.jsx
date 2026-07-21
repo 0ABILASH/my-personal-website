@@ -37,7 +37,7 @@ export default function Writing() {
             <PenLine size={18} className="text-accent" />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Writing</h1>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Blogs</h1>
             <p className="text-[12px] text-text-tertiary">Thoughts, tutorials, and updates.</p>
           </div>
         </div>

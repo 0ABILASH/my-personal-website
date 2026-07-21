@@ -66,8 +66,8 @@ export default function App() {
       <Shell onCvOpen={() => setCvOpen(true)}>
         <Routes>
           <Route path="/" element={<Home onCvOpen={() => setCvOpen(true)} />} />
-          <Route path="/space" element={<Space />} />
-          <Route path="/writing" element={<Writing />} />
+          <Route path="/travel-log" element={<Space />} />
+          <Route path="/blogs" element={<Writing />} />
           <Route path="/profile" element={<Profile onCvOpen={() => setCvOpen(true)} />} />
         </Routes>
       </Shell>

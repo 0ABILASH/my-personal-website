@@ -85,7 +85,7 @@ export default function Space() {
             <Globe size={18} className="text-green" />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Space</h1>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Travel Log</h1>
             <p className="text-[12px] text-text-tertiary">Places I&apos;ve been &mdash; click a destination to fly there.</p>
           </div>
         </div>

@@ -5,9 +5,9 @@ import { ArrowUpRight, Download, Menu, X } from 'lucide-react'
 
 const NAV = [
   { to: '/', label: 'Home' },
-  { to: '/space', label: 'Space' },
-  { to: '/writing', label: 'Writing' },
   { to: '/profile', label: 'Profile' },
+  { to: '/travel-log', label: 'Travel Log' },
+  { to: '/blogs', label: 'Blogs' },
 ]
 
 export default function Shell({ children, onCvOpen }) {
