@@ -2,11 +2,11 @@ import { Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect, useRef, useState, useCallback } from 'react'
 
 import Shell from './layouts/Shell'
-import CvModal from './components/CvModal'
+import DownloadModal from './components/DownloadModal'
 import TimeoutModal from './components/TimeoutModal'
 import Home from './pages/Home'
-import Space from './pages/Space'
-import Writing from './pages/Writing'
+import TravelLog from './pages/TravelLog'
+import Blogs from './pages/Blogs'
 import Profile from './pages/Profile'
 import { trackVisitor } from './services/track'
 
@@ -66,12 +66,12 @@ export default function App() {
       <Shell onCvOpen={() => setCvOpen(true)}>
         <Routes>
           <Route path="/" element={<Home onCvOpen={() => setCvOpen(true)} />} />
-          <Route path="/travel-log" element={<Space />} />
-          <Route path="/blogs" element={<Writing />} />
+          <Route path="/travel-log" element={<TravelLog />} />
+          <Route path="/blogs" element={<Blogs />} />
           <Route path="/profile" element={<Profile onCvOpen={() => setCvOpen(true)} />} />
         </Routes>
       </Shell>
-      <CvModal open={cvOpen} onClose={() => setCvOpen(false)} />
+      <DownloadModal open={cvOpen} onClose={() => setCvOpen(false)} />
       {timedOut && <TimeoutModal onRetry={handleRetry} />}
     </>
   )

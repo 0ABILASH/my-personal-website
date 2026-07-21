@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, FileText, Loader2, Check } from 'lucide-react'
 import { trackDataDownload } from '../services/track'
-import { downloadCV } from '../services/cv'
+import { downloadCV } from '../services/download'
 
-export default function CvModal({ open, onClose }) {
+export default function DownloadModal({ open, onClose }) {
   const [name, setName] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [status, setStatus] = useState('')

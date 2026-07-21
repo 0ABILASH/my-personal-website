@@ -160,10 +160,6 @@ export default function Home({ onCvOpen }) {
               chasing experiences that inspire growth, creativity, and
               meaningful connections.
             </p>
-            {/* <div className="flex items-center gap-1.5 text-[11px] text-text-tertiary">
-              <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
-              Available for opportunities
-            </div> */}
           </div>
 
           <div className="bg-surface border border-border rounded-2xl p-5 sm:p-6 hover:border-border-hover transition-all duration-300">
