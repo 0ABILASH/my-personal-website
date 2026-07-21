@@ -47,7 +47,7 @@ export default function Shell({ children, onCvOpen }) {
               className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-[12px] font-medium text-text-secondary hover:text-text transition-all cursor-pointer"
             >
               <Download size={12} />
-              CV
+              Data
             </button>
             <div className="w-px h-4 bg-border hidden sm:block" />
             <a
@@ -98,7 +98,7 @@ export default function Shell({ children, onCvOpen }) {
                 className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-medium text-text-tertiary hover:text-text-secondary hover:bg-surface-hover transition-all text-left cursor-pointer"
               >
                 <Download size={13} />
-                Download CV
+                Download Data
               </button>
             </div>
           </motion.div>

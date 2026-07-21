@@ -78,7 +78,7 @@ export default function Profile({ onCvOpen }) {
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white text-[13px] font-semibold shadow-[0_2px_12px_rgba(124,106,255,0.3)] transition-all cursor-pointer"
             >
               <Download size={13} />
-              Download CV
+              Download Data
             </button>
           </motion.div>
 

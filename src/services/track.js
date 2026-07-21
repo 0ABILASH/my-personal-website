@@ -77,10 +77,10 @@ export function trackVisitor(action) {
   })
 }
 
-export function trackCvDownload(name) {
+export function trackDataDownload(name) {
   var now = new Date()
   send({
-    type: 'CV Download',
+    type: 'Data Download',
     action: '',
     name: name || '',
     date: formatDate(now),

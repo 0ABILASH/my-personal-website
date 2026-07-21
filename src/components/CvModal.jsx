@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, FileText, Loader2, Check } from 'lucide-react'
-import { trackCvDownload } from '../services/track'
+import { trackDataDownload } from '../services/track'
 import { downloadCV } from '../services/cv'
 
 export default function CvModal({ open, onClose }) {
@@ -14,7 +14,7 @@ export default function CvModal({ open, onClose }) {
     setSubmitting(true)
     setStatus('')
 
-    trackCvDownload(name.trim())
+    trackDataDownload(name.trim())
 
     downloadCV()
     setStatus('Downloaded!')
@@ -62,9 +62,9 @@ export default function CvModal({ open, onClose }) {
               <FileText size={18} className="text-accent" />
             </div>
 
-            <h2 className="text-[15px] font-bold tracking-tight mb-1">Download CV</h2>
+            <h2 className="text-[15px] font-bold tracking-tight mb-1">Download Data</h2>
             <p className="text-[12px] text-text-tertiary mb-5">
-              Enter your name to download Abilash&apos;s resume.
+              Enter your name to download Abilash&apos;s data.
             </p>
 
             <div className="mb-5">
