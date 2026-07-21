@@ -6,27 +6,28 @@ import { Globe } from 'lucide-react'
 import { SHEETS_URL, FALLBACK_PLACES, renderLayers } from '../services/map'
 
 export default function Space() {
-  const [sheetData, setSheetData] = useState(null)
+  const [places, setPlaces] = useState(FALLBACK_PLACES)
   const [activePlace, setActivePlace] = useState(null)
   const mapRef = useRef(null)
   const mapInstance = useRef(null)
   const mapReady = useRef(false)
 
-  const places = sheetData
-    ? (sheetData.places || []).filter(p => p.lat && p.lng)
-    : FALLBACK_PLACES
-
   useEffect(() => {
     if (!SHEETS_URL) return
-    fetch(`${SHEETS_URL}?action=travel`)
-      .then(r => r.json())
-      .then(data => setSheetData(data))
-      .catch(() => {})
+    fetch(SHEETS_URL + '?action=travel')
+      .then(function (r) { return r.json() })
+      .then(function (data) {
+        if (data.places && data.places.length > 0) {
+          var filtered = data.places.filter(function (p) { return p.lat && p.lng })
+          if (filtered.length > 0) setPlaces(filtered)
+        }
+      })
+      .catch(function () {})
   }, [])
 
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return
-    const map = L.map(mapRef.current, {
+    var map = L.map(mapRef.current, {
       scrollWheelZoom: true,
       zoomControl: true,
       attributionControl: true,
@@ -37,7 +38,7 @@ export default function Space() {
     }).addTo(map)
     mapInstance.current = map
     mapReady.current = true
-    return () => {
+    return function () {
       if (mapInstance.current) {
         mapInstance.current.remove()
         mapInstance.current = null
@@ -53,22 +54,21 @@ export default function Space() {
 
   useEffect(() => {
     if (!mapReady.current || !mapInstance.current || places.length === 0) return
-
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
+        function (pos) {
           mapInstance.current.flyTo([pos.coords.latitude, pos.coords.longitude], 8, { duration: 2 })
         },
-        () => {
+        function () {
           mapInstance.current.flyTo([places[0].lat, places[0].lng], 8, { duration: 2 })
         }
       )
     } else {
       mapInstance.current.flyTo([places[0].lat, places[0].lng], 8, { duration: 2 })
     }
-  }, [sheetData])
+  }, [places])
 
-  const flyTo = (place) => {
+  var flyTo = function (place) {
     if (!mapInstance.current) return
     setActivePlace(place)
     mapInstance.current.flyTo([place.lat, place.lng], 8, { duration: 1.5 })
@@ -101,26 +101,29 @@ export default function Space() {
         </motion.div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-          {places.map((p, i) => (
-            <motion.button
-              key={i}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.18 + i * 0.02, duration: 0.2 }}
-              onClick={() => flyTo(p)}
-              className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-surface border transition-all duration-200 text-left cursor-pointer ${
-                activePlace === p
-                  ? 'border-accent/40 bg-accent-soft shadow-[0_0_10px_rgba(124,106,255,0.08)]'
-                  : 'border-border hover:border-border-hover'
-              }`}
-            >
-              <span className="text-base flex-shrink-0">{p.emoji}</span>
-              <div className="min-w-0">
-                <div className="text-[12px] font-semibold truncate leading-tight">{p.city}</div>
-                <div className="text-[10px] text-text-tertiary truncate leading-tight">{p.country} &middot; {p.date}</div>
-              </div>
-            </motion.button>
-          ))}
+          {places.map(function (p, i) {
+            return (
+              <motion.button
+                key={i}
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.18 + i * 0.02, duration: 0.2 }}
+                onClick={function () { flyTo(p) }}
+                className={
+                  'flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-surface border transition-all duration-200 text-left cursor-pointer ' +
+                  (activePlace === p
+                    ? 'border-accent/40 bg-accent-soft shadow-[0_0_10px_rgba(124,106,255,0.08)]'
+                    : 'border-border hover:border-border-hover')
+                }
+              >
+                <span className="text-base flex-shrink-0">{p.emoji}</span>
+                <div className="min-w-0">
+                  <div className="text-[12px] font-semibold truncate leading-tight">{p.city}</div>
+                  <div className="text-[10px] text-text-tertiary truncate leading-tight">{p.country} &middot; {p.date}</div>
+                </div>
+              </motion.button>
+            )
+          })}
         </div>
       </motion.div>
     </div>

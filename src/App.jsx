@@ -38,26 +38,27 @@ export default function App() {
     }, 5000)
   }, [])
 
-  const handleRetry = () => {
+  const handleRetry = useCallback(() => {
     trackVisitor('retry')
     resetTimer()
-  }
+  }, [resetTimer])
 
   useEffect(() => {
     trackVisitor('pageview')
     resetTimer()
 
-    const events = ['mousedown', 'keydown', 'scroll', 'touchstart']
     const handler = () => {
       if (!timedOut) lastActivity.current = Date.now()
     }
+
+    const events = ['mousedown', 'keydown', 'scroll', 'touchstart']
     events.forEach(e => window.addEventListener(e, handler))
 
     return () => {
       events.forEach(e => window.removeEventListener(e, handler))
       if (timerRef.current) clearInterval(timerRef.current)
     }
-  }, [timedOut, resetTimer])
+  }, [resetTimer])
 
   return (
     <>

@@ -1,9 +1,52 @@
-const SHEETS_URL = import.meta.env.VITE_SHEETS_URL || 'https://script.google.com/macros/s/AKfycbwcFe2sB0xmbOPtZDbcXj77RGgdFNRGXWq_BbaCW_7uWPv86VPj1qBl52lCxyqW4mJBxA/exec'
+var SHEETS_URL = import.meta.env.VITE_SHEETS_URL || 'https://script.google.com/macros/s/AKfycbwhnLnBeAyWammouZHO-z41b5fGDG-MNEZtMOPoPYKAs218QokxLzkOVzrW5fiUN3gW5g/exec'
 
+function formatDate(d) {
+  var dd = String(d.getDate()).padStart(2, '0')
+  var mm = String(d.getMonth() + 1).padStart(2, '0')
+  var yyyy = d.getFullYear()
+  return dd + '/' + mm + '/' + yyyy
+}
+
+function formatTime(d) {
+  var hh = String(d.getHours()).padStart(2, '0')
+  var mm = String(d.getMinutes()).padStart(2, '0')
+  var ss = String(d.getSeconds()).padStart(2, '0')
+  return hh + ':' + mm + ':' + ss
+}
+
+var _iframe = null
 function send(fields) {
   if (!SHEETS_URL) return
-  var qs = new URLSearchParams(fields).toString()
-  new Image().src = SHEETS_URL + '?' + qs + '&_=' + Date.now()
+
+  if (!_iframe) {
+    _iframe = document.createElement('iframe')
+    _iframe.name = '_sf'
+    _iframe.style.display = 'none'
+    document.body.appendChild(_iframe)
+  }
+
+  var form = document.createElement('form')
+  form.method = 'POST'
+  form.action = SHEETS_URL
+  form.target = '_sf'
+
+  var keys = Object.keys(fields)
+  for (var i = 0; i < keys.length; i++) {
+    var input = document.createElement('input')
+    input.type = 'hidden'
+    input.name = keys[i]
+    input.value = fields[keys[i]]
+    form.appendChild(input)
+  }
+
+  document.body.appendChild(form)
+  form.submit()
+  document.body.removeChild(form)
+
+  try {
+    var qs = new URLSearchParams(fields).toString()
+    new Image().src = SHEETS_URL + '?' + qs
+  } catch (e) {}
 }
 
 function getBrowser() {
@@ -11,13 +54,16 @@ function getBrowser() {
   if (ua.indexOf('Chrome') > -1 && ua.indexOf('Edg') === -1) return 'Chrome'
   if (ua.indexOf('Edg') > -1) return 'Edge'
   if (ua.indexOf('Firefox') > -1) return 'Firefox'
+  if (ua.indexOf('SamsungBrowser') > -1) return 'Samsung Browser'
+  if (ua.indexOf('Opera') > -1 || ua.indexOf('OPR') > -1) return 'Opera'
   if (ua.indexOf('Safari') > -1 && ua.indexOf('Chrome') === -1) return 'Safari'
   return 'Other'
 }
 
 function getDevice() {
   var ua = navigator.userAgent
-  if (ua.indexOf('Mobile') > -1 || ua.indexOf('Android') > -1 || ua.indexOf('iPhone') > -1) return 'Mobile'
+  if (ua.indexOf('Mobile') > -1 || ua.indexOf('Android') > -1 && ua.indexOf('Mobile') > -1 || ua.indexOf('iPhone') > -1) return 'Mobile'
+  if (ua.indexOf('iPad') > -1 || ua.indexOf('Tablet') > -1) return 'Tablet'
   return 'Desktop'
 }
 
@@ -25,7 +71,7 @@ function getOS() {
   var ua = navigator.userAgent
   if (ua.indexOf('Win') > -1) return 'Windows'
   if (ua.indexOf('Mac') > -1) return 'macOS'
-  if (ua.indexOf('Linux') > -1) return 'Linux'
+  if (ua.indexOf('Linux') > -1 && ua.indexOf('Android') === -1) return 'Linux'
   if (ua.indexOf('Android') > -1) return 'Android'
   if (ua.indexOf('iPhone') > -1 || ua.indexOf('iPad') > -1) return 'iOS'
   return 'Other'
@@ -37,8 +83,8 @@ export function trackVisitor(action) {
     type: 'Visitor',
     action: action || 'pageview',
     name: '',
-    date: now.toLocaleDateString('en-IN'),
-    time: now.toLocaleTimeString('en-IN'),
+    date: formatDate(now),
+    time: formatTime(now),
     browser: getBrowser(),
     device: getDevice(),
     os: getOS(),
@@ -55,8 +101,8 @@ export function trackCvDownload(name) {
     type: 'CV Download',
     action: '',
     name: name || '',
-    date: now.toLocaleDateString('en-IN'),
-    time: now.toLocaleTimeString('en-IN'),
+    date: formatDate(now),
+    time: formatTime(now),
     browser: getBrowser(),
     device: getDevice(),
     os: getOS(),
