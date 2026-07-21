@@ -28,19 +28,19 @@ const HOBBY_ROUTES = {
 
 function ProfileStatus() {
   const statuses = [
-    { emoji:'📍', label:'Location', val:'Coimbatore', color:'var(--blue)', bg:'var(--blue-bg)' },
-    { emoji:'💜', label:'Status', val:'Single', color:'var(--red)', bg:'var(--red-bg)' },
-    { emoji:'🔒', label:'Privacy', val:'Private', color:'var(--purple)', bg:'var(--purple-bg)' },
-    { emoji:'💼', label:'What\'s Happening', val:'Career', color:'var(--green)', bg:'var(--green-bg)' },
+    { emoji:'📍', label:'Location', val:'Coimbatore', color:'var(--blue)', bg:'var(--blue-soft)' },
+    { emoji:'💜', label:'Status', val:'Single', color:'var(--red)', bg:'var(--red-soft)' },
+    { emoji:'🔒', label:'Privacy', val:'Private', color:'var(--purple)', bg:'var(--purple-soft)' },
+    { emoji:'💼', label:'What\'s Happening', val:'Career', color:'var(--green)', bg:'var(--green-soft)' },
   ];
   return (
-    <div className="profile-status">
+    <div className="status-row">
       {statuses.map((s,i) => (
-        <div key={i} className="profile-status-item">
-          <span className="profile-status-emoji" style={{background:s.bg}}>{s.emoji}</span>
-          <div className="profile-status-info">
-            <span className="profile-status-label">{s.label}</span>
-            <span className="profile-status-val">{s.val}</span>
+        <div key={i} className="status-chip">
+          <span className="status-dot" style={{background:s.bg,color:s.color}}>{s.emoji}</span>
+          <div className="status-meta">
+            <span className="status-label">{s.label}</span>
+            <span className="status-val">{s.val}</span>
           </div>
         </div>
       ))}
@@ -119,7 +119,7 @@ function Home() {
     doc.text('Coimbatore, India', 20, 40);
     doc.text('Email: hello@example.com', 20, 47);
 
-    doc.setDrawColor(37, 99, 235);
+    doc.setDrawColor(91, 74, 228);
     doc.setLineWidth(0.5);
     doc.line(20, 52, 190, 52);
 
@@ -164,7 +164,7 @@ function Home() {
     doc.setFont('helvetica', 'normal');
     doc.text('Bachelor of Technology', 20, 185);
 
-    doc.setDrawColor(37, 99, 235);
+    doc.setDrawColor(91, 74, 228);
     doc.line(20, 200, 190, 200);
     doc.setFontSize(8);
     doc.setTextColor(107, 114, 128);
@@ -266,93 +266,87 @@ function Home() {
   const blogs = blogFilter==='all'?posts:posts.filter(p=>p.tag===blogFilter);
 
   return (
-    <div className="app">
-      {/* CENTERED PILL NAV */}
-      <nav className="pnav">
-        <span className="pnav-logo">abi<span>lash</span></span>
-        <div className="pnav-tabs">
-          {NAV.map(n => (
-            <button key={n.id}
-              className={`pnav-tab ${active===n.id?'active':''}`}
-              onClick={() => scrollTo(n.id)}
-            >{n.label}</button>
-          ))}
+    <div className="orbit">
+
+      {/* ─── TOP NAVIGATION ─── */}
+      <nav className="topnav">
+        <div className="topnav-wrap">
+          <span className="topnav-logo">abi<span>lash</span></span>
+          <div className="topnav-links">
+            {NAV.map(n => (
+              <button key={n.id}
+                className={`topnav-link ${active===n.id?'is-active':''}`}
+                onClick={() => scrollTo(n.id)}
+              >{n.label}</button>
+            ))}
+          </div>
         </div>
       </nav>
 
-      <main className="main">
+      <main className="orbit-main">
 
-        {/* PROFILE */}
+        {/* ─── PROFILE ─── */}
         <section className="section" id="profile" ref={refs.profile}>
-          <div className="profile-card-new">
-            <div className="profile-cover">
-              <img src="https://picsum.photos/seed/banner/1200/400" alt="Profile banner" />
-              <div className="profile-cover-fade" />
-            </div>
-            <div className="profile-main-new">
-              <div className="profile-avatar-wrap">
-                <div className="profile-avatar">👨‍💻</div>
-                <span className="profile-online-dot" />
+          <div className="profile-hero">
+            <div className="profile-mesh" />
+            <div className="profile-content">
+              <div className="profile-avatar">
+                <span className="profile-emoji">👨‍💻</span>
+                <div className="profile-online" />
               </div>
-              <div className="profile-info">
-                <h1>Abilash</h1>
-                <span className="profile-role">ABILASH</span>
-                <p className="profile-bio">Building digital experiences with clean code and creative thinking.</p>
-              </div>
-              <div className="profile-actions">
-                <button className="profile-btn primary" onClick={() => setShowCvModal(true)}>Download My Data</button>
-              </div>
+              <h1 className="profile-name">Abilash</h1>
+              <span className="profile-tag">Full Stack Developer</span>
+              <p className="profile-desc">Building digital experiences with clean code and creative thinking.</p>
+              <button className="btn btn-primary" onClick={() => setShowCvModal(true)}>Download My Data</button>
             </div>
           </div>
 
           <ProfileStatus />
 
-          <div className="profile-content">
-            <div className="profile-about-card card">
-              <div className="pabout-split">
-                <div className="pabout-left">
-                  <span className="pabout-quote">"</span>
-                  <p className="pabout-text">Hey! I'm Abilash — a curious soul who loves exploring things, building random projects at 2am, and getting way too deep into rabbit holes. I enjoy the simple stuff: good music, long walks, and conversations that go nowhere and everywhere at the same time.</p>
-                  <div className="pabout-location">
-                    <span className="pabout-loc-dot" />Based in India
+          <div className="profile-section">
+            <div className="card about-card">
+              <div className="about-grid">
+                <div className="about-main">
+                  <span className="about-mark">"</span>
+                  <p className="about-text">Hey! I'm Abilash — a curious soul who loves exploring things, building random projects at 2am, and getting way too deep into rabbit holes. I enjoy the simple stuff: good music, long walks, and conversations that go nowhere and everywhere at the same time.</p>
+                  <div className="about-loc">
+                    <span className="about-loc-dot" />Based in India
                   </div>
                 </div>
-                <div className="pabout-right">
-                  <div className="pabout-trait">
-                    <span className="pabout-trait-emoji">☕</span>
-                    <div><span className="pabout-trait-title">Chai Person</span><span className="pabout-trait-sub">over coffee, always</span></div>
+                <div className="about-traits">
+                  <div className="trait">
+                    <span className="trait-icon">☕</span>
+                    <div><span className="trait-name">Chai Person</span><span className="trait-sub">over coffee, always</span></div>
                   </div>
-                  <div className="pabout-trait">
-                    <span className="pabout-trait-emoji">🌙</span>
-                    <div><span className="pabout-trait-title">Night Owl</span><span className="pabout-trait-sub">2am coding sessions</span></div>
+                  <div className="trait">
+                    <span className="trait-icon">🌙</span>
+                    <div><span className="trait-name">Night Owl</span><span className="trait-sub">2am coding sessions</span></div>
                   </div>
-                  <div className="pabout-trait">
-                    <span className="pabout-trait-emoji">🎧</span>
-                    <div><span className="pabout-trait-title">Music Addict</span><span className="pabout-trait-sub">lo-fi & indie vibes</span></div>
+                  <div className="trait">
+                    <span className="trait-icon">🎧</span>
+                    <div><span className="trait-name">Music Addict</span><span className="trait-sub">lo-fi & indie vibes</span></div>
                   </div>
-                  <div className="pabout-trait">
-                    <span className="pabout-trait-emoji">🐕</span>
-                    <div><span className="pabout-trait-title">Dog Person</span><span className="pabout-trait-sub">no debate</span></div>
+                  <div className="trait">
+                    <span className="trait-icon">🐕</span>
+                    <div><span className="trait-name">Dog Person</span><span className="trait-sub">no debate</span></div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="profile-quotes card">
-              <div className="pabout-header">
-                <span className="pabout-badge" style={{background:'var(--purple)',color:'white'}}>Quotes I Live By</span>
-              </div>
-              <div className="pquotes-list">
+            <div className="card quotes-card">
+              <span className="badge badge-purple">Quotes I Live By</span>
+              <div className="quotes-list">
                 {[
                   { text:'Be yourself; everyone else is already taken.', author:'Oscar Wilde' },
                   { text:'The only way to do great work is to love what you do.', author:'Steve Jobs' },
                   { text:'In the middle of difficulty lies opportunity.', author:'Albert Einstein' },
                 ].map((q,i) => (
-                  <div key={i} className="pquote">
-                    <span className="pquote-mark">"</span>
-                    <div className="pquote-content">
-                      <p className="pquote-text">{q.text}</p>
-                      <span className="pquote-author">— {q.author}</span>
+                  <div key={i} className="quote">
+                    <span className="quote-mark">"</span>
+                    <div className="quote-body">
+                      <p className="quote-text">{q.text}</p>
+                      <span className="quote-author">— {q.author}</span>
                     </div>
                   </div>
                 ))}
@@ -361,46 +355,46 @@ function Home() {
           </div>
         </section>
 
-        {/* HOBBIES */}
+        {/* ─── HOBBIES ─── */}
         <section className="section" id="hobbies" ref={refs.hobbies}>
-          <div className="section-head" style={{'--accent':'var(--orange)'}}>
-            <span className="section-head-pill">Hobbies</span>
-            <span className="section-head-dots">•••</span>
+          <div className="section-head">
+            <span className="section-label">Hobbies</span>
           </div>
           <div className="hobby-grid">
             {hobbies.map((h,i) => (
               <Link key={i} to={HOBBY_ROUTES[h.title]} className="hobby-card">
-                <div className="hobby-card-icon" style={{background:h.color+'14',color:h.color}}>{h.emoji}</div>
-                <h3>{h.title}</h3>
-                <p>{h.desc}</p>
-                <span className="hobby-card-arrow" style={{color:h.color}}>→</span>
+                <span className="hobby-emoji">{h.emoji}</span>
+                <div className="hobby-info">
+                  <h3>{h.title}</h3>
+                  <p>{h.desc}</p>
+                </div>
+                <span className="hobby-arrow">→</span>
               </Link>
             ))}
           </div>
         </section>
 
-        {/* GALLERY */}
+        {/* ─── GALLERY ─── */}
         <section className="section" id="gallery" ref={refs.gallery}>
-          <div className="section-head" style={{'--accent':'var(--purple)'}}>
-            <span className="section-head-pill">Photo Collections</span>
-            <span className="section-head-dots">•••</span>
+          <div className="section-head">
+            <span className="section-label">Photo Collections</span>
           </div>
-          <div className="game-tabs" style={{marginBottom:'0.75rem'}}>
+          <div className="filter-row">
             {cats.map(c => (
-              <button key={c} className={`game-tab ${photoFilter===c?'active':''}`} onClick={() => setPhotoFilter(c)}>
+              <button key={c} className={`filter-pill ${photoFilter===c?'is-active':''}`} onClick={() => setPhotoFilter(c)}>
                 {c}
               </button>
             ))}
           </div>
-          <div className="collections-grid">
+          <div className="collection-grid">
             {filteredCollections.map((col,i) => (
               <div key={i} className="collection-card" onClick={() => setOpenCollection(col)}>
                 <img src={col.photos[0].src} alt={col.title} />
                 <div className="collection-overlay">
                   <h4>{col.title}</h4>
-                  <div className="meta">
+                  <div className="collection-meta">
                     <span>{col.photos.length} photos</span>
-                    <span className="dot" />
+                    <span className="collection-dot" />
                     <span>{col.cat}</span>
                   </div>
                 </div>
@@ -411,15 +405,14 @@ function Home() {
           </div>
         </section>
 
-        {/* BLOGS */}
+        {/* ─── BLOGS ─── */}
         <section className="section" id="blogs" ref={refs.blogs}>
-          <div className="section-head" style={{'--accent':'var(--yellow)'}}>
-            <span className="section-head-pill">Blogs</span>
-            <span className="section-head-dots">•••</span>
+          <div className="section-head">
+            <span className="section-label">Blogs</span>
           </div>
-          <div className="game-tabs" style={{marginBottom:'0.75rem'}}>
+          <div className="filter-row">
             {['all','tutorial','thoughts','update'].map(t => (
-              <button key={t} className={`game-tab ${blogFilter===t?'active':''}`} onClick={() => setBlogFilter(t)}>
+              <button key={t} className={`filter-pill ${blogFilter===t?'is-active':''}`} onClick={() => setBlogFilter(t)}>
                 {t}
               </button>
             ))}
@@ -427,20 +420,20 @@ function Home() {
           <div className="blog-grid">
             {blogs.map((b,i) => {
               const tagColor = b.tag==='tutorial'?'var(--blue)':b.tag==='thoughts'?'var(--purple)':'var(--green)';
-              const tagBg = b.tag==='tutorial'?'var(--blue-bg)':b.tag==='thoughts'?'var(--purple-bg)':'var(--green-bg)';
+              const tagBg = b.tag==='tutorial'?'var(--blue-soft)':b.tag==='thoughts'?'var(--purple-soft)':'var(--green-soft)';
               return (
                 <div key={i} className="blog-card" onClick={() => setOpenBlog(b)}>
                   <div className="blog-card-accent" style={{background:tagColor}} />
-                  <div className="blog-card-inner">
-                    <div className="blog-card-top">
-                      <span className="blog-card-tag" style={{background:tagBg,color:tagColor}}>{b.tag}</span>
-                      <span className="blog-card-read">{b.read} read</span>
+                  <div className="blog-card-body">
+                    <div className="blog-card-head">
+                      <span className="blog-tag" style={{background:tagBg,color:tagColor}}>{b.tag}</span>
+                      <span className="blog-read">{b.read} read</span>
                     </div>
                     <h3>{b.title}</h3>
                     <p>{b.excerpt}</p>
                     <div className="blog-card-foot">
-                      <span className="blog-card-date">{b.date}</span>
-                      <span className="blog-card-arrow">→</span>
+                      <span className="blog-date">{b.date}</span>
+                      <span className="blog-arrow">→</span>
                     </div>
                   </div>
                 </div>
@@ -451,83 +444,83 @@ function Home() {
 
       </main>
 
-      {/* BLOG READER - SLIDE PANEL */}
+      {/* ─── BLOG READER ─── */}
       {openBlog && (
-        <div className="blog-reader">
-          <div className="blog-reader-topbar">
-            <button className="blog-reader-back" onClick={() => setOpenBlog(null)}>← Back</button>
-            <div className="blog-reader-topbar-info">
-              <span className="blog-reader-topbar-tag" style={{
-                background: openBlog.tag==='tutorial'?'var(--blue-bg)':openBlog.tag==='thoughts'?'var(--purple-bg)':'var(--green-bg)',
+        <div className="reader">
+          <div className="reader-bar">
+            <button className="reader-back" onClick={() => setOpenBlog(null)}>← Back</button>
+            <div className="reader-bar-info">
+              <span className="reader-tag" style={{
+                background: openBlog.tag==='tutorial'?'var(--blue-soft)':openBlog.tag==='thoughts'?'var(--purple-soft)':'var(--green-soft)',
                 color: openBlog.tag==='tutorial'?'var(--blue)':openBlog.tag==='thoughts'?'var(--purple)':'var(--green)',
               }}>{openBlog.tag}</span>
-              <span className="blog-reader-topbar-read">{openBlog.read} read</span>
+              <span className="reader-read">{openBlog.read} read</span>
             </div>
-            <span className="blog-reader-topbar-date">{openBlog.date}</span>
+            <span className="reader-date">{openBlog.date}</span>
           </div>
 
-          <div className="blog-reader-scroll">
-            <article className="blog-article">
-              <header className="blog-article-header">
-                <span className="blog-article-tag" style={{
-                  background: openBlog.tag==='tutorial'?'var(--blue-bg)':openBlog.tag==='thoughts'?'var(--purple-bg)':'var(--green-bg)',
+          <div className="reader-scroll">
+            <article className="article">
+              <header className="article-header">
+                <span className="article-tag" style={{
+                  background: openBlog.tag==='tutorial'?'var(--blue-soft)':openBlog.tag==='thoughts'?'var(--purple-soft)':'var(--green-soft)',
                   color: openBlog.tag==='tutorial'?'var(--blue)':openBlog.tag==='thoughts'?'var(--purple)':'var(--green)',
                 }}>{openBlog.tag}</span>
                 <h1>{openBlog.title}</h1>
-                <p className="blog-article-excerpt">{openBlog.excerpt}</p>
-                <div className="blog-article-meta">
-                  <div className="blog-article-author">
-                    <div className="blog-article-avatar">A</div>
+                <p className="article-excerpt">{openBlog.excerpt}</p>
+                <div className="article-meta">
+                  <div className="article-author">
+                    <div className="article-avatar">A</div>
                     <div>
-                      <span className="blog-article-author-name">Abilash</span>
-                      <span className="blog-article-author-role">Developer & Writer</span>
+                      <span className="article-author-name">Abilash</span>
+                      <span className="article-author-role">Developer & Writer</span>
                     </div>
                   </div>
-                  <div className="blog-article-meta-right">
+                  <div className="article-meta-right">
                     <span>{openBlog.date}</span>
-                    <span className="blog-article-meta-dot">·</span>
+                    <span className="article-meta-dot">·</span>
                     <span>{openBlog.read} read</span>
                   </div>
                 </div>
               </header>
 
-              <div className="blog-article-divider" />
+              <div className="article-divider" />
 
-              <div className="blog-article-body">
+              <div className="article-body">
                 <p>{openBlog.body || 'This is a full blog post about ' + openBlog.title.toLowerCase() + '. It covers the key insights, lessons learned, and practical tips I gathered along the way.'}</p>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                 <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
               </div>
 
-              <div className="blog-article-divider" />
+              <div className="article-divider" />
 
-              <footer className="blog-article-footer">
-                <div className="blog-article-author-card">
-                  <div className="blog-article-author-card-avatar">A</div>
+              <footer className="article-footer">
+                <div className="article-author-card">
+                  <div className="article-author-card-avatar">A</div>
                   <div>
-                    <span className="blog-article-author-card-name">Written by Abilash</span>
-                    <span className="blog-article-author-card-bio">Building digital experiences with clean code and creative thinking.</span>
+                    <span className="article-author-card-name">Written by Abilash</span>
+                    <span className="article-author-card-bio">Building digital experiences with clean code and creative thinking.</span>
                   </div>
                 </div>
-                <button className="blog-reader-done" onClick={() => setOpenBlog(null)}>Done reading</button>
+                <button className="reader-done" onClick={() => setOpenBlog(null)}>Done reading</button>
               </footer>
             </article>
           </div>
         </div>
       )}
 
-      {/* COLLECTION - FULLSCREEN GALLERY */}
+      {/* ─── COLLECTION FULLSCREEN ─── */}
       {openCollection && (
-        <div className="gallery-fs">
-          <div className="gallery-fs-top">
-            <button className="gallery-fs-back" onClick={() => { setOpenCollection(null); setLightboxIdx(null); }}>← Back</button>
-            <div className="gallery-fs-title">
+        <div className="gallery-full">
+          <div className="gallery-full-bar">
+            <button className="gallery-full-back" onClick={() => { setOpenCollection(null); setLightboxIdx(null); }}>← Back</button>
+            <div className="gallery-full-info">
               <h2>{openCollection.title}</h2>
               <span>{openCollection.photos.length} photos · {openCollection.cat}</span>
             </div>
-            <span className="gallery-fs-badge">{openCollection.photos.length} shots</span>
+            <span className="gallery-full-badge">{openCollection.photos.length} shots</span>
           </div>
-          <div className="gallery-fs-scroll">
+          <div className="gallery-full-scroll">
             <div className="gallery-masonry">
               {openCollection.photos.map((p,i) => (
                 <div key={i} className="gallery-m-item" onClick={() => setLightboxIdx(i)}>
@@ -540,8 +533,8 @@ function Home() {
               ))}
             </div>
           </div>
-          <div className="gallery-fs-bottom">
-            <button className="gallery-fs-back-btn" onClick={() => { setOpenCollection(null); setLightboxIdx(null); }}>← Back to collections</button>
+          <div className="gallery-full-foot">
+            <button className="gallery-full-btn" onClick={() => { setOpenCollection(null); setLightboxIdx(null); }}>← Back to collections</button>
           </div>
         </div>
       )}
@@ -565,22 +558,22 @@ function Home() {
         </div>
       )}
 
-      {/* FOOTER */}
+      {/* ─── FOOTER ─── */}
       <footer className="footer">
-        <div className="footer-inner">
+        <div className="footer-wrap">
           <div className="footer-cta">
             <span className="footer-cta-label">Let's Connect</span>
             <p className="footer-cta-text">Got something cool in mind? Let's make it happen.</p>
             <a href="mailto:hello@example.com" className="footer-cta-btn">Say Hello ✉</a>
           </div>
           <div className="footer-mid">
-            <div className="footer-links-row">
+            <div className="footer-links">
               <button onClick={() => scrollTo('profile')}>Profile</button>
-              <span className="footer-links-dot">·</span>
+              <span className="footer-dot">·</span>
               <button onClick={() => scrollTo('hobbies')}>Hobbies</button>
-              <span className="footer-links-dot">·</span>
+              <span className="footer-dot">·</span>
               <button onClick={() => scrollTo('gallery')}>Gallery</button>
-              <span className="footer-links-dot">·</span>
+              <span className="footer-dot">·</span>
               <button onClick={() => scrollTo('blogs')}>Blogs</button>
             </div>
             <div className="footer-socials">
@@ -590,25 +583,26 @@ function Home() {
               <a href="mailto:hello@example.com" className="footer-social" title="Email">✉</a>
             </div>
           </div>
-          <div className="footer-divider" />
+          <div className="footer-sep" />
           <div className="footer-bottom">
             <span>© {new Date().getFullYear()} Abilash. Made with React & Vite</span>
-            <button className="footer-top-btn" onClick={() => scrollTo('profile')} title="Back to top">↑ Top</button>
+            <button className="footer-top" onClick={() => scrollTo('profile')} title="Back to top">↑ Top</button>
           </div>
         </div>
       </footer>
 
+      {/* ─── CV MODAL ─── */}
       {showCvModal && (
         <div className="modal-overlay" onClick={() => { setShowCvModal(false); setCvName(''); }}>
           <div className="modal-card" onClick={e => e.stopPropagation()}>
             <button className="modal-close" onClick={() => { setShowCvModal(false); setCvName(''); }}>✕</button>
-            <span className="modal-emoji">📄</span>
+            <span className="modal-icon">📄</span>
             <h2>Download CV</h2>
             <p className="modal-desc">Enter your name to download Abilash's CV.</p>
-            <div className="cv-form">
-              <label className="cv-label">Your Name <span className="cv-required">*</span></label>
+            <div className="modal-form">
+              <label className="modal-label">Your Name <span className="modal-required">*</span></label>
               <input
-                className="cv-input"
+                className="modal-input"
                 type="text"
                 placeholder="Enter your full name"
                 value={cvName}
@@ -617,13 +611,13 @@ function Home() {
                 autoFocus
               />
             </div>
-            <div className="cv-modal-actions">
-              <button className="cv-modal-btn cancel" onClick={() => { setShowCvModal(false); setCvName(''); }}>Cancel</button>
-              <button className="cv-modal-btn confirm" disabled={!cvName.trim() || cvSubmitting} onClick={handleCvDownload}>
+            <div className="modal-actions">
+              <button className="modal-btn modal-btn-cancel" onClick={() => { setShowCvModal(false); setCvName(''); }}>Cancel</button>
+              <button className="modal-btn modal-btn-confirm" disabled={!cvName.trim() || cvSubmitting} onClick={handleCvDownload}>
                 {cvSubmitting ? 'Saving...' : 'Download PDF'}
               </button>
             </div>
-            {cvStatus && <p className="cv-status">{cvStatus}</p>}
+            {cvStatus && <p className="modal-status">{cvStatus}</p>}
           </div>
         </div>
       )}
