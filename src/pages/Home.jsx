@@ -48,8 +48,8 @@ const TRAITS = [
   { icon: "\u{1F319}", name: "Im Batman", sub: "Night Person" },
   { icon: "\u{1F3A7}", name: "Music Addict", sub: "Yes I'm" },
   { icon: "\u{1F415}", name: "Pet", sub: "Soon" },
-  { icon: "\u{1F30D}", name: "Traveler", sub: "Wanderlust" },
-  { icon: "\u{1F6B4}", name: "Biker", sub: "Two Wheels Freedom" },
+  { icon: "\u{1F30D}", name: "God", sub: "Trust" },
+  { icon: "\u{1F6B4}", name: "Motorcyclist", sub: "Two Wheels Freedom" },
 ];
 
 export default function Home({ onCvOpen }) {

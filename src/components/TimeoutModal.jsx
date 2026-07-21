@@ -4,7 +4,7 @@ import { Clock, RotateCcw } from 'lucide-react'
 export default function TimeoutModal({ onRetry }) {
   return (
     <motion.div
-      className="fixed inset-0 z-[95] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -29,7 +29,7 @@ export default function TimeoutModal({ onRetry }) {
 
         <h2 className="text-lg font-bold tracking-tight mb-2">Session Timeout</h2>
         <p className="text-[13px] text-text-secondary leading-relaxed mb-6">
-          You&apos;ve been inactive for a while. Click below to continue browsing.
+          You&apos;ve been inactive for a while. Click below to continue.
         </p>
 
         <button
@@ -40,8 +40,8 @@ export default function TimeoutModal({ onRetry }) {
           Try Again
         </button>
 
-        <p className="text-[10px] text-text-quaternary mt-4 font-mono">
-          This counts as a new visit
+          <p className="text-[10px] text-text-quaternary mt-4 font-mono">
+          It will navigate to website.
         </p>
       </motion.div>
     </motion.div>
