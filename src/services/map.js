@@ -27,7 +27,7 @@ export function renderLayers(map, places) {
       weight: isFirst ? 3 : 1.5,
     }).addTo(map)
     marker.bindPopup(
-      '<div style="text-align:center;font-family:Inter,sans-serif;padding:2px 6px">' +
+      '<div style="text-align:center;font-family:Inter,sans-serif;padding:2px 6px;color:#18181b">' +
       '<span style="font-size:1.2rem">' + p.emoji + '</span><br/>' +
       '<strong style="font-size:0.85rem">' + p.city + '</strong><br/>' +
       '<span style="font-size:0.7rem;color:#71717a">' + p.country + ' \u00b7 ' + p.date + '</span></div>',
