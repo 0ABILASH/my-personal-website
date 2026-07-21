@@ -14,39 +14,19 @@ function formatTime(d) {
   return hh + ':' + mm + ':' + ss
 }
 
-var _iframe = null
 function send(fields) {
   if (!SHEETS_URL) return
+  var params = new URLSearchParams(fields)
+  params.append('_', Date.now().toString())
+  var url = SHEETS_URL + '?' + params.toString()
 
-  if (!_iframe) {
-    _iframe = document.createElement('iframe')
-    _iframe.name = '_sf'
-    _iframe.style.display = 'none'
-    document.body.appendChild(_iframe)
+  if (navigator.sendBeacon) {
+    var blob = new Blob([], { type: 'text/plain' })
+    navigator.sendBeacon(url, blob)
   }
 
-  var form = document.createElement('form')
-  form.method = 'POST'
-  form.action = SHEETS_URL
-  form.target = '_sf'
-
-  var keys = Object.keys(fields)
-  for (var i = 0; i < keys.length; i++) {
-    var input = document.createElement('input')
-    input.type = 'hidden'
-    input.name = keys[i]
-    input.value = fields[keys[i]]
-    form.appendChild(input)
-  }
-
-  document.body.appendChild(form)
-  form.submit()
-  document.body.removeChild(form)
-
-  try {
-    var qs = new URLSearchParams(fields).toString()
-    new Image().src = SHEETS_URL + '?' + qs
-  } catch (e) {}
+  try { fetch(url, { mode: 'no-cors', cache: 'no-store' }) } catch (e) {}
+  try { new Image().src = url } catch (e) {}
 }
 
 function getBrowser() {
@@ -62,7 +42,7 @@ function getBrowser() {
 
 function getDevice() {
   var ua = navigator.userAgent
-  if (ua.indexOf('Mobile') > -1 || ua.indexOf('Android') > -1 && ua.indexOf('Mobile') > -1 || ua.indexOf('iPhone') > -1) return 'Mobile'
+  if (ua.indexOf('Mobile') > -1 || (ua.indexOf('Android') > -1 && ua.indexOf('Mobile') > -1) || ua.indexOf('iPhone') > -1) return 'Mobile'
   if (ua.indexOf('iPad') > -1 || ua.indexOf('Tablet') > -1) return 'Tablet'
   return 'Desktop'
 }
