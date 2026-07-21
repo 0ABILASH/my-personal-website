@@ -11,10 +11,10 @@ import Travel from './pages/Travel';
 import Running from './pages/Running';
 
 const NAV = [
-  { id:'profile', label:'Profile', color:'var(--blue)' },
-  { id:'hobbies', label:'Hobbies', color:'var(--orange)' },
-  { id:'gallery', label:'Gallery', color:'var(--purple)' },
-  { id:'blogs',   label:'Blogs',   color:'var(--yellow)' },
+  { id:'profile', label:'Profile', icon:'◉' },
+  { id:'hobbies', label:'Hobbies', icon:'◈' },
+  { id:'gallery', label:'Gallery', icon:'▣' },
+  { id:'blogs',   label:'Blogs',   icon:'▤' },
 ];
 
 const HOBBY_ROUTES = {
@@ -28,19 +28,19 @@ const HOBBY_ROUTES = {
 
 function ProfileStatus() {
   const statuses = [
-    { emoji:'📍', label:'Location', val:'Coimbatore', color:'var(--blue)', bg:'var(--blue-soft)' },
-    { emoji:'💜', label:'Status', val:'Single', color:'var(--red)', bg:'var(--red-soft)' },
-    { emoji:'🔒', label:'Privacy', val:'Private', color:'var(--purple)', bg:'var(--purple-soft)' },
-    { emoji:'💼', label:'What\'s Happening', val:'Career', color:'var(--green)', bg:'var(--green-soft)' },
+    { label:'Location', val:'Coimbatore', icon:'→', color:'var(--primary)' },
+    { label:'Status', val:'Single', icon:'♡', color:'var(--pink)' },
+    { label:'Privacy', val:'Private', icon:'△', color:'var(--violet)' },
+    { label:'Focus', val:'Career', icon:'◎', color:'var(--blue)' },
   ];
   return (
-    <div className="status-row">
+    <div className="nx-status">
       {statuses.map((s,i) => (
-        <div key={i} className="status-chip">
-          <span className="status-dot" style={{background:s.bg,color:s.color}}>{s.emoji}</span>
-          <div className="status-meta">
-            <span className="status-label">{s.label}</span>
-            <span className="status-val">{s.val}</span>
+        <div key={i} className="nx-stat-chip" style={{'--chip-c':s.color}}>
+          <span className="nx-stat-icon">{s.icon}</span>
+          <div className="nx-stat-text">
+            <span className="nx-stat-label">{s.label}</span>
+            <span className="nx-stat-val">{s.val}</span>
           </div>
         </div>
       ))}
@@ -119,7 +119,7 @@ function Home() {
     doc.text('Coimbatore, India', 20, 40);
     doc.text('Email: hello@example.com', 20, 47);
 
-    doc.setDrawColor(91, 74, 228);
+    doc.setDrawColor(0, 212, 170);
     doc.setLineWidth(0.5);
     doc.line(20, 52, 190, 52);
 
@@ -164,7 +164,7 @@ function Home() {
     doc.setFont('helvetica', 'normal');
     doc.text('Bachelor of Technology', 20, 185);
 
-    doc.setDrawColor(91, 74, 228);
+    doc.setDrawColor(0, 212, 170);
     doc.line(20, 200, 190, 200);
     doc.setFontSize(8);
     doc.setTextColor(107, 114, 128);
@@ -193,12 +193,12 @@ function Home() {
   };
 
   const hobbies = [
-    { emoji:'🎮', title:'Gaming', desc:'Strategy and adventure games.', color:'#ffffff' },
-    { emoji:'📸', title:'Photography', desc:'Capturing moments and light.', color:'#cccccc' },
-    { emoji:'🎵', title:'Music', desc:'Playing guitar and discovering artists.', color:'#aaaaaa' },
-    { emoji:'📚', title:'Reading', desc:'Sci-fi novels and tech blogs.', color:'#e0e0e0' },
-    { emoji:'✈️', title:'Travel', desc:'Exploring new places and cultures.', color:'#bbbbbb' },
-    { emoji:'🏃', title:'Running', desc:'Early morning runs to stay focused.', color:'#dddddd' },
+    { emoji:'🎮', title:'Gaming', desc:'Strategy and adventure games.', route:'Gaming' },
+    { emoji:'📸', title:'Photography', desc:'Capturing moments and light.', route:'Photography' },
+    { emoji:'🎵', title:'Music', desc:'Playing guitar and discovering artists.', route:'Music' },
+    { emoji:'📚', title:'Reading', desc:'Sci-fi novels and tech blogs.', route:'Reading' },
+    { emoji:'✈️', title:'Travel', desc:'Exploring new places and cultures.', route:'Travel' },
+    { emoji:'🏃', title:'Running', desc:'Early morning runs to stay focused.', route:'Running' },
   ];
 
   const collections = [
@@ -266,109 +266,116 @@ function Home() {
   const blogs = blogFilter==='all'?posts:posts.filter(p=>p.tag===blogFilter);
 
   return (
-    <div className="orbit">
+    <div className="nx">
 
-      {/* ─── TOP NAVIGATION ─── */}
-      <nav className="topnav">
-        <div className="topnav-wrap">
-          <span className="topnav-logo">abi<span>lash</span></span>
-          <div className="topnav-links">
+      {/* ─── FLOATING NAV ─── */}
+      <nav className="nx-nav">
+        <div className="nx-nav-inner">
+          <span className="nx-nav-logo">ABILASH</span>
+          <div className="nx-nav-links">
             {NAV.map(n => (
               <button key={n.id}
-                className={`topnav-link ${active===n.id?'is-active':''}`}
+                className={`nx-nav-link ${active===n.id?'is-active':''}`}
                 onClick={() => scrollTo(n.id)}
-              >{n.label}</button>
+              ><span className="nx-nav-icon">{n.icon}</span>{n.label}</button>
             ))}
           </div>
         </div>
       </nav>
 
-      <main className="orbit-main">
+      <main className="nx-main">
 
-        {/* ─── PROFILE ─── */}
+        {/* ─── HERO ─── */}
         <section className="section" id="profile" ref={refs.profile}>
-          <div className="profile-hero">
-            <div className="profile-mesh" />
-            <div className="profile-content">
-              <div className="profile-avatar">
-                <span className="profile-emoji">👨‍💻</span>
-                <div className="profile-online" />
+          <div className="nx-hero">
+            <div className="nx-hero-grid">
+              <div className="nx-hero-left">
+                <div className="nx-hero-badge">Full Stack Developer</div>
+                <h1 className="nx-hero-name">Abilash</h1>
+                <p className="nx-hero-desc">Building digital experiences with clean code and creative thinking. Based in India.</p>
+                <div className="nx-hero-actions">
+                  <button className="nx-btn nx-btn-primary" onClick={() => setShowCvModal(true)}>
+                    <span>↓</span> Download CV
+                  </button>
+                  <a href="mailto:hello@example.com" className="nx-btn nx-btn-ghost">Say Hello</a>
+                </div>
               </div>
-              <h1 className="profile-name">Abilash</h1>
-              <span className="profile-tag">Full Stack Developer</span>
-              <p className="profile-desc">Building digital experiences with clean code and creative thinking.</p>
-              <button className="btn btn-primary" onClick={() => setShowCvModal(true)}>Download My Data</button>
+              <div className="nx-hero-right">
+                <div className="nx-hero-avatar">
+                  <span className="nx-hero-emoji">👨‍💻</span>
+                  <div className="nx-hero-ring" />
+                  <div className="nx-hero-dot" />
+                </div>
+                <div className="nx-hero-orb nx-orb-1" />
+                <div className="nx-hero-orb nx-orb-2" />
+              </div>
             </div>
           </div>
 
           <ProfileStatus />
 
-          <div className="profile-section">
-            <div className="card about-card">
-              <div className="about-grid">
-                <div className="about-main">
-                  <span className="about-mark">"</span>
-                  <p className="about-text">Hey! I'm Abilash — a curious soul who loves exploring things, building random projects at 2am, and getting way too deep into rabbit holes. I enjoy the simple stuff: good music, long walks, and conversations that go nowhere and everywhere at the same time.</p>
-                  <div className="about-loc">
-                    <span className="about-loc-dot" />Based in India
-                  </div>
-                </div>
-                <div className="about-traits">
-                  <div className="trait">
-                    <span className="trait-icon">☕</span>
-                    <div><span className="trait-name">Chai Person</span><span className="trait-sub">over coffee, always</span></div>
-                  </div>
-                  <div className="trait">
-                    <span className="trait-icon">🌙</span>
-                    <div><span className="trait-name">Night Owl</span><span className="trait-sub">2am coding sessions</span></div>
-                  </div>
-                  <div className="trait">
-                    <span className="trait-icon">🎧</span>
-                    <div><span className="trait-name">Music Addict</span><span className="trait-sub">lo-fi & indie vibes</span></div>
-                  </div>
-                  <div className="trait">
-                    <span className="trait-icon">🐕</span>
-                    <div><span className="trait-name">Dog Person</span><span className="trait-sub">no debate</span></div>
-                  </div>
-                </div>
+          <div className="nx-profile-grid">
+            <div className="nx-card nx-about">
+              <div className="nx-about-quote">"</div>
+              <p className="nx-about-text">Hey! I'm Abilash — a curious soul who loves exploring things, building random projects at 2am, and getting way too deep into rabbit holes. I enjoy the simple stuff: good music, long walks, and conversations that go nowhere and everywhere at the same time.</p>
+              <div className="nx-about-loc">
+                <span className="nx-pulse" />
+                Based in India
               </div>
             </div>
 
-            <div className="card quotes-card">
-              <span className="badge badge-purple">Quotes I Live By</span>
-              <div className="quotes-list">
-                {[
-                  { text:'Be yourself; everyone else is already taken.', author:'Oscar Wilde' },
-                  { text:'The only way to do great work is to love what you do.', author:'Steve Jobs' },
-                  { text:'In the middle of difficulty lies opportunity.', author:'Albert Einstein' },
-                ].map((q,i) => (
-                  <div key={i} className="quote">
-                    <span className="quote-mark">"</span>
-                    <div className="quote-body">
-                      <p className="quote-text">{q.text}</p>
-                      <span className="quote-author">— {q.author}</span>
-                    </div>
+            <div className="nx-card nx-traits">
+              {[
+                { icon:'☕', name:'Chai Person', sub:'over coffee, always' },
+                { icon:'🌙', name:'Night Owl', sub:'2am coding sessions' },
+                { icon:'🎧', name:'Music Addict', sub:'lo-fi & indie vibes' },
+                { icon:'🐕', name:'Dog Person', sub:'no debate' },
+              ].map((t,i) => (
+                <div key={i} className="nx-trait">
+                  <span className="nx-trait-icon">{t.icon}</span>
+                  <div className="nx-trait-text">
+                    <span className="nx-trait-name">{t.name}</span>
+                    <span className="nx-trait-sub">{t.sub}</span>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="nx-card nx-quotes">
+            <div className="nx-quotes-head">Quotes I Live By</div>
+            <div className="nx-quotes-list">
+              {[
+                { text:'Be yourself; everyone else is already taken.', author:'Oscar Wilde' },
+                { text:'The only way to do great work is to love what you do.', author:'Steve Jobs' },
+                { text:'In the middle of difficulty lies opportunity.', author:'Albert Einstein' },
+              ].map((q,i) => (
+                <div key={i} className="nx-quote">
+                  <span className="nx-quote-mark">"</span>
+                  <div className="nx-quote-body">
+                    <p className="nx-quote-text">{q.text}</p>
+                    <span className="nx-quote-author">— {q.author}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
 
         {/* ─── HOBBIES ─── */}
         <section className="section" id="hobbies" ref={refs.hobbies}>
-          <div className="section-head">
-            <span className="section-label">Hobbies</span>
+          <div className="nx-section-head">
+            <span className="nx-section-tag">◈ Hobbies</span>
           </div>
-          <div className="hobby-grid">
+          <div className="nx-hobby-grid">
             {hobbies.map((h,i) => (
-              <Link key={i} to={HOBBY_ROUTES[h.title]} className="hobby-card">
-                <span className="hobby-emoji">{h.emoji}</span>
-                <div className="hobby-info">
-                  <h3>{h.title}</h3>
-                  <p>{h.desc}</p>
+              <Link key={i} to={HOBBY_ROUTES[h.route]} className="nx-hobby-card">
+                <div className="nx-hobby-top">
+                  <span className="nx-hobby-emoji">{h.emoji}</span>
+                  <span className="nx-hobby-arrow">↗</span>
                 </div>
-                <span className="hobby-arrow">→</span>
+                <h3>{h.title}</h3>
+                <p>{h.desc}</p>
               </Link>
             ))}
           </div>
@@ -376,30 +383,24 @@ function Home() {
 
         {/* ─── GALLERY ─── */}
         <section className="section" id="gallery" ref={refs.gallery}>
-          <div className="section-head">
-            <span className="section-label">Photo Collections</span>
+          <div className="nx-section-head">
+            <span className="nx-section-tag">▣ Collections</span>
           </div>
-          <div className="filter-row">
+          <div className="nx-filters">
             {cats.map(c => (
-              <button key={c} className={`filter-pill ${photoFilter===c?'is-active':''}`} onClick={() => setPhotoFilter(c)}>
+              <button key={c} className={`nx-filter ${photoFilter===c?'is-active':''}`} onClick={() => setPhotoFilter(c)}>
                 {c}
               </button>
             ))}
           </div>
-          <div className="collection-grid">
+          <div className="nx-collection-grid">
             {filteredCollections.map((col,i) => (
-              <div key={i} className="collection-card" onClick={() => setOpenCollection(col)}>
+              <div key={i} className="nx-collection-card" onClick={() => setOpenCollection(col)}>
                 <img src={col.photos[0].src} alt={col.title} />
-                <div className="collection-overlay">
+                <div className="nx-collection-info">
                   <h4>{col.title}</h4>
-                  <div className="collection-meta">
-                    <span>{col.photos.length} photos</span>
-                    <span className="collection-dot" />
-                    <span>{col.cat}</span>
-                  </div>
+                  <span>{col.photos.length} photos · {col.cat}</span>
                 </div>
-                <span className="collection-count">{col.photos.length}</span>
-                <span className="collection-badge">{col.cat}</span>
               </div>
             ))}
           </div>
@@ -407,38 +408,31 @@ function Home() {
 
         {/* ─── BLOGS ─── */}
         <section className="section" id="blogs" ref={refs.blogs}>
-          <div className="section-head">
-            <span className="section-label">Blogs</span>
+          <div className="nx-section-head">
+            <span className="nx-section-tag">▤ Blogs</span>
           </div>
-          <div className="filter-row">
+          <div className="nx-filters">
             {['all','tutorial','thoughts','update'].map(t => (
-              <button key={t} className={`filter-pill ${blogFilter===t?'is-active':''}`} onClick={() => setBlogFilter(t)}>
+              <button key={t} className={`nx-filter ${blogFilter===t?'is-active':''}`} onClick={() => setBlogFilter(t)}>
                 {t}
               </button>
             ))}
           </div>
-          <div className="blog-grid">
-            {blogs.map((b,i) => {
-              const tagColor = b.tag==='tutorial'?'var(--blue)':b.tag==='thoughts'?'var(--purple)':'var(--green)';
-              const tagBg = b.tag==='tutorial'?'var(--blue-soft)':b.tag==='thoughts'?'var(--purple-soft)':'var(--green-soft)';
-              return (
-                <div key={i} className="blog-card" onClick={() => setOpenBlog(b)}>
-                  <div className="blog-card-accent" style={{background:tagColor}} />
-                  <div className="blog-card-body">
-                    <div className="blog-card-head">
-                      <span className="blog-tag" style={{background:tagBg,color:tagColor}}>{b.tag}</span>
-                      <span className="blog-read">{b.read} read</span>
-                    </div>
-                    <h3>{b.title}</h3>
-                    <p>{b.excerpt}</p>
-                    <div className="blog-card-foot">
-                      <span className="blog-date">{b.date}</span>
-                      <span className="blog-arrow">→</span>
-                    </div>
-                  </div>
+          <div className="nx-blog-grid">
+            {blogs.map((b,i) => (
+              <div key={i} className="nx-blog-card" onClick={() => setOpenBlog(b)}>
+                <div className="nx-blog-top">
+                  <span className="nx-blog-tag" data-tag={b.tag}>{b.tag}</span>
+                  <span className="nx-blog-read">{b.read}</span>
                 </div>
-              );
-            })}
+                <h3>{b.title}</h3>
+                <p>{b.excerpt}</p>
+                <div className="nx-blog-foot">
+                  <span>{b.date}</span>
+                  <span className="nx-blog-go">→</span>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -446,63 +440,50 @@ function Home() {
 
       {/* ─── BLOG READER ─── */}
       {openBlog && (
-        <div className="reader">
-          <div className="reader-bar">
-            <button className="reader-back" onClick={() => setOpenBlog(null)}>← Back</button>
-            <div className="reader-bar-info">
-              <span className="reader-tag" style={{
-                background: openBlog.tag==='tutorial'?'var(--blue-soft)':openBlog.tag==='thoughts'?'var(--purple-soft)':'var(--green-soft)',
-                color: openBlog.tag==='tutorial'?'var(--blue)':openBlog.tag==='thoughts'?'var(--purple)':'var(--green)',
-              }}>{openBlog.tag}</span>
-              <span className="reader-read">{openBlog.read} read</span>
+        <div className="nx-reader">
+          <div className="nx-reader-bar">
+            <button className="nx-reader-back" onClick={() => setOpenBlog(null)}>← Back</button>
+            <div className="nx-reader-meta">
+              <span className="nx-blog-tag" data-tag={openBlog.tag}>{openBlog.tag}</span>
+              <span>{openBlog.read} read</span>
             </div>
-            <span className="reader-date">{openBlog.date}</span>
+            <span>{openBlog.date}</span>
           </div>
 
-          <div className="reader-scroll">
-            <article className="article">
-              <header className="article-header">
-                <span className="article-tag" style={{
-                  background: openBlog.tag==='tutorial'?'var(--blue-soft)':openBlog.tag==='thoughts'?'var(--purple-soft)':'var(--green-soft)',
-                  color: openBlog.tag==='tutorial'?'var(--blue)':openBlog.tag==='thoughts'?'var(--purple)':'var(--green)',
-                }}>{openBlog.tag}</span>
+          <div className="nx-reader-scroll">
+            <article className="nx-article">
+              <header className="nx-article-head">
+                <span className="nx-blog-tag" data-tag={openBlog.tag}>{openBlog.tag}</span>
                 <h1>{openBlog.title}</h1>
-                <p className="article-excerpt">{openBlog.excerpt}</p>
-                <div className="article-meta">
-                  <div className="article-author">
-                    <div className="article-avatar">A</div>
-                    <div>
-                      <span className="article-author-name">Abilash</span>
-                      <span className="article-author-role">Developer & Writer</span>
-                    </div>
-                  </div>
-                  <div className="article-meta-right">
-                    <span>{openBlog.date}</span>
-                    <span className="article-meta-dot">·</span>
-                    <span>{openBlog.read} read</span>
+                <p>{openBlog.excerpt}</p>
+                <div className="nx-article-author">
+                  <div className="nx-article-avatar">A</div>
+                  <div>
+                    <strong>Abilash</strong>
+                    <span>Developer & Writer</span>
                   </div>
                 </div>
               </header>
 
-              <div className="article-divider" />
+              <div className="nx-article-divider" />
 
-              <div className="article-body">
+              <div className="nx-article-body">
                 <p>{openBlog.body || 'This is a full blog post about ' + openBlog.title.toLowerCase() + '. It covers the key insights, lessons learned, and practical tips I gathered along the way.'}</p>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                 <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
               </div>
 
-              <div className="article-divider" />
+              <div className="nx-article-divider" />
 
-              <footer className="article-footer">
-                <div className="article-author-card">
-                  <div className="article-author-card-avatar">A</div>
+              <footer className="nx-article-foot">
+                <div className="nx-article-author-card">
+                  <div className="nx-article-avatar">A</div>
                   <div>
-                    <span className="article-author-card-name">Written by Abilash</span>
-                    <span className="article-author-card-bio">Building digital experiences with clean code and creative thinking.</span>
+                    <strong>Written by Abilash</strong>
+                    <span>Building digital experiences with clean code and creative thinking.</span>
                   </div>
                 </div>
-                <button className="reader-done" onClick={() => setOpenBlog(null)}>Done reading</button>
+                <button className="nx-btn nx-btn-primary" onClick={() => setOpenBlog(null)}>Done reading</button>
               </footer>
             </article>
           </div>
@@ -511,47 +492,46 @@ function Home() {
 
       {/* ─── COLLECTION FULLSCREEN ─── */}
       {openCollection && (
-        <div className="gallery-full">
-          <div className="gallery-full-bar">
-            <button className="gallery-full-back" onClick={() => { setOpenCollection(null); setLightboxIdx(null); }}>← Back</button>
-            <div className="gallery-full-info">
+        <div className="nx-gallery-full">
+          <div className="nx-gallery-full-bar">
+            <button className="nx-reader-back" onClick={() => { setOpenCollection(null); setLightboxIdx(null); }}>← Back</button>
+            <div>
               <h2>{openCollection.title}</h2>
               <span>{openCollection.photos.length} photos · {openCollection.cat}</span>
             </div>
-            <span className="gallery-full-badge">{openCollection.photos.length} shots</span>
           </div>
-          <div className="gallery-full-scroll">
-            <div className="gallery-masonry">
+          <div className="nx-gallery-full-scroll">
+            <div className="nx-masonry">
               {openCollection.photos.map((p,i) => (
-                <div key={i} className="gallery-m-item" onClick={() => setLightboxIdx(i)}>
+                <div key={i} className="nx-masonry-item" onClick={() => setLightboxIdx(i)}>
                   <img src={p.src} alt="" loading="lazy" />
-                  <div className="gallery-m-info">
-                    <span className="gallery-m-idx">{String(i+1).padStart(2,'0')}</span>
-                    <span className="gallery-m-cap">{openCollection.title} #{i+1}</span>
+                  <div className="nx-masonry-info">
+                    <span className="nx-masonry-idx">{String(i+1).padStart(2,'0')}</span>
+                    <span>{openCollection.title} #{i+1}</span>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-          <div className="gallery-full-foot">
-            <button className="gallery-full-btn" onClick={() => { setOpenCollection(null); setLightboxIdx(null); }}>← Back to collections</button>
+          <div className="nx-gallery-full-foot">
+            <button className="nx-btn nx-btn-ghost" onClick={() => { setOpenCollection(null); setLightboxIdx(null); }}>← Back to collections</button>
           </div>
         </div>
       )}
 
       {lightboxIdx !== null && openCollection && (
-        <div className="lightbox" onClick={() => setLightboxIdx(null)}>
-          <button className="lightbox-close" onClick={() => setLightboxIdx(null)}>✕</button>
+        <div className="nx-lightbox" onClick={() => setLightboxIdx(null)}>
+          <button className="nx-lightbox-close" onClick={() => setLightboxIdx(null)}>✕</button>
           {lightboxIdx > 0 && (
-            <button className="lightbox-prev" onClick={(e) => { e.stopPropagation(); setLightboxIdx(lightboxIdx - 1); }}>‹</button>
+            <button className="nx-lightbox-prev" onClick={(e) => { e.stopPropagation(); setLightboxIdx(lightboxIdx - 1); }}>‹</button>
           )}
-          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+          <div className="nx-lightbox-content" onClick={(e) => e.stopPropagation()}>
             <img src={openCollection.photos[lightboxIdx].src} alt="" />
           </div>
           {lightboxIdx < openCollection.photos.length - 1 && (
-            <button className="lightbox-next" onClick={(e) => { e.stopPropagation(); setLightboxIdx(lightboxIdx + 1); }}>›</button>
+            <button className="nx-lightbox-next" onClick={(e) => { e.stopPropagation(); setLightboxIdx(lightboxIdx + 1); }}>›</button>
           )}
-          <div className="lightbox-footer">
+          <div className="nx-lightbox-footer">
             <span>{lightboxIdx + 1} / {openCollection.photos.length}</span>
             <span>{openCollection.title}</span>
           </div>
@@ -559,50 +539,44 @@ function Home() {
       )}
 
       {/* ─── FOOTER ─── */}
-      <footer className="footer">
-        <div className="footer-wrap">
-          <div className="footer-cta">
-            <span className="footer-cta-label">Let's Connect</span>
-            <p className="footer-cta-text">Got something cool in mind? Let's make it happen.</p>
-            <a href="mailto:hello@example.com" className="footer-cta-btn">Say Hello ✉</a>
+      <footer className="nx-footer">
+        <div className="nx-footer-inner">
+          <div className="nx-footer-cta">
+            <span className="nx-footer-tag">Let's Connect</span>
+            <p>Got something cool in mind? Let's make it happen.</p>
+            <a href="mailto:hello@example.com" className="nx-btn nx-btn-primary">Say Hello</a>
           </div>
-          <div className="footer-mid">
-            <div className="footer-links">
-              <button onClick={() => scrollTo('profile')}>Profile</button>
-              <span className="footer-dot">·</span>
-              <button onClick={() => scrollTo('hobbies')}>Hobbies</button>
-              <span className="footer-dot">·</span>
-              <button onClick={() => scrollTo('gallery')}>Gallery</button>
-              <span className="footer-dot">·</span>
-              <button onClick={() => scrollTo('blogs')}>Blogs</button>
+          <div className="nx-footer-mid">
+            <div className="nx-footer-links">
+              {NAV.map(n => (
+                <button key={n.id} onClick={() => scrollTo(n.id)}>{n.label}</button>
+              ))}
             </div>
-            <div className="footer-socials">
-              <a href="https://github.com" target="_blank" rel="noreferrer" className="footer-social" title="GitHub">⌨</a>
-              <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="footer-social" title="LinkedIn">💼</a>
-              <a href="https://twitter.com" target="_blank" rel="noreferrer" className="footer-social" title="Twitter">𝕏</a>
-              <a href="mailto:hello@example.com" className="footer-social" title="Email">✉</a>
+            <div className="nx-footer-socials">
+              <a href="https://github.com" target="_blank" rel="noreferrer">⌨</a>
+              <a href="https://linkedin.com" target="_blank" rel="noreferrer">💼</a>
+              <a href="https://twitter.com" target="_blank" rel="noreferrer">𝕏</a>
+              <a href="mailto:hello@example.com">✉</a>
             </div>
           </div>
-          <div className="footer-sep" />
-          <div className="footer-bottom">
-            <span>© {new Date().getFullYear()} Abilash. Made with React & Vite</span>
-            <button className="footer-top" onClick={() => scrollTo('profile')} title="Back to top">↑ Top</button>
+          <div className="nx-footer-bottom">
+            <span>© {new Date().getFullYear()} Abilash</span>
+            <button onClick={() => scrollTo('profile')}>↑ Top</button>
           </div>
         </div>
       </footer>
 
       {/* ─── CV MODAL ─── */}
       {showCvModal && (
-        <div className="modal-overlay" onClick={() => { setShowCvModal(false); setCvName(''); }}>
-          <div className="modal-card" onClick={e => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => { setShowCvModal(false); setCvName(''); }}>✕</button>
-            <span className="modal-icon">📄</span>
+        <div className="nx-modal-overlay" onClick={() => { setShowCvModal(false); setCvName(''); }}>
+          <div className="nx-modal" onClick={e => e.stopPropagation()}>
+            <button className="nx-modal-close" onClick={() => { setShowCvModal(false); setCvName(''); }}>✕</button>
+            <div className="nx-modal-icon">📄</div>
             <h2>Download CV</h2>
-            <p className="modal-desc">Enter your name to download Abilash's CV.</p>
-            <div className="modal-form">
-              <label className="modal-label">Your Name <span className="modal-required">*</span></label>
+            <p>Enter your name to download Abilash's CV.</p>
+            <div className="nx-modal-field">
+              <label>Your Name <span>*</span></label>
               <input
-                className="modal-input"
                 type="text"
                 placeholder="Enter your full name"
                 value={cvName}
@@ -611,13 +585,13 @@ function Home() {
                 autoFocus
               />
             </div>
-            <div className="modal-actions">
-              <button className="modal-btn modal-btn-cancel" onClick={() => { setShowCvModal(false); setCvName(''); }}>Cancel</button>
-              <button className="modal-btn modal-btn-confirm" disabled={!cvName.trim() || cvSubmitting} onClick={handleCvDownload}>
+            <div className="nx-modal-actions">
+              <button className="nx-btn nx-btn-ghost" onClick={() => { setShowCvModal(false); setCvName(''); }}>Cancel</button>
+              <button className="nx-btn nx-btn-primary" disabled={!cvName.trim() || cvSubmitting} onClick={handleCvDownload}>
                 {cvSubmitting ? 'Saving...' : 'Download PDF'}
               </button>
             </div>
-            {cvStatus && <p className="modal-status">{cvStatus}</p>}
+            {cvStatus && <p className="nx-modal-status">{cvStatus}</p>}
           </div>
         </div>
       )}
