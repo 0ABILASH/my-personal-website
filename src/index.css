@@ -93,6 +93,10 @@
   z-index: 0;
 }
 
+.leaflet-tile {
+  filter: grayscale(1) contrast(1.1);
+}
+
 .leaflet-popup-content-wrapper {
   background: var(--color-surface) !important;
   border: 1px solid var(--color-border) !important;

@@ -38,9 +38,10 @@ export default function Space() {
       worldCopyJump: true,
       preferCanvas: true,
     }).setView([11.5, 78.5], 5.5);
-    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
       attribution: '',
       maxZoom: 19,
+      subdomains: 'abcd',
     }).addTo(map);
     mapInstance.current = map;
     mapReady.current = true;
