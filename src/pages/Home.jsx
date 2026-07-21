@@ -18,6 +18,14 @@ const fadeUp = {
 
 const PANELS = [
   {
+    to: "/profile",
+    icon: User,
+    label: "Profile",
+    desc: "Who I am and what I do.",
+    color: "text-amber",
+    bg: "bg-amber-soft",
+  },
+  {
     to: "/space",
     icon: MapPin,
     label: "Space",
@@ -33,21 +41,13 @@ const PANELS = [
     color: "text-accent",
     bg: "bg-accent-soft",
   },
-  {
-    to: "/profile",
-    icon: User,
-    label: "Profile",
-    desc: "Who I am and what I do.",
-    color: "text-amber",
-    bg: "bg-amber-soft",
-  },
 ];
 
 const TRAITS = [
   { icon: "\u2615", name: "Tea Person", sub: "Proud Teetotaler" },
   { icon: "\u{1F319}", name: "Im Batman", sub: "Night Person" },
   { icon: "\u{1F3A7}", name: "Music Addict", sub: "Yes I'm" },
-  { icon: "\u{1F415}", name: "Pat", sub: "Soon" },
+  { icon: "\u{1F415}", name: "Pet", sub: "Soon" },
 ];
 
 export default function Home({ onCvOpen }) {
@@ -88,11 +88,8 @@ export default function Home({ onCvOpen }) {
           >
             A Developer, Traveler, and Curious-explorer.{" "}
             <a href="https://abilash.perofile.onrender.con">
-              <u>Abilash</u>
-            </a>
-            my personal space where I share my journey through technology, my
-            travel history, personal blogs, and the experiences that continue to
-            shape who I am.
+              This is My <u>personal space,</u>
+            </a> here you'll find my travel stories, personal blogs and a little glimpse into my world.
           </motion.p>
 
           <motion.div variants={fadeUp} className="flex flex-wrap gap-2.5">
@@ -155,11 +152,6 @@ export default function Home({ onCvOpen }) {
               &ldquo;
             </div>
             <p className="text-[14px] text-text-secondary leading-relaxed mb-4">
-              {/* Hey! I&apos;m Abilash &mdash; a curious soul who loves exploring
-              things, crossing random state border at 2am, and getting way too deep
-              into rabbit holes. I enjoy the simple stuff: good music, long
-              walks, and health conversations that go nowhere and everywhere at the
-              same time. */}
               Hey! I&apos;m Abilash &mdash; a curious soul who believes every journey has
               something to teach. I love exploring new places, building modern
               web applications, and diving into ideas that challenge the way I
@@ -257,8 +249,8 @@ export default function Home({ onCvOpen }) {
       <footer className="max-w-5xl mx-auto px-5 sm:px-6 pb-10">
         <div className="h-px bg-border mb-8" />
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-text-quaternary">
-          <p>&copy; {new Date().getFullYear()} Abilash. All rights reserved.</p>
-          <p className="font-mono">Built with React &amp; Tailwind CSS</p>
+          <p>&copy; {new Date().getFullYear()} Licenced Under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC NC-ND-4.0</a></p>
+          <p className="font-mono">Developed by Abilash</p>
         </div>
       </footer>
 

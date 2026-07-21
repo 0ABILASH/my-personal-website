@@ -1,34 +1,5 @@
 import { jsPDF } from 'jspdf'
 
-const SHEETS_URL = import.meta.env.VITE_SHEETS_URL || 'https://script.google.com/macros/s/AKfycbwcFe2sB0xmbOPtZDbcXj77RGgdFNRGXWq_BbaCW_7uWPv86VPj1qBl52lCxyqW4mJBxA/exec'
-
-export function trackCvDownload(name) {
-  const now = new Date()
-  const payload = {
-    name,
-    date: now.toLocaleDateString('en-IN'),
-    time: now.toLocaleTimeString('en-IN'),
-  }
-
-  if (!SHEETS_URL) {
-    console.error('[CV] VITE_SHEETS_URL is not set!')
-    return
-  }
-
-  fetch(SHEETS_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-    body: JSON.stringify(payload),
-  })
-    .then(() => {})
-    .catch(() => {
-      if (navigator.sendBeacon) {
-        const blob = new Blob([JSON.stringify(payload)], { type: 'text/plain;charset=UTF-8' })
-        navigator.sendBeacon(SHEETS_URL, blob)
-      }
-    })
-}
-
 export function downloadCV() {
   const doc = new jsPDF()
   doc.setFont('helvetica', 'bold')

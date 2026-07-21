@@ -53,10 +53,19 @@ export default function Space() {
 
   useEffect(() => {
     if (!mapReady.current || !mapInstance.current || places.length === 0) return
-    const timer = setTimeout(() => {
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          mapInstance.current.flyTo([pos.coords.latitude, pos.coords.longitude], 8, { duration: 2 })
+        },
+        () => {
+          mapInstance.current.flyTo([places[0].lat, places[0].lng], 8, { duration: 2 })
+        }
+      )
+    } else {
       mapInstance.current.flyTo([places[0].lat, places[0].lng], 8, { duration: 2 })
-    }, 500)
-    return () => clearTimeout(timer)
+    }
   }, [sheetData])
 
   const flyTo = (place) => {
@@ -64,15 +73,6 @@ export default function Space() {
     setActivePlace(place)
     mapInstance.current.flyTo([place.lat, place.lng], 8, { duration: 1.5 })
   }
-
-  const uniqueCountries = new Set(places.map(p => p.country)).size
-  const uniqueCities = new Set(places.map(p => p.city)).size
-
-  const stats = [
-    { label: 'Countries', value: uniqueCountries },
-    { label: 'Cities', value: uniqueCities },
-    { label: 'Total', value: places.length },
-  ]
 
   return (
     <div className="max-w-5xl mx-auto px-5 sm:px-6 py-12 sm:py-16">
@@ -91,30 +91,13 @@ export default function Space() {
           </div>
         </div>
 
-        <div className="flex gap-2 mb-8">
-          {stats.map((s, i) => (
-            <motion.div
-              key={s.label}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.06 + i * 0.03, duration: 0.3 }}
-              className="px-4 py-3 rounded-xl bg-surface border border-border min-w-[80px]"
-            >
-              <div className="text-lg font-extrabold tracking-tight bg-gradient-to-r from-accent to-green bg-clip-text text-transparent">
-                {s.value}
-              </div>
-              <div className="text-[10px] text-text-quaternary font-mono font-medium mt-0.5">{s.label}</div>
-            </motion.div>
-          ))}
-        </div>
-
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.12, duration: 0.4 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
           className="rounded-2xl overflow-hidden border border-border mb-8"
         >
-          <div ref={mapRef} className="w-full h-[320px] sm:h-[420px] bg-bg" />
+          <div ref={mapRef} className="w-full h-[380px] sm:h-[480px] bg-bg" />
         </motion.div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">

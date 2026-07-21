@@ -1,18 +1,21 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, FileText, Loader2, Check } from 'lucide-react'
-import { trackCvDownload, downloadCV } from '../services/cv'
+import { trackCvDownload } from '../services/track'
+import { downloadCV } from '../services/cv'
 
 export default function CvModal({ open, onClose }) {
   const [name, setName] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [status, setStatus] = useState('')
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!name.trim()) return
     setSubmitting(true)
     setStatus('')
+
     trackCvDownload(name.trim())
+
     downloadCV()
     setStatus('Downloaded!')
     setTimeout(() => {
