@@ -14,17 +14,45 @@ function formatTime(d) {
   return hh + ':' + mm + ':' + ss
 }
 
+var _lastSendTime = 0
+
 function send(fields) {
   if (!SHEETS_URL) return
 
-  var params = new URLSearchParams(fields)
-  params.append('_', Date.now().toString())
-  var url = SHEETS_URL + '?' + params.toString()
+  var now = Date.now()
+  if (now - _lastSendTime < 2000) return
+  _lastSendTime = now
 
-  fetch(url, { redirect: 'follow' })
-    .catch(function () {
-      new Image().src = url
-    })
+  var params = new URLSearchParams(fields)
+  params.append('_', now.toString())
+
+  var iframeName = '_track_' + now
+  var iframe = document.createElement('iframe')
+  iframe.name = iframeName
+  iframe.style.display = 'none'
+  document.body.appendChild(iframe)
+
+  var form = document.createElement('form')
+  form.method = 'GET'
+  form.action = SHEETS_URL
+  form.target = iframeName
+  form.style.display = 'none'
+
+  params.forEach(function (value, key) {
+    var input = document.createElement('input')
+    input.type = 'hidden'
+    input.name = key
+    input.value = value
+    form.appendChild(input)
+  })
+
+  document.body.appendChild(form)
+  form.submit()
+
+  setTimeout(function () {
+    if (form.parentNode) form.parentNode.removeChild(form)
+    if (iframe.parentNode) iframe.parentNode.removeChild(iframe)
+  }, 5000)
 }
 
 function getBrowser() {
