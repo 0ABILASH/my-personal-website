@@ -33,7 +33,7 @@ export default function Space() {
     var map = L.map(mapRef.current, {
       scrollWheelZoom: true,
       zoomControl: true,
-      attributionControl: true,
+      attributionControl: false,
       maxBoundsViscosity: 1.0,
       worldCopyJump: true,
       preferCanvas: true,
