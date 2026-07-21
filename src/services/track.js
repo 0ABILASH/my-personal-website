@@ -21,13 +21,10 @@ function send(fields) {
   params.append('_', Date.now().toString())
   var url = SHEETS_URL + '?' + params.toString()
 
-  if (navigator.sendBeacon) {
-    var blob = new Blob([], { type: 'text/html' })
-    navigator.sendBeacon(url, blob)
-  } else {
-    var img = new Image()
-    img.src = url
-  }
+  fetch(url, { redirect: 'follow' })
+    .catch(function () {
+      new Image().src = url
+    })
 }
 
 function getBrowser() {
