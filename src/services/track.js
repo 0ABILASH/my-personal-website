@@ -14,21 +14,19 @@ function formatTime(d) {
   return hh + ':' + mm + ':' + ss
 }
 
-var _iframe
 function send(fields) {
   if (!SHEETS_URL) return
 
-  if (!_iframe) {
-    _iframe = document.createElement('iframe')
-    _iframe.name = '_tf_' + Date.now()
-    _iframe.style.cssText = 'width:0;height:0;border:0;position:absolute'
-    document.body.appendChild(_iframe)
-  }
+  var iframeName = '_tf' + Date.now()
+  var iframe = document.createElement('iframe')
+  iframe.name = iframeName
+  iframe.style.cssText = 'width:0;height:0;border:0;position:absolute;visibility:hidden'
+  document.body.appendChild(iframe)
 
   var form = document.createElement('form')
   form.method = 'POST'
   form.action = SHEETS_URL
-  form.target = _iframe.name
+  form.target = iframeName
   form.style.cssText = 'display:none'
 
   var keys = Object.keys(fields)
@@ -42,7 +40,11 @@ function send(fields) {
 
   document.body.appendChild(form)
   form.submit()
-  document.body.removeChild(form)
+
+  setTimeout(function () {
+    try { document.body.removeChild(form) } catch (e) {}
+    try { document.body.removeChild(iframe) } catch (e) {}
+  }, 5000)
 }
 
 function getBrowser() {
