@@ -20,13 +20,9 @@ function send(fields) {
   params.append('_', Date.now().toString())
   var url = SHEETS_URL + '?' + params.toString()
 
-  if (navigator.sendBeacon) {
-    var blob = new Blob([], { type: 'text/plain' })
-    navigator.sendBeacon(url, blob)
-  }
-
-  try { fetch(url, { mode: 'no-cors', cache: 'no-store' }) } catch (e) {}
-  try { new Image().src = url } catch (e) {}
+  var xhr = new XMLHttpRequest()
+  xhr.open('GET', url, true)
+  xhr.send()
 }
 
 function getBrowser() {
