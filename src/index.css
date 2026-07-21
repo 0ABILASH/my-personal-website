@@ -1,96 +1,132 @@
-*{margin:0;padding:0;box-sizing:border-box}
+@import "tailwindcss";
 
-:root{
-  --bg:#0A0B0F;
-  --bg-2:#0E0F14;
-  --surface:#13141A;
-  --surface-2:#1A1B22;
-  --surface-3:#22232B;
-  --text:#E8E9ED;
-  --text-2:#8E9099;
-  --text-3:#55565E;
-  --border:#1E1F27;
-  --border-2:#2A2B34;
-
-  --primary:#00D4AA;
-  --primary-hover:#00BFA0;
-  --primary-soft:rgba(0,212,170,0.08);
-  --primary-glow:rgba(0,212,170,0.15);
-
-  --violet:#7C5CFC;
-  --violet-soft:rgba(124,92,252,0.08);
-  --blue:#3B82F6;
-  --blue-soft:rgba(59,130,246,0.08);
-  --pink:#FF3D71;
-  --pink-soft:rgba(255,61,113,0.08);
-  --orange:#FF8F3D;
-  --orange-soft:rgba(255,143,61,0.08);
-  --yellow:#FFD93D;
-  --yellow-soft:rgba(255,217,61,0.08);
-  --green:#00D4AA;
-  --green-soft:rgba(0,212,170,0.08);
-  --red:#FF3D71;
-  --red-soft:rgba(255,61,113,0.08);
-  --cyan:#00D4AA;
-  --cyan-soft:rgba(0,212,170,0.08);
-
-  --gradient:linear-gradient(135deg,#00D4AA 0%,#7C5CFC 100%);
-  --gradient-2:linear-gradient(135deg,#7C5CFC 0%,#FF3D71 100%);
-  --gradient-warm:linear-gradient(135deg,#FF8F3D 0%,#FF3D71 100%);
-  --gradient-cool:linear-gradient(135deg,#3B82F6 0%,#00D4AA 100%);
-  --gradient-glow:radial-gradient(ellipse at 50% 0%,rgba(0,212,170,0.12) 0%,transparent 60%);
-
-  --radius:12px;
-  --radius-sm:8px;
-  --radius-xs:6px;
-  --radius-pill:9999px;
-
-  --shadow-xs:0 1px 2px rgba(0,0,0,0.3);
-  --shadow-sm:0 2px 6px rgba(0,0,0,0.3);
-  --shadow-md:0 4px 16px rgba(0,0,0,0.4);
-  --shadow-lg:0 8px 32px rgba(0,0,0,0.5);
-  --shadow-xl:0 16px 48px rgba(0,0,0,0.6);
-  --shadow-glow:0 0 20px rgba(0,212,170,0.1);
-
-  --ease:cubic-bezier(0.4,0,0.2,1);
-  --ease-spring:cubic-bezier(0.22,1,0.36,1);
-  --ease-out:cubic-bezier(0,0,0.2,1);
+@theme {
+  --color-bg: #09090b;
+  --color-bg-subtle: #111113;
+  --color-surface: #18181b;
+  --color-surface-hover: #1f1f23;
+  --color-border: #27272a;
+  --color-border-hover: #3f3f46;
+  --color-text: #fafafa;
+  --color-text-secondary: #a1a1aa;
+  --color-text-tertiary: #71717a;
+  --color-text-quaternary: #52525b;
+  --color-accent: #7c6aff;
+  --color-accent-hover: #6b5aff;
+  --color-accent-glow: rgba(124, 106, 255, 0.15);
+  --color-accent-soft: rgba(124, 106, 255, 0.08);
+  --color-green: #22c55e;
+  --color-green-soft: rgba(34, 197, 94, 0.08);
+  --color-amber: #f59e0b;
+  --color-amber-soft: rgba(245, 158, 11, 0.08);
+  --color-red: #ef4444;
+  --color-red-soft: rgba(239, 68, 68, 0.08);
+  --color-blue: #3b82f6;
+  --color-blue-soft: rgba(59, 130, 246, 0.08);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --animate-glow: glow 3s ease-in-out infinite;
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-fade-in: fadeIn 0.4s ease-out;
+  --animate-scale-in: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-html{scroll-behavior:smooth}
+@layer base {
+  html {
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
 
-body{
-  font-family:'DM Sans',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  line-height:1.6;
-  min-height:100vh;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  overflow-x:hidden;
+  body {
+    min-height: 100vh;
+    background: var(--color-bg);
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: white;
+  }
 }
 
-body::before{
-  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background:var(--gradient-glow);
+@layer utilities {
+  @keyframes glow {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+  }
 }
 
-h1,h2,h3,h4,h5,h6{font-family:'Barlow',sans-serif;font-weight:700;line-height:1.2}
-code,.mono{font-family:'DM Sans',monospace}
-a{text-decoration:none;color:inherit}
-button{font-family:inherit}
-img{display:block}
-::selection{background:var(--primary);color:#0A0B0F}
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-hover);
+}
 
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:var(--text-3)}
+.leaflet-container {
+  background: var(--color-bg);
+}
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes scaleIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
-@keyframes slideRight{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-@keyframes glow{0%,100%{box-shadow:0 0 5px rgba(0,212,170,0.2)}50%{box-shadow:0 0 20px rgba(0,212,170,0.3)}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.leaflet-popup-content-wrapper {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
+}
+
+.leaflet-popup-tip {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  box-shadow: none !important;
+}
+
+.leaflet-popup-close-button {
+  display: none !important;
+}
+
+.leaflet-control-zoom {
+  border: 1px solid var(--color-border) !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3) !important;
+}
+
+.leaflet-control-zoom a {
+  background: var(--color-surface) !important;
+  color: var(--color-text-secondary) !important;
+  border-bottom-color: var(--color-border) !important;
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  font-size: 14px !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: var(--color-surface-hover) !important;
+  color: var(--color-text) !important;
+}
