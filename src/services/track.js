@@ -17,34 +17,17 @@ function formatTime(d) {
 function send(fields) {
   if (!SHEETS_URL) return
 
-  var iframeName = '_tf' + Date.now()
-  var iframe = document.createElement('iframe')
-  iframe.name = iframeName
-  iframe.style.cssText = 'width:0;height:0;border:0;position:absolute;visibility:hidden'
-  document.body.appendChild(iframe)
+  var params = new URLSearchParams(fields)
+  params.append('_', Date.now().toString())
+  var url = SHEETS_URL + '?' + params.toString()
 
-  var form = document.createElement('form')
-  form.method = 'POST'
-  form.action = SHEETS_URL
-  form.target = iframeName
-  form.style.cssText = 'display:none'
-
-  var keys = Object.keys(fields)
-  for (var i = 0; i < keys.length; i++) {
-    var inp = document.createElement('input')
-    inp.type = 'hidden'
-    inp.name = keys[i]
-    inp.value = fields[keys[i]]
-    form.appendChild(inp)
+  if (navigator.sendBeacon) {
+    var blob = new Blob([], { type: 'text/html' })
+    navigator.sendBeacon(url, blob)
+  } else {
+    var img = new Image()
+    img.src = url
   }
-
-  document.body.appendChild(form)
-  form.submit()
-
-  setTimeout(function () {
-    try { document.body.removeChild(form) } catch (e) {}
-    try { document.body.removeChild(iframe) } catch (e) {}
-  }, 5000)
 }
 
 function getBrowser() {
