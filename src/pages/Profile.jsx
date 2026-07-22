@@ -66,17 +66,17 @@ export default function Profile() {
 
             <div className="flex-1 text-center sm:text-left">
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight mb-1">Abilash</h1>
-              <p className="text-[13px] font-semibold text-accent mb-2">Full Stack Developer</p>
+              {/* <p className="text-[13px] font-semibold text-accent mb-2">Full Stack Developer</p> */}
               <p className="text-[13px] text-text-secondary leading-relaxed mb-3 max-w-md">
                 A curious soul who loves exploring things, building random projects at 2am,
                 and getting way too deep into rabbit holes.
               </p>
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
-                <div className="flex items-center gap-1.5 text-[11px] text-text-tertiary">
+                {/* <div className="flex items-center gap-1.5 text-[11px] text-text-tertiary">
                   <MapPin size={11} />
                   Coimbatore, India
                 </div>
-                <div className="w-px h-3.5 bg-border" />
+                <div className="w-px h-3.5 bg-border" /> */}
                 <div className="flex items-center gap-1.5 text-[11px] text-green">
                   <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
                   Available for opportunities
