@@ -2,7 +2,6 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, MapPin, PenLine, User, Sparkles, X } from "lucide-react";
-import signatureImg from "../images/signature-BA4A181CB65FD4B2C980CBAFA3A1BAE9.png";
 
 const stagger = {
   hidden: {},
@@ -113,14 +112,6 @@ export default function Home({ onCvOpen }) {
             </motion.div>
           </div>
 
-          {/* Signature */}
-          <motion.div
-            variants={fadeUp}
-            className="hidden md:flex flex-shrink-0 items-center justify-center"
-          >
-            <img src={signatureImg} alt="Abilash signature" className="h-34 lg:h-42 w-auto -rotate-12 select-none" />
-          </motion.div>
-          
         </motion.div>
 
          <motion.div
