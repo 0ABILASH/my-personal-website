@@ -117,20 +117,18 @@ export default function Home({ onCvOpen }) {
             variants={fadeUp}
             className="hidden md:flex flex-shrink-0 items-center justify-center"
           >
-            <div className="text-6xl lg:text-7xl font-bold italic text-accent/20 select-none leading-none tracking-tight whitespace-nowrap">
+            <div className="text-6xl lg:text-7xl text-accent/20 select-none leading-none tracking-tight whitespace-nowrap" style={{ fontFamily: '"Cedarville Cursive", cursive' }}>
               Abilash
             </div>
           </motion.div>
-{/* 
-          <motion.div
+          
+        </motion.div>
+
+         <motion.div
             variants={fadeUp}
             className="flex items-center gap-3 mt-10"
           >
-           
-          </motion.div>
-        </motion.div> */}
-
-         <div className="flex items-center gap-1.5 text-[11px] text-text-tertiary">
+           <div className="flex items-center gap-1.5 text-[11px] text-text-tertiary">
               <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
               Coimbatore, India
             </div>
@@ -152,6 +150,7 @@ export default function Home({ onCvOpen }) {
                 </a>
               ))}
             </div>
+          </motion.div>
       </section>
 
       {/* About + Traits */}
