@@ -121,12 +121,16 @@ export default function Home({ onCvOpen }) {
               Abilash
             </div>
           </motion.div>
-
+{/* 
           <motion.div
             variants={fadeUp}
             className="flex items-center gap-3 mt-10"
           >
-            <div className="flex items-center gap-1.5 text-[11px] text-text-tertiary">
+           
+          </motion.div>
+        </motion.div> */}
+
+         <div className="flex items-center gap-1.5 text-[11px] text-text-tertiary">
               <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
               Coimbatore, India
             </div>
@@ -148,8 +152,6 @@ export default function Home({ onCvOpen }) {
                 </a>
               ))}
             </div>
-          </motion.div>
-        </motion.div>
       </section>
 
       {/* About + Traits */}
@@ -258,11 +260,6 @@ export default function Home({ onCvOpen }) {
       {/* Copyright */}
       <footer className="max-w-5xl mx-auto px-5 sm:px-6 pb-10">
         <div className="h-px bg-border mb-8" />
-        <div className="text-center mb-6">
-          <span className="text-4xl sm:text-5xl font-bold italic text-accent/15 select-none leading-none tracking-tight">
-            Abilash
-          </span>
-        </div>
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-text-quaternary">
           <p>&copy; {new Date().getFullYear()} Licenced Under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC NC-ND-4.0</a></p>
           <p className="font-mono">Developed by Abilash</p>
