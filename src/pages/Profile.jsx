@@ -1,8 +1,6 @@
 import { motion } from 'framer-motion'
 import { MapPin, ExternalLink } from 'lucide-react'
-
-const profileModules = import.meta.glob('../images/profile.*', { eager: true })
-const profileImg = Object.values(profileModules)[0]?.default || null
+import profileImg from '../services/profileImg'
 
 const TRAITS = [
   { icon: '\u{1F4AC}', label: 'Status', sub: 'Single', color: 'text-amber', bg: 'bg-amber-soft' },

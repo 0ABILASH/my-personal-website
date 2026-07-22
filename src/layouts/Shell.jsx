@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowUpRight, Download, Menu, X } from 'lucide-react'
+import profileImg from '../services/profileImg'
 
 const NAV = [
   { to: '/', label: 'Home' },
@@ -21,7 +22,11 @@ export default function Shell({ children, onCvOpen }) {
       <header className="fixed top-0 left-0 right-0 z-50 bg-bg/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-5xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group" onClick={() => setMobileOpen(false)}>
-            <div className="w-7 h-7 rounded-lg bg-accent flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_16px_rgba(124,106,255,0.25)]">A</div>
+            {profileImg ? (
+              <img src={profileImg} alt="Abilash" className="w-7 h-7 rounded-lg object-cover shadow-[0_0_16px_rgba(124,106,255,0.25)]" />
+            ) : (
+              <div className="w-7 h-7 rounded-lg bg-accent flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_16px_rgba(124,106,255,0.25)]">A</div>
+            )}
             <span className="text-[13px] font-semibold tracking-tight text-text group-hover:text-accent transition-colors">Abilash</span>
           </Link>
 

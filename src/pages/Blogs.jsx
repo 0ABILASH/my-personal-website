@@ -1,9 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PenLine, ArrowRight, X, Clock } from 'lucide-react'
-
-const profileModules = import.meta.glob('../images/profile.*', { eager: true })
-const profileImg = Object.values(profileModules)[0]?.default || null
+import profileImg from '../services/profileImg'
 
 const POSTS = [
   { id: 1, title: 'Building My First React App', excerpt: 'How I got started with React and what I learned along the way.', tag: 'tutorial', date: 'Jan 2025', read: '5 min' },

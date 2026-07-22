@@ -4,7 +4,7 @@ export const FALLBACK_PLACES = [
   { city: 'Coimbatore', country: 'India', lat: 11.0168, lng: 76.9558, emoji: '\u{1F3D9}\u{FE0F}', date: 'Home Base' },
 ]
 
-export const ROUTE_COLOR = '#7c6aff'
+export const ROUTE_COLOR = '#f59e0b'
 
 export function renderLayers(map, places) {
   map.eachLayer(layer => {
