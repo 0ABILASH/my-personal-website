@@ -56,7 +56,7 @@ export default function Home({ onCvOpen }) {
   const [greeting, setGreeting] = useState(false);
 
   return (
-    <div className="min-h-screen">
+    <div>
       {/* Hero */}
       <section className="relative max-w-5xl mx-auto px-5 sm:px-6 pt-8 pb-16 sm:pt-12 sm:pb-24">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
