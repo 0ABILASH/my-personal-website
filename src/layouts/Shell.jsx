@@ -30,9 +30,9 @@ export default function Shell({ children, onCvOpen }) {
         <div className="max-w-5xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group" onClick={() => setMobileOpen(false)}>
             {profileImg ? (
-              <img src={profileImg} alt="Abilash" className="w-7 h-7 rounded-lg object-cover shadow-[0_0_16px_rgba(124,106,255,0.25)]" />
+              <img src={profileImg} alt="Abilash" className="w-7 h-7 rounded-full object-cover shadow-[0_0_16px_rgba(124,106,255,0.25)]" />
             ) : (
-              <div className="w-7 h-7 rounded-lg bg-accent flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_16px_rgba(124,106,255,0.25)]">A</div>
+              <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_16px_rgba(124,106,255,0.25)]">A</div>
             )}
             <span className="text-[13px] font-semibold tracking-tight text-text group-hover:text-accent transition-colors">Abilash</span>
           </Link>
@@ -72,11 +72,13 @@ export default function Shell({ children, onCvOpen }) {
             </a>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden relative w-7 h-7 rounded-lg bg-surface border border-border flex items-center justify-center text-text-tertiary hover:text-text hover:border-border-hover transition-all cursor-pointer"
+              className="md:hidden relative w-7 h-7 rounded-lg bg-surface border border-border flex items-center justify-center hover:border-border-hover transition-all cursor-pointer"
               aria-label="Toggle menu"
             >
-              <span className={`block w-3.5 h-[1.5px] bg-current rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobileOpen ? 'rotate-45 translate-y-[0]' : '-translate-y-[3px]'}`} />
-              <span className={`block w-3.5 h-[1.5px] bg-current rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobileOpen ? '-rotate-45 translate-y-[0]' : 'translate-y-[3px]'}`} />
+              <span className="flex flex-col gap-[5px] w-3.5">
+                <span className={`block h-[1.5px] bg-text-secondary rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] origin-center ${mobileOpen ? 'rotate-45 translate-y-[3.25px]' : ''}`} />
+                <span className={`block h-[1.5px] bg-text-secondary rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] origin-center ${mobileOpen ? '-rotate-45 -translate-y-[3.25px]' : ''}`} />
+              </span>
             </button>
           </div>
         </div>
