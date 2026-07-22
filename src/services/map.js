@@ -4,7 +4,7 @@ export const FALLBACK_PLACES = [
   { city: 'Coimbatore', country: 'India', lat: 11.0168, lng: 76.9558, emoji: '\u{1F3D9}\u{FE0F}', date: 'Home Base' },
 ]
 
-export const ROUTE_COLOR = '#f59e0b'
+export const ROUTE_COLOR = '#F4B400'
 
 export function renderLayers(map, places) {
   map.eachLayer(layer => {
@@ -13,7 +13,7 @@ export function renderLayers(map, places) {
 
   for (let i = 0; i < places.length - 1; i++) {
     L.polyline([[places[i].lat, places[i].lng], [places[i + 1].lat, places[i + 1].lng]], {
-      color: ROUTE_COLOR, weight: 2, opacity: 0.8, dashArray: '6, 4',
+      color: '#FFD54F', weight: 4, opacity: 0.9, dashArray: '10, 8',
     }).addTo(map)
   }
 
