@@ -29,7 +29,7 @@ export default function Space() {
       .catch(function () {});
   }, []);
 
-  // Init map
+  // Init Leaflet map
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
     var map = L.map(mapRef.current, {
@@ -56,7 +56,7 @@ export default function Space() {
     };
   }, []);
 
-  // Fetch routes and render
+  // Fetch road routes and render
   const loadRoutes = useCallback(async function () {
     if (places.length < 2) {
       setRoutes({});
@@ -72,7 +72,7 @@ export default function Space() {
       });
       setRoutes(r);
       setLoading(false);
-    } catch (e) {
+    } catch {
       setError(true);
       setLoading(false);
     }
@@ -82,13 +82,13 @@ export default function Space() {
     loadRoutes();
   }, [loadRoutes]);
 
-  // Render layers when places or routes change
+  // Render map layers when places or routes change
   useEffect(() => {
     if (!mapReady.current || !mapInstance.current) return;
     renderLayers(mapInstance.current, places, routes);
   }, [places, routes]);
 
-  // Fly to user or first place
+  // Fly to user location or first place on load
   useEffect(() => {
     if (!mapReady.current || !mapInstance.current || places.length === 0) return;
     if (navigator.geolocation) {
