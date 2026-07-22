@@ -1,33 +1,35 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Globe } from "lucide-react";
-import { FALLBACK_PLACES, renderLayers } from "../services/map";
+import { Globe, Loader2, RefreshCw } from "lucide-react";
+import { FALLBACK_PLACES, renderLayers, fetchAllRoutes } from "../services/map";
 
 export default function Space() {
   const [places, setPlaces] = useState(FALLBACK_PLACES);
   const [activePlace, setActivePlace] = useState(null);
+  const [routes, setRoutes] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [progress, setProgress] = useState({ done: 0, total: 0 });
+  const [error, setError] = useState(false);
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const mapReady = useRef(false);
 
+  // Fetch places from API
   useEffect(() => {
     fetch("/api/travel")
-      .then(function (r) {
-        return r.json();
-      })
+      .then(function (r) { return r.json() })
       .then(function (data) {
         if (data.places && data.places.length > 0) {
-          var filtered = data.places.filter(function (p) {
-            return p.lat && p.lng;
-          });
+          var filtered = data.places.filter(function (p) { return p.lat && p.lng });
           if (filtered.length > 0) setPlaces(filtered);
         }
       })
       .catch(function () {});
   }, []);
 
+  // Init map
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
     var map = L.map(mapRef.current, {
@@ -54,33 +56,52 @@ export default function Space() {
     };
   }, []);
 
-  useEffect(() => {
-    if (!mapReady.current || !mapInstance.current) return;
-    renderLayers(mapInstance.current, places);
+  // Fetch routes and render
+  const loadRoutes = useCallback(async function () {
+    if (places.length < 2) {
+      setRoutes({});
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setError(false);
+    setProgress({ done: 0, total: places.length - 1 });
+    try {
+      var r = await fetchAllRoutes(places, function (done, total) {
+        setProgress({ done: done, total: total });
+      });
+      setRoutes(r);
+      setLoading(false);
+    } catch (e) {
+      setError(true);
+      setLoading(false);
+    }
   }, [places]);
 
   useEffect(() => {
-    if (!mapReady.current || !mapInstance.current || places.length === 0)
-      return;
+    loadRoutes();
+  }, [loadRoutes]);
+
+  // Render layers when places or routes change
+  useEffect(() => {
+    if (!mapReady.current || !mapInstance.current) return;
+    renderLayers(mapInstance.current, places, routes);
+  }, [places, routes]);
+
+  // Fly to user or first place
+  useEffect(() => {
+    if (!mapReady.current || !mapInstance.current || places.length === 0) return;
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         function (pos) {
-          mapInstance.current.flyTo(
-            [pos.coords.latitude, pos.coords.longitude],
-            8,
-            { duration: 2 },
-          );
+          mapInstance.current.flyTo([pos.coords.latitude, pos.coords.longitude], 8, { duration: 2 });
         },
         function () {
-          mapInstance.current.flyTo([places[0].lat, places[0].lng], 8, {
-            duration: 2,
-          });
+          mapInstance.current.flyTo([places[0].lat, places[0].lng], 8, { duration: 2 });
         },
       );
     } else {
-      mapInstance.current.flyTo([places[0].lat, places[0].lng], 8, {
-        duration: 2,
-      });
+      mapInstance.current.flyTo([places[0].lat, places[0].lng], 8, { duration: 2 });
     }
   }, [places]);
 
@@ -89,6 +110,8 @@ export default function Space() {
     setActivePlace(place);
     mapInstance.current.flyTo([place.lat, place.lng], 8, { duration: 1.5 });
   };
+
+  var progressPct = progress.total > 0 ? Math.round((progress.done / progress.total) * 100) : 0;
 
   return (
     <div className="max-w-5xl mx-auto px-5 sm:px-6 py-12 sm:py-16">
@@ -118,9 +141,39 @@ export default function Space() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.4 }}
-          className="rounded-2xl overflow-hidden border border-border mb-8"
+          className="rounded-2xl overflow-hidden border border-border mb-4 relative"
         >
           <div ref={mapRef} className="w-full h-[380px] sm:h-[480px] bg-bg" />
+
+          {/* Loading overlay */}
+          {loading && (
+            <div className="absolute inset-0 z-[1000] flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm gap-3">
+              <Loader2 size={20} className="text-accent animate-spin" />
+              <p className="text-[12px] text-text-secondary font-medium">
+                Calculating road routes... {progress.done}/{progress.total}
+              </p>
+              <div className="w-40 h-1 rounded-full bg-border overflow-hidden">
+                <div
+                  className="h-full bg-accent rounded-full transition-all duration-300"
+                  style={{ width: progressPct + '%' }}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Error overlay */}
+          {error && (
+            <div className="absolute inset-0 z-[1000] flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm gap-3">
+              <p className="text-[12px] text-red font-medium">Route calculation failed</p>
+              <button
+                onClick={loadRoutes}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-[11px] font-medium text-text-secondary hover:text-text transition-all cursor-pointer"
+              >
+                <RefreshCw size={11} />
+                Retry
+              </button>
+            </div>
+          )}
         </motion.div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
@@ -131,9 +184,7 @@ export default function Space() {
                 initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.18 + i * 0.02, duration: 0.2 }}
-                onClick={function () {
-                  flyTo(p);
-                }}
+                onClick={function () { flyTo(p) }}
                 className={
                   "flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-surface border transition-all duration-200 text-left cursor-pointer " +
                   (activePlace === p
