@@ -313,7 +313,7 @@ export default function Home({ onCvOpen }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
               >
-                Hey there! What's up?
+                Hey! What's up?
               </motion.h1>
 
               <motion.p

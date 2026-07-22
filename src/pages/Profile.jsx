@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Download, MapPin, ExternalLink } from 'lucide-react'
+import { MapPin, ExternalLink } from 'lucide-react'
 
 const TRAITS = [
   { icon: '\u{1F4AC}', label: 'Status', sub: 'Single', color: 'text-amber', bg: 'bg-amber-soft' },
@@ -33,7 +33,7 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] } },
 }
 
-export default function Profile({ onCvOpen }) {
+export default function Profile() {
   return (
     <div className="max-w-4xl mx-auto px-5 sm:px-6 py-12 sm:py-16">
       <motion.div
@@ -77,13 +77,6 @@ export default function Profile({ onCvOpen }) {
               </div>
             </div>
 
-            <button
-              onClick={onCvOpen}
-              className="flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white text-[13px] font-semibold shadow-[0_2px_16px_rgba(124,106,255,0.3)] transition-all cursor-pointer"
-            >
-              <Download size={13} />
-              Download Data
-            </button>
           </div>
         </motion.div>
 

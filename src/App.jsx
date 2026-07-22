@@ -68,7 +68,7 @@ export default function App() {
           <Route path="/" element={<Home onCvOpen={() => setCvOpen(true)} />} />
           <Route path="/travel-log" element={<TravelLog />} />
           <Route path="/blogs" element={<Blogs />} />
-          <Route path="/profile" element={<Profile onCvOpen={() => setCvOpen(true)} />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Shell>
       <DownloadModal open={cvOpen} onClose={() => setCvOpen(false)} />
