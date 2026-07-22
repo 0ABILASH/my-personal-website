@@ -9,13 +9,8 @@ export const FALLBACK_PLACES = [
 // Glow layer sits behind the main route for a soft neon effect.
 export const ROUTE_COLOR = '#F4B400'
 const ROUTE_PRIMARY = '#F4B400'
-const ROUTE_GLOW = 'rgba(244, 180, 0, 0.25)'
 const ROUTE_STYLE = {
   color: ROUTE_PRIMARY, weight: 2, opacity: 0.9,
-  lineCap: 'round', lineJoin: 'round',
-}
-const GLOW_STYLE = {
-  color: ROUTE_GLOW, weight: 8, opacity: 0.4,
   lineCap: 'round', lineJoin: 'round',
 }
 
@@ -182,8 +177,6 @@ function animateRouteDraw() {
   requestAnimationFrame(function () {
     var paths = document.querySelectorAll('.leaflet-pane.leaflet-overlay-pane path')
     paths.forEach(function (path) {
-      // Skip glow layer paths — only animate the main (non-glow) ones
-      if (path.style.opacity === '0.4') return
       var len = path.getTotalLength()
       if (!len || len === 0) return
       path.style.strokeDasharray = len
@@ -210,8 +203,6 @@ export function renderLayers(map, places, routes, animate) {
         ? routes[key]
         : [[places[i].lat, places[i].lng], [places[i + 1].lat, places[i + 1].lng]]
 
-      // Glow layer (wider, blurred, behind main route)
-      L.polyline(coords, GLOW_STYLE).addTo(map)
       // Main route
       L.polyline(coords, ROUTE_STYLE).addTo(map)
     }
