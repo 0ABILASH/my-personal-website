@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion'
 import { MapPin, ExternalLink } from 'lucide-react'
 
+const profileModules = import.meta.glob('../images/profile.*', { eager: true })
+const profileImg = Object.values(profileModules)[0]?.default || null
+
 const TRAITS = [
   { icon: '\u{1F4AC}', label: 'Status', sub: 'Single', color: 'text-amber', bg: 'bg-amber-soft' },
   { icon: '\u{1F4BB}', label: 'Profession', sub: 'Software Engineer', color: 'text-accent', bg: 'bg-accent-soft' },
@@ -49,9 +52,13 @@ export default function Profile() {
           <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-green/5" />
           <div className="relative flex flex-col sm:flex-row items-center sm:items-start gap-5 p-6 sm:p-8">
             <div className="relative flex-shrink-0">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-accent to-green flex items-center justify-center text-2xl sm:text-3xl font-black text-white shadow-[0_0_40px_rgba(124,106,255,0.25)]">
-                A
-              </div>
+              {profileImg ? (
+                <img src={profileImg} alt="Profile" className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-[0_0_40px_rgba(124,106,255,0.25)]" />
+              ) : (
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-accent to-green flex items-center justify-center text-2xl sm:text-3xl font-black text-white shadow-[0_0_40px_rgba(124,106,255,0.25)]">
+                  A
+                </div>
+              )}
               <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green border-2 border-surface flex items-center justify-center">
                 <span className="w-2 h-2 rounded-full bg-white" />
               </div>
