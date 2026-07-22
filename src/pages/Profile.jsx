@@ -2,10 +2,10 @@ import { motion } from 'framer-motion'
 import { User, Download } from 'lucide-react'
 
 const TRAITS = [
-  { icon: '\u2615', label: 'Status', sub: 'Single' },
-  { icon: '\u{1F319}', label: 'Profession', sub: 'Software Engineer' },
-  { icon: '\u{1F3A7}', label: 'Lo-fi & Indie', sub: 'always on repeat' },
-  { icon: '\u{1F415}', label: 'Dog Person', sub: 'no debate' },
+  { icon: '\u{1F4AC}', label: 'Status', sub: 'Single', color: 'text-amber', bg: 'bg-amber-soft' },
+  { icon: '\u{1F4BB}', label: 'Profession', sub: 'Software Engineer', color: 'text-accent', bg: 'bg-accent-soft' },
+  { icon: '\u{1F3B5}', label: 'Lo-fi & Indie', sub: 'always on repeat', color: 'text-green', bg: 'bg-green-soft' },
+  { icon: '\u{1F415}', label: 'Dog Person', sub: 'no debate', color: 'text-blue', bg: 'bg-blue-soft' },
 ]
 
 const STACK = [
@@ -89,18 +89,18 @@ export default function Profile({ onCvOpen }) {
             <h3 className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono mb-4">
               Status
             </h3>
-            <div className="flex flex-col gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {TRAITS.map((t, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-bg border border-border hover:border-border-hover transition-all duration-200"
+                  className="flex flex-col items-center gap-2 px-3 py-3.5 rounded-xl bg-bg border border-border hover:border-border-hover hover:scale-[1.02] transition-all duration-200 cursor-default"
                 >
-                  <span className="text-sm w-8 h-8 flex items-center justify-center bg-surface rounded-lg border border-border flex-shrink-0">
-                    {t.icon}
-                  </span>
-                  <div>
-                    <div className="text-[12px] font-semibold leading-tight">{t.label}</div>
-                    <div className="text-[10px] text-text-tertiary leading-tight mt-0.5">{t.sub}</div>
+                  <div className={`w-9 h-9 rounded-xl ${t.bg} flex items-center justify-center`}>
+                    <span className="text-base">{t.icon}</span>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[10px] font-bold text-text-quaternary uppercase tracking-wider mb-0.5">{t.label}</div>
+                    <div className={`text-[12px] font-semibold ${t.color}`}>{t.sub}</div>
                   </div>
                 </div>
               ))}
