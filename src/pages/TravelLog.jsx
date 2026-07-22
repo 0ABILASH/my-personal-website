@@ -113,8 +113,6 @@ export default function Space() {
             </p>
           </div>
         </div>
-          </div>
-        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 10 }}
