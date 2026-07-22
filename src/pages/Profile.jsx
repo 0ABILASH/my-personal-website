@@ -8,26 +8,20 @@ const TRAITS = [
   { icon: '\u{1F415}', label: 'Dog Person', sub: 'no debate', color: 'text-blue', bg: 'bg-blue-soft' },
 ]
 
-const STACK = [
-  { name: 'React', color: 'text-cyan-400' },
-  { name: 'TypeScript', color: 'text-blue-400' },
-  { name: 'Node.js', color: 'text-green-400' },
-  { name: 'Python', color: 'text-yellow-400' },
-  { name: 'PostgreSQL', color: 'text-blue-300' },
-  { name: 'Tailwind CSS', color: 'text-sky-400' },
-  { name: 'Git', color: 'text-orange-400' },
-  { name: 'Docker', color: 'text-blue-500' },
-  { name: 'AWS', color: 'text-amber' },
-  { name: 'Figma', color: 'text-pink-400' },
-  { name: 'Next.js', color: 'text-text-secondary' },
-  { name: 'Redis', color: 'text-red-400' },
-]
-
 const LINKS = [
   { label: 'GitHub', href: 'https://github.com', icon: 'GH', color: 'hover:border-text-tertiary/30' },
   { label: 'LinkedIn', href: 'https://linkedin.com', icon: 'LI', color: 'hover:border-blue/30' },
   { label: 'Twitter', href: 'https://twitter.com', icon: 'X', color: 'hover:border-text-tertiary/30' },
   { label: 'Email', href: 'mailto:hello@example.com', icon: '@', color: 'hover:border-green/30' },
+]
+
+const INTERESTS = [
+  { icon: '\u{1F30D}', name: 'Traveling', sub: 'Exploring new places', color: 'text-green', bg: 'bg-green-soft' },
+  { icon: '\u{1F6B4}', name: 'Biking', sub: 'Two wheels, infinite freedom', color: 'text-accent', bg: 'bg-accent-soft' },
+  { icon: '\u{1F3A7}', name: 'Music', sub: 'Lo-fi & Indie always on repeat', color: 'text-amber', bg: 'bg-amber-soft' },
+  { icon: '\u2615', name: 'Tea', sub: 'Proud teetotaler', color: 'text-orange-400', bg: 'bg-orange-400/8' },
+  { icon: '\u{1F4F1}', name: 'Tech', sub: 'Building random projects at 2am', color: 'text-blue', bg: 'bg-blue-soft' },
+  { icon: '\u{1F319}', name: 'Night Owl', sub: 'Best ideas come after midnight', color: 'text-purple-400', bg: 'bg-purple-400/8' },
 ]
 
 const stagger = {
@@ -93,9 +87,8 @@ export default function Profile({ onCvOpen }) {
           </div>
         </motion.div>
 
-        {/* Status + Links Row */}
+        {/* Status + Links */}
         <div className="grid sm:grid-cols-2 gap-4 mb-4">
-          {/* Status */}
           <motion.div
             variants={fadeUp}
             className="bg-surface border border-border rounded-2xl p-5 sm:p-6 hover:border-border-hover transition-all duration-300"
@@ -121,7 +114,6 @@ export default function Profile({ onCvOpen }) {
             </div>
           </motion.div>
 
-          {/* Links */}
           <motion.div
             variants={fadeUp}
             className="bg-surface border border-border rounded-2xl p-5 sm:p-6 hover:border-border-hover transition-all duration-300"
@@ -149,22 +141,62 @@ export default function Profile({ onCvOpen }) {
           </motion.div>
         </div>
 
-        {/* Stack */}
+        {/* About */}
+        <motion.div
+          variants={fadeUp}
+          className="bg-surface border border-border rounded-2xl p-5 sm:p-6 mb-4 hover:border-border-hover transition-all duration-300"
+        >
+          <h3 className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono mb-4">
+            About
+          </h3>
+          <div className="space-y-3">
+            <p className="text-[13px] text-text-secondary leading-relaxed">
+              Hey! I&apos;m Abilash &mdash; a curious soul who believes every journey has something to teach.
+              I love exploring new places, building modern web applications, and diving into ideas that
+              challenge the way I think. Whether it&apos;s crossing random state borders at 2 AM, listening
+              to good music on a long drive, or tweaking code until 4am &mdash; I&apos;m always chasing
+              experiences that inspire growth, creativity, and meaningful connections.
+            </p>
+            <p className="text-[13px] text-text-secondary leading-relaxed">
+              I specialize in building full-stack web applications with a focus on clean design
+              and smooth user experiences. When I&apos;m not coding, you&apos;ll find me on a bike ride,
+              curating playlists, or planning my next trip.
+            </p>
+            <div className="flex flex-wrap gap-2 pt-1">
+              {['Open Source', 'UI/UX', 'Travel', 'Music', 'Biking', 'Tea'].map((tag, i) => (
+                <span
+                  key={i}
+                  className="px-2.5 py-1 rounded-lg bg-bg border border-border text-[10px] font-semibold text-text-tertiary font-mono"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Interests */}
         <motion.div
           variants={fadeUp}
           className="bg-surface border border-border rounded-2xl p-5 sm:p-6 hover:border-border-hover transition-all duration-300"
         >
           <h3 className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono mb-4">
-            Stack
+            Interests
           </h3>
-          <div className="flex flex-wrap gap-2">
-            {STACK.map((s, i) => (
-              <span
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {INTERESTS.map((item, i) => (
+              <div
                 key={i}
-                className="px-3 py-1.5 rounded-lg bg-bg border border-border text-[11px] font-semibold font-mono hover:border-accent/30 hover:bg-accent-soft hover:text-accent transition-all duration-200 cursor-default"
+                className="flex items-center gap-3 px-3.5 py-3 rounded-xl bg-bg border border-border hover:border-border-hover hover:bg-surface-hover transition-all duration-200 cursor-default group"
               >
-                {s.name}
-              </span>
+                <div className={`w-9 h-9 rounded-xl ${item.bg} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-200`}>
+                  <span className="text-base">{item.icon}</span>
+                </div>
+                <div className="min-w-0">
+                  <div className={`text-[12px] font-semibold ${item.color}`}>{item.name}</div>
+                  <div className="text-[10px] text-text-quaternary truncate">{item.sub}</div>
+                </div>
+              </div>
             ))}
           </div>
         </motion.div>
