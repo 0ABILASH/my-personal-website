@@ -65,49 +65,65 @@ export default function Home({ onCvOpen }) {
         </div>
 
         <motion.div
-          className="relative"
+          className="relative flex items-center justify-between gap-8"
           variants={stagger}
           initial="hidden"
           animate="visible"
         >
-          <motion.div variants={fadeUp}>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border text-[11px] font-mono font-medium text-text-tertiary mb-5">
-              <Sparkles size={11} className="text-accent" />
-              Software Engineer
-            </span>
-          </motion.div>
+          <div className="flex-1 min-w-0">
+            <motion.div variants={fadeUp}>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border text-[11px] font-mono font-medium text-text-tertiary mb-5">
+                <Sparkles size={11} className="text-accent" />
+                Software Engineer
+              </span>
+            </motion.div>
 
-          <motion.h1
-            variants={fadeUp}
-            className="text-5xl sm:text-6xl md:text-7xl font-black tracking-[-0.03em] leading-[0.92] mb-5"
-          >
-            ABILASH
-          </motion.h1>
-
-          <motion.p
-            variants={fadeUp}
-            className="text-lg md:text-xl text-text-secondary max-w-lg leading-relaxed mb-7"
-          >
-            A Developer, Traveler, and Curious-explorer.{" "}
-            <a href="https://abilash.perofile.onrender.con">
-              This is My <u>personal space,</u>
-            </a> here you'll find my travel stories, personal blogs and a little glimpse into my world.
-          </motion.p>
-
-          <motion.div variants={fadeUp} className="flex flex-wrap gap-2.5">
-            <button
-              onClick={onCvOpen}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white text-[13px] font-semibold shadow-[0_2px_16px_rgba(124,106,255,0.3)] transition-all cursor-pointer"
+            <motion.h1
+              variants={fadeUp}
+              className="text-5xl sm:text-6xl md:text-7xl font-black tracking-[-0.03em] leading-[0.92] mb-5"
             >
-              Download My Data
-              <ArrowRight size={13} />
-            </button>
-            <button
-              onClick={() => setGreeting(true)}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface border border-border hover:border-border-hover text-[13px] font-medium text-text-secondary hover:text-text transition-all cursor-pointer"
+              ABILASH
+            </motion.h1>
+
+            <motion.p
+              variants={fadeUp}
+              className="text-lg md:text-xl text-text-secondary max-w-lg leading-relaxed mb-7"
             >
-              Say Hello
-            </button>
+              A Developer, Traveler, and Curious-explorer.{" "}
+              <a href="https://abilash.perofile.onrender.con">
+                This is My <u>personal space,</u>
+              </a> here you'll find my travel stories, personal blogs and a little glimpse into my world.
+            </motion.p>
+
+            <motion.div variants={fadeUp} className="flex flex-wrap gap-2.5">
+              <button
+                onClick={onCvOpen}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white text-[13px] font-semibold shadow-[0_2px_16px_rgba(124,106,255,0.3)] transition-all cursor-pointer"
+              >
+                Download My Data
+                <ArrowRight size={13} />
+              </button>
+              <button
+                onClick={() => setGreeting(true)}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface border border-border hover:border-border-hover text-[13px] font-medium text-text-secondary hover:text-text transition-all cursor-pointer"
+              >
+                Say Hello
+              </button>
+            </motion.div>
+          </div>
+
+          {/* Logo Mark */}
+          <motion.div
+            variants={fadeUp}
+            className="hidden md:flex flex-shrink-0 items-center justify-center"
+          >
+            <div className="relative">
+              <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-3xl bg-gradient-to-br from-accent to-green flex items-center justify-center text-5xl lg:text-6xl font-black text-white shadow-[0_0_60px_rgba(124,106,255,0.2)]">
+                A
+              </div>
+              <div className="absolute -inset-2 rounded-[28px] border border-accent/10 animate-glow" />
+              <div className="absolute -inset-4 rounded-[32px] border border-accent/5" />
+            </div>
           </motion.div>
 
           <motion.div
