@@ -97,20 +97,22 @@ export default function Space() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-green-soft flex items-center justify-center">
-            <Globe size={18} className="text-green" />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
+          <div className="relative">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green to-accent flex items-center justify-center shadow-[0_0_24px_rgba(34,197,94,0.15)]">
+              <Globe size={20} className="text-white" />
+            </div>
+            <div className="absolute -inset-1 rounded-[14px] border border-green/10 animate-glow" />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight mb-1">
               Travel Log
             </h1>
-            <p className="text-[12px] text-text-tertiary">
-              This travel log captures the destinations I've visited, the roads
-              I've traveled, and the moments that made each journey
-              unforgettable. Every trip has its own story, and this is where I
-              preserve them.
+            <p className="text-[13px] text-text-secondary max-w-lg leading-relaxed">
+              Destinations I&apos;ve visited, roads I&apos;ve traveled, and the moments that made each journey unforgettable.
             </p>
+          </div>
+        </div>
           </div>
         </div>
 
