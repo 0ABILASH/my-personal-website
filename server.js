@@ -79,6 +79,28 @@ app.get('/api/travel', async function (req, res) {
   }
 })
 
+// Proxy OSRM route requests — avoids browser CORS/rate-limit issues
+app.get('/api/route', async function (req, res) {
+  try {
+    var from = req.query.from  // "lng,lat"
+    var to = req.query.to      // "lng,lat"
+    if (!from || !to) return res.json({ error: 'missing from/to' })
+
+    var url = 'https://router.project-osrm.org/route/v1/driving/' + from + ';' + to + '?overview=full&geometries=geojson'
+    var osrmRes = await fetch(url)
+    var data = await osrmRes.json()
+
+    if (data.routes && data.routes.length > 0) {
+      var coords = data.routes[0].geometry.coordinates.map(function (c) { return [c[1], c[0]] })
+      res.json({ coords: coords })
+    } else {
+      res.json({ coords: null })
+    }
+  } catch (err) {
+    res.json({ coords: null })
+  }
+})
+
 app.get('*', function (req, res) {
   res.sendFile(join(__dirname, 'dist', 'index.html'))
 })

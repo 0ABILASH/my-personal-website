@@ -26,7 +26,7 @@ var MARKER_COLORS = {
 var ORS_BASE = 'https://api.openrouteservice.org/v2/directions/driving'
 var ORS_KEY = import.meta.env.VITE_ORS_API_KEY || ''
 var OSRM_BASE = 'https://router.project-osrm.org'
-var CACHE_KEY = 'travel_routes_v3'
+var CACHE_KEY = 'travel_routes_v4'
 var CACHE_HASH_KEY = 'travel_places_hash'
 var BATCH_SIZE = 5
 var BATCH_DELAY = 600
@@ -60,29 +60,16 @@ function routeKey(a, b) {
   return lo.lat.toFixed(4) + ',' + lo.lng.toFixed(4) + '|' + hi.lat.toFixed(4) + ',' + hi.lng.toFixed(4)
 }
 
-// ─── single-route fetch (ORS → OSRM) ─────────────────────────────────
+// ─── single-route fetch (server proxy → OSRM) ────────────────────────
+// Routes through our own server to avoid browser CORS/rate-limit issues.
 async function fetchSingleRoute(from, to) {
-  if (ORS_KEY) {
-    try {
-      var res = await fetch(ORS_BASE, {
-        method: 'POST',
-        headers: { 'Authorization': ORS_KEY, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ coordinates: [[from.lng, from.lat], [to.lng, to.lat]] }),
-      })
-      if (res.ok) {
-        var data = await res.json()
-        return data.features[0].geometry.coordinates.map(function (c) { return [c[1], c[0]] })
-      }
-    } catch {}
-  }
-  var osrmRes = await fetch(
-    OSRM_BASE + '/route/v1/driving/' + from.lng + ',' + from.lat + ';' + to.lng + ',' + to.lat +
-    '?overview=full&geometries=geojson'
-  )
-  if (!osrmRes.ok) throw new Error('OSRM ' + osrmRes.status)
-  var osrmData = await osrmRes.json()
-  if (!osrmData.routes || osrmData.routes.length === 0) throw new Error('No route')
-  return osrmData.routes[0].geometry.coordinates.map(function (c) { return [c[1], c[0]] })
+  var fromCoord = from.lng + ',' + from.lat
+  var toCoord = to.lng + ',' + to.lat
+  var res = await fetch('/api/route?from=' + fromCoord + '&to=' + toCoord)
+  if (!res.ok) throw new Error('Route proxy ' + res.status)
+  var data = await res.json()
+  if (!data.coords || data.coords.length === 0) throw new Error('No route')
+  return data.coords
 }
 
 // ─── batch-fetch all routes ───────────────────────────────────────────
