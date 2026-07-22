@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowUpRight, Download, Menu, X } from 'lucide-react'
@@ -16,6 +16,13 @@ export default function Shell({ children, onCvOpen }) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const isActive = (to) => to === '/' ? location.pathname === '/' : location.pathname.startsWith(to)
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [mobileOpen])
+
+  useEffect(() => { setMobileOpen(false) }, [location.pathname])
 
   return (
     <div className="min-h-screen bg-bg text-text flex flex-col">
