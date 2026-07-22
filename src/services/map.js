@@ -217,16 +217,6 @@ export function renderLayers(map, places, routes, animate) {
     var icon = makeMarkerIcon(type)
     var marker = L.marker([p.lat, p.lng], { icon: icon, riseOnHover: true }).addTo(map)
 
-    // Hover scale effect via CSS class
-    marker.on('mouseover', function () {
-      var el = marker.getElement()
-      if (el) el.classList.add('travel-marker--hover')
-    })
-    marker.on('mouseout', function () {
-      var el = marker.getElement()
-      if (el) el.classList.remove('travel-marker--hover')
-    })
-
     marker.bindPopup(popupHtml(p, type), {
       closeButton: false, offset: [0, -8], maxWidth: 220,
       className: 'travel-popup',

@@ -143,13 +143,8 @@
 .travel-marker {
   background: none !important;
   border: none !important;
-  transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), filter 0.25s ease;
-  transform-origin: center center !important;
-  transform-box: fill-box !important;
 }
 .travel-marker--hover {
-  transform: scale(1.2) !important;
-  filter: drop-shadow(0 0 6px rgba(244,180,0,0.5));
   z-index: 9999 !important;
 }
 
