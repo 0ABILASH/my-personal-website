@@ -27,6 +27,7 @@ var ORS_BASE = 'https://api.openrouteservice.org/v2/directions/driving'
 var ORS_KEY = import.meta.env.VITE_ORS_API_KEY || ''
 var OSRM_BASE = 'https://router.project-osrm.org'
 var CACHE_KEY = 'travel_routes_v3'
+var CACHE_HASH_KEY = 'travel_places_hash'
 var BATCH_SIZE = 5
 var BATCH_DELAY = 600
 
@@ -37,6 +38,21 @@ function getRouteCache() {
 }
 function saveRouteCache(c) {
   try { localStorage.setItem(CACHE_KEY, JSON.stringify(c)) } catch {}
+}
+
+// Hash places coordinates to detect when sheet data changes
+function placesHash(places) {
+  return places.map(function (p) { return p.lat + ',' + p.lng }).join('|')
+}
+function invalidateCacheIfPlacesChanged(places) {
+  try {
+    var hash = placesHash(places)
+    var prev = localStorage.getItem(CACHE_HASH_KEY)
+    if (prev !== hash) {
+      localStorage.removeItem(CACHE_KEY)
+      localStorage.setItem(CACHE_HASH_KEY, hash)
+    }
+  } catch {}
 }
 function routeKey(a, b) {
   var lo = a.lat < b.lat ? a : b
@@ -72,6 +88,7 @@ async function fetchSingleRoute(from, to) {
 // ─── batch-fetch all routes ───────────────────────────────────────────
 export async function fetchAllRoutes(places, onProgress) {
   if (places.length < 2) return {}
+  invalidateCacheIfPlacesChanged(places)
   var cache = getRouteCache()
   var routes = {}
   var total = places.length - 1
