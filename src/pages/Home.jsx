@@ -258,6 +258,11 @@ export default function Home({ onCvOpen }) {
       {/* Copyright */}
       <footer className="max-w-5xl mx-auto px-5 sm:px-6 pb-10">
         <div className="h-px bg-border mb-8" />
+        <div className="text-center mb-6">
+          <span className="text-4xl sm:text-5xl font-bold italic text-accent/15 select-none leading-none tracking-tight">
+            Abilash
+          </span>
+        </div>
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-text-quaternary">
           <p>&copy; {new Date().getFullYear()} Licenced Under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC NC-ND-4.0</a></p>
           <p className="font-mono">Developed by Abilash</p>
