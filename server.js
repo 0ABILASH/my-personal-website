@@ -51,7 +51,9 @@ app.get('/api/travel', async function (req, res) {
     var params = new URLSearchParams({ action: 'travel' })
     var url = GAS_URL + '?' + params.toString()
     var gasRes = await fetch(url, { redirect: 'manual' })
+    var finalRes = gasRes
 
+    // GAS returns 302 redirect — follow it manually
     if (gasRes.status >= 300 && gasRes.status < 400) {
       var location = gasRes.headers.get('location')
       if (location) {
@@ -61,11 +63,12 @@ app.get('/api/travel', async function (req, res) {
         if (location.indexOf('?') === -1) {
           location += '?' + params.toString()
         }
-        gasRes = await fetch(location)
+        // Use redirect: 'follow' so the body is readable
+        finalRes = await fetch(location, { redirect: 'follow' })
       }
     }
 
-    var text = await gasRes.text()
+    var text = await finalRes.text()
     try {
       res.json(JSON.parse(text))
     } catch (e) {
