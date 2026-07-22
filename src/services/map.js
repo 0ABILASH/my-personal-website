@@ -4,9 +4,9 @@ export const FALLBACK_PLACES = [
   { city: 'Coimbatore', country: 'India', lat: 11.0168, lng: 76.9558, emoji: '🏙️', date: 'Home Base' },
 ]
 
-export const ROUTE_COLOR = '#6ef400'
+export const ROUTE_COLOR = '#255206'
 
-const ROUTE_STYLE = { color: '#f63817', weight: 4, opacity: 0.9, }
+const ROUTE_STYLE = { color: '#96cba1', weight: 4, opacity: 0.9, }
 const OSRM_BASE = 'https://router.project-osrm.org'
 const CACHE_KEY = 'travel_routes_v2'
 const FETCH_DELAY = 300
