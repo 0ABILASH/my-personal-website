@@ -88,21 +88,10 @@ export default function Space() {
     if (shouldAnimate) animDone.current = true
   }, [places, routes]);
 
-  // Fly to user location or first place
+  // Fly to first place (current location from sheet)
   useEffect(() => {
     if (!mapReady.current || !mapInstance.current || places.length === 0) return;
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        function (pos) {
-          mapInstance.current.flyTo([pos.coords.latitude, pos.coords.longitude], 8, { duration: 2 });
-        },
-        function () {
-          mapInstance.current.flyTo([places[0].lat, places[0].lng], 8, { duration: 2 });
-        },
-      );
-    } else {
-      mapInstance.current.flyTo([places[0].lat, places[0].lng], 8, { duration: 2 });
-    }
+    mapInstance.current.flyTo([places[0].lat, places[0].lng], 8, { duration: 2 });
   }, [places]);
 
   var flyTo = function (place) {

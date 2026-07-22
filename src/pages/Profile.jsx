@@ -3,8 +3,8 @@ import { MapPin, ExternalLink } from 'lucide-react'
 import profileImg from '../services/profileImg'
 
 const TRAITS = [
-  { icon: '\u{1F4AC}', label: 'R-Status', sub: 'Single', color: 'text-amber', bg: 'bg-amber-soft' },
-  { icon: '\u{1F4BB}', label: '', sub: '', color: '', bg: 'bg-accent-soft' },
+  { icon: '\u{1F4AC}', label: 'R-Status', sub: 'Single', color: 'text-blue', bg: 'bg-amber-soft' },
+  { icon: '\u{1F4BB}', label: '', sub: '', color: 'text-blue', bg: 'bg-accent-soft' },
   { icon: '\u{1F3B5}', label: 'Profession', sub: 'Software Engineer', color: 'text-green', bg: 'bg-green-soft' },
   { icon: '\u{1F415}', label: 'Passion', sub: 'Traveler', color: 'text-blue', bg: 'bg-blue-soft' },
 ]
