@@ -3,36 +3,7 @@ import { motion } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Globe, Loader2, RefreshCw } from "lucide-react";
-import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS } from "../services/map";
-
-/* ─── Floating legend (bottom-left) ────────────────────────────────── */
-function MapLegend() {
-  return (
-    <div className="absolute bottom-3 left-3 z-[1000] bg-bg/85 backdrop-blur-md border border-border rounded-xl px-3 py-2.5 flex flex-col gap-1.5 pointer-events-none">
-      <LegendItem color="#22c55e" label="Current Location" pulse />
-      <LegendItem color="#3b82f6" label="Visited City" />
-      <LegendItem color="#F4B400" label="Major Destination" />
-      <LegendItem color="#8b5cf6" label="Small Stop" />
-      <div className="flex items-center gap-2 mt-0.5">
-        <span className="w-5 h-0 border-t-[2px] border-dashed" style={{ borderColor: '#F4B400' }} />
-        <span className="text-[9px] text-text-tertiary leading-none">Travel Route</span>
-      </div>
-    </div>
-  );
-}
-
-function LegendItem({ color, label, pulse }) {
-  return (
-    <div className="flex items-center gap-2">
-      <span className="relative flex-shrink-0 w-2.5 h-2.5 rounded-full" style={{ background: color }}>
-        {pulse && (
-          <span className="absolute inset-0 rounded-full animate-ping" style={{ background: color, opacity: 0.4 }} />
-        )}
-      </span>
-      <span className="text-[9px] text-text-tertiary leading-none">{label}</span>
-    </div>
-  );
-}
+import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS, addLegend } from "../services/map";
 
 export default function Space() {
   const [places, setPlaces] = useState(FALLBACK_PLACES);
@@ -72,6 +43,7 @@ export default function Space() {
     L.tileLayer(DARK_TILES, TILE_OPTIONS).addTo(map);
     mapInstance.current = map;
     mapReady.current = true;
+    addLegend(map);
     return function () {
       if (mapInstance.current) {
         mapInstance.current.remove();
@@ -172,9 +144,6 @@ export default function Space() {
           className="rounded-2xl overflow-hidden border border-border mb-4 relative"
         >
           <div ref={mapRef} className="w-full h-[380px] sm:h-[480px] bg-bg" />
-
-          {/* Legend */}
-          {!loading && !error && <MapLegend />}
 
           {/* Loading overlay */}
           {loading && (

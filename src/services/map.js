@@ -12,11 +12,11 @@ const ROUTE_PRIMARY = '#F4B400'
 const ROUTE_GLOW = 'rgba(244, 180, 0, 0.25)'
 const ROUTE_STYLE = {
   color: ROUTE_PRIMARY, weight: 2, opacity: 0.9,
-  dashArray: '10, 8', lineCap: 'round', lineJoin: 'round',
+  lineCap: 'round', lineJoin: 'round',
 }
 const GLOW_STYLE = {
   color: ROUTE_GLOW, weight: 8, opacity: 0.4,
-  dashArray: '10, 8', lineCap: 'round', lineJoin: 'round',
+  lineCap: 'round', lineJoin: 'round',
 }
 
 // ─── Marker color palette ────────────────────────────────────────────
@@ -246,3 +246,26 @@ export function renderLayers(map, places, routes, animate) {
 // ─── Tile layer config (CartoDB Dark Matter) ─────────────────────────
 export var DARK_TILES = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
 export var TILE_OPTIONS = { attribution: '', maxZoom: 19, subdomains: 'abcd' }
+
+// ─── Legend as a Leaflet control (stays inside the map) ───────────────
+var legendControl = null
+export function addLegend(map) {
+  if (legendControl) return
+  legendControl = L.control({ position: 'bottomleft' })
+  legendControl.onAdd = function () {
+    var div = L.DomUtil.create('div', 'travel-legend')
+    div.innerHTML =
+      '<div class="travel-legend-inner">' +
+        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#22c55e"></span><span>Current Location</span></div>' +
+        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#3b82f6"></span><span>Visited City</span></div>' +
+        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#F4B400"></span><span>Major Destination</span></div>' +
+        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#8b5cf6"></span><span>Small Stop</span></div>' +
+        '<div class="travel-legend-item"><span class="travel-legend-line"></span><span>Travel Route</span></div>' +
+      '</div>'
+    return div
+  }
+  legendControl.addTo(map)
+}
+export function removeLegend() {
+  if (legendControl) { legendControl.remove(); legendControl = null }
+}

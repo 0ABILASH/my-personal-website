@@ -167,3 +167,41 @@
 .travel-popup .leaflet-popup-close-button {
   display: none !important;
 }
+
+/* ─── Travel legend (Leaflet control) ─────────────────────────────── */
+.travel-legend {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.travel-legend-inner {
+  background: rgba(9,9,11,0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid #27272a;
+  border-radius: 12px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.travel-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 9px;
+  color: #71717a;
+  line-height: 1;
+  white-space: nowrap;
+}
+.travel-legend-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.travel-legend-line {
+  flex-shrink: 0;
+  width: 16px;
+  height: 0;
+  border-top: 2px solid #F4B400;
+}
