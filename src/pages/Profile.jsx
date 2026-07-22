@@ -3,17 +3,17 @@ import { MapPin, ExternalLink } from 'lucide-react'
 import profileImg from '../services/profileImg'
 
 const TRAITS = [
-  { icon: '\u{1F4AC}', label: 'Status', sub: 'Single', color: 'text-amber', bg: 'bg-amber-soft' },
-  { icon: '\u{1F4BB}', label: 'Profession', sub: 'Software Engineer', color: 'text-accent', bg: 'bg-accent-soft' },
-  { icon: '\u{1F3B5}', label: 'Motto', sub: 'Be Kind', color: 'text-green', bg: 'bg-green-soft' },
-  { icon: '\u{1F415}', label: 'Dog Person', sub: 'no debate', color: 'text-blue', bg: 'bg-blue-soft' },
+  { icon: '\u{1F4AC}', label: 'R-Status', sub: 'Single', color: 'text-amber', bg: 'bg-amber-soft' },
+  { icon: '\u{1F4BB}', label: '', sub: '', color: '', bg: 'bg-accent-soft' },
+  { icon: '\u{1F3B5}', label: 'Profession', sub: 'Software Engineer', color: 'text-green', bg: 'bg-green-soft' },
+  { icon: '\u{1F415}', label: 'Passion', sub: 'Traveler', color: 'text-blue', bg: 'bg-blue-soft' },
 ]
 
 const LINKS = [
-  { label: 'GitHub', href: 'https://github.com', icon: 'GH', color: 'hover:border-text-tertiary/30' },
-  { label: 'LinkedIn', href: 'https://linkedin.com', icon: 'LI', color: 'hover:border-blue/30' },
+  { label: 'Instagram', href: 'https://instagram.com', icon: 'GH', color: 'hover:border-text-tertiary/30' },
+  { label: 'Chess', href: 'https://chess.com', icon: 'LI', color: 'hover:border-blue/30' },
   { label: 'Twitter', href: 'https://twitter.com', icon: 'X', color: 'hover:border-text-tertiary/30' },
-  { label: 'Email', href: 'mailto:hello@example.com', icon: '@', color: 'hover:border-green/30' },
+  { label: 'Email', href: 'mailto:mailtoabilashy@gmail.com', icon: '@', color: 'hover:border-green/30' },
 ]
 
 const INTERESTS = [

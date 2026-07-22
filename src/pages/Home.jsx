@@ -90,7 +90,7 @@ export default function Home({ onCvOpen }) {
               className="text-lg md:text-xl text-text-secondary max-w-lg leading-relaxed mb-7"
             >
               A Developer, Traveler, and Curious-explorer.{" "}
-              <a href="https://abilash.perofile.onrender.con">
+              <a href="https://abilash-profile.onrender.com">
                 This is My <u>personal space,</u>
               </a> here you'll find my travel stories, personal blogs and a little glimpse into my world.
             </motion.p>
