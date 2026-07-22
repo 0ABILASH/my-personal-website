@@ -10,7 +10,7 @@ export const FALLBACK_PLACES = [
 export const ROUTE_COLOR = '#F4B400'
 const ROUTE_PRIMARY = '#F4B400'
 const ROUTE_STYLE = {
-  color: ROUTE_PRIMARY, weight: 2, opacity: 0.9,
+  color: ROUTE_PRIMARY, weight: 1, opacity: 0.5,
   lineCap: 'round', lineJoin: 'round',
 }
 
