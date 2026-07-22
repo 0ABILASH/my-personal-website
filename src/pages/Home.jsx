@@ -112,17 +112,13 @@ export default function Home({ onCvOpen }) {
             </motion.div>
           </div>
 
-          {/* Logo Mark */}
+          {/* Signature */}
           <motion.div
             variants={fadeUp}
             className="hidden md:flex flex-shrink-0 items-center justify-center"
           >
-            <div className="relative">
-              <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-3xl bg-gradient-to-br from-accent to-green flex items-center justify-center text-5xl lg:text-6xl font-black text-white shadow-[0_0_60px_rgba(124,106,255,0.2)]">
-                A
-              </div>
-              <div className="absolute -inset-2 rounded-[28px] border border-accent/10 animate-glow" />
-              <div className="absolute -inset-4 rounded-[32px] border border-accent/5" />
+            <div className="text-6xl lg:text-7xl font-bold italic text-accent/20 select-none leading-none tracking-tight whitespace-nowrap">
+              Abilash
             </div>
           </motion.div>
 
