@@ -4,66 +4,69 @@ export const FALLBACK_PLACES = [
   { city: 'Coimbatore', country: 'India', lat: 11.0168, lng: 76.9558, emoji: '🏙️', date: 'Home Base' },
 ]
 
+// ─── Route style ─────────────────────────────────────────────────────
+// Premium amber dashed route with rounded caps/joins.
+// Glow layer sits behind the main route for a soft neon effect.
 export const ROUTE_COLOR = '#F4B400'
+const ROUTE_PRIMARY = '#F4B400'
+const ROUTE_GLOW = 'rgba(244, 180, 0, 0.25)'
+const ROUTE_STYLE = {
+  color: ROUTE_PRIMARY, weight: 2, opacity: 0.9,
+  dashArray: '10, 8', lineCap: 'round', lineJoin: 'round',
+}
+const GLOW_STYLE = {
+  color: ROUTE_GLOW, weight: 8, opacity: 0.4,
+  dashArray: '10, 8', lineCap: 'round', lineJoin: 'round',
+}
 
-// Route polyline style — orange dashed line following roads
-const ROUTE_STYLE = { color: '#F4B400', weight: 2, opacity: 0.9, dashArray: '10, 8' }
+// ─── Marker color palette ────────────────────────────────────────────
+var MARKER_COLORS = {
+  current:  { fill: '#22c55e', stroke: '#ffffff', glow: 'rgba(34,197,94,0.4)' },
+  major:    { fill: '#F4B400', stroke: '#ffffff', glow: 'rgba(244,180,0,0.4)' },
+  visited:  { fill: '#3b82f6', stroke: '#ffffff', glow: 'rgba(59,130,246,0.3)' },
+  small:    { fill: '#8b5cf6', stroke: '#ffffff', glow: 'rgba(139,92,246,0.2)' },
+}
 
-// API providers — OpenRouteService preferred, OSRM as fallback
-const ORS_BASE = 'https://api.openrouteservice.org/v2/directions/driving'
-const ORS_KEY = import.meta.env.VITE_ORS_API_KEY || ''
-const OSRM_BASE = 'https://router.project-osrm.org'
-const CACHE_KEY = 'travel_routes_v3'
-const BATCH_SIZE = 5   // parallel requests per batch
-const BATCH_DELAY = 600 // ms between batches
+// ─── API providers (ORS preferred, OSRM fallback) ────────────────────
+var ORS_BASE = 'https://api.openrouteservice.org/v2/directions/driving'
+var ORS_KEY = import.meta.env.VITE_ORS_API_KEY || ''
+var OSRM_BASE = 'https://router.project-osrm.org'
+var CACHE_KEY = 'travel_routes_v3'
+var BATCH_SIZE = 5
+var BATCH_DELAY = 600
 
 // ─── localStorage cache ───────────────────────────────────────────────
-// Cache keyed by ordered consecutive pairs. Store version in key to allow
-// migration when cache format changes.
 function getRouteCache() {
   try { return JSON.parse(localStorage.getItem(CACHE_KEY)) || {} }
   catch { return {} }
 }
-
 function saveRouteCache(c) {
   try { localStorage.setItem(CACHE_KEY, JSON.stringify(c)) } catch {}
 }
-
-// Deterministic key for an unordered pair of coordinates
 function routeKey(a, b) {
   var lo = a.lat < b.lat ? a : b
   var hi = a.lat >= b.lat ? a : b
   return lo.lat.toFixed(4) + ',' + lo.lng.toFixed(4) + '|' + hi.lat.toFixed(4) + ',' + hi.lng.toFixed(4)
 }
 
-// ─── single-route fetch (ORS → OSRM fallback) ────────────────────────
-// Tries OpenRouteService first (requires API key), falls back to free
-// OSRM demo server. Returns array of [lat, lng] coordinates.
+// ─── single-route fetch (ORS → OSRM) ─────────────────────────────────
 async function fetchSingleRoute(from, to) {
-  // Attempt OpenRouteService if key is available
   if (ORS_KEY) {
     try {
-      var coords = [[from.lng, from.lat], [to.lng, to.lat]]
       var res = await fetch(ORS_BASE, {
         method: 'POST',
-        headers: {
-          'Authorization': ORS_KEY,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ coordinates: coords }),
+        headers: { 'Authorization': ORS_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ coordinates: [[from.lng, from.lat], [to.lng, to.lat]] }),
       })
       if (res.ok) {
         var data = await res.json()
-        var geom = data.features[0].geometry.coordinates
-        return geom.map(function (c) { return [c[1], c[0]] })
+        return data.features[0].geometry.coordinates.map(function (c) { return [c[1], c[0]] })
       }
     } catch {}
   }
-
-  // Fallback to OSRM (free, no key)
-  var osrmCoords = from.lng + ',' + from.lat + ';' + to.lng + ',' + to.lat
   var osrmRes = await fetch(
-    OSRM_BASE + '/route/v1/driving/' + osrmCoords + '?overview=full&geometries=geojson'
+    OSRM_BASE + '/route/v1/driving/' + from.lng + ',' + from.lat + ';' + to.lng + ',' + to.lat +
+    '?overview=full&geometries=geojson'
   )
   if (!osrmRes.ok) throw new Error('OSRM ' + osrmRes.status)
   var osrmData = await osrmRes.json()
@@ -71,109 +74,175 @@ async function fetchSingleRoute(from, to) {
   return osrmData.routes[0].geometry.coordinates.map(function (c) { return [c[1], c[0]] })
 }
 
-// ─── batch-fetch all routes (parallel batches + cache) ────────────────
-// For 100+ locations, fetches routes in parallel batches of BATCH_SIZE
-// to maximise throughput while staying within rate limits.
-// onProgress(done, total) is called after each segment completes.
+// ─── batch-fetch all routes ───────────────────────────────────────────
 export async function fetchAllRoutes(places, onProgress) {
   if (places.length < 2) return {}
   var cache = getRouteCache()
   var routes = {}
   var total = places.length - 1
   var completed = 0
-
-  // Build list of uncached segments
   var toFetch = []
   for (var i = 0; i < total; i++) {
-    var from = places[i]
-    var to = places[i + 1]
-    var key = routeKey(from, to)
-    if (cache[key]) {
-      routes[key] = cache[key]
-    } else {
-      toFetch.push({ from: from, to: to, key: key, index: i })
-    }
+    var key = routeKey(places[i], places[i + 1])
+    if (cache[key]) { routes[key] = cache[key] }
+    else { toFetch.push({ from: places[i], to: places[i + 1], key: key }) }
   }
-
-  // Fetch uncached segments in parallel batches
   for (var b = 0; b < toFetch.length; b += BATCH_SIZE) {
     var batch = toFetch.slice(b, b + BATCH_SIZE)
-    var promises = batch.map(async function (seg) {
+    await Promise.all(batch.map(async function (seg) {
       try {
         var decoded = await fetchSingleRoute(seg.from, seg.to)
-        routes[seg.key] = decoded
-        cache[seg.key] = decoded
+        routes[seg.key] = decoded; cache[seg.key] = decoded
       } catch {
-        // On failure, cache a straight line to avoid retrying
-        var fallback = [[seg.from.lat, seg.from.lng], [seg.to.lat, seg.to.lng]]
-        routes[seg.key] = fallback
-        cache[seg.key] = fallback
+        var fb = [[seg.from.lat, seg.from.lng], [seg.to.lat, seg.to.lng]]
+        routes[seg.key] = fb; cache[seg.key] = fb
       }
       completed++
-      if (onProgress) onProgress(Math.min(completed + Object.keys(routes).length - completed, total), total)
-    })
-    await Promise.all(promises)
-
-    // Persist cache after each batch
+      if (onProgress) onProgress(completed, total)
+    }))
     saveRouteCache(cache)
-
-    // Report progress and throttle between batches
-    if (onProgress) onProgress(completed + (Object.keys(routes).length - completed), total)
-    if (b + BATCH_SIZE < toFetch.length) {
-      await new Promise(function (r) { setTimeout(r, BATCH_DELAY) })
-    }
+    if (b + BATCH_SIZE < toFetch.length) await new Promise(function (r) { setTimeout(r, BATCH_DELAY) })
   }
-
-  // Final progress update
   if (onProgress) onProgress(total, total)
   return routes
 }
 
-// ─── clear cached routes ──────────────────────────────────────────────
 export function clearRouteCache() {
   try { localStorage.removeItem(CACHE_KEY) } catch {}
 }
 
-// ─── render layers on map ──────────────────────────────────────────────
-// Clears all non-tile layers, draws road polylines then markers.
-// When routes is null/undefined, shows straight dashed fallback lines
-// so the map is never blank while loading.
-export function renderLayers(map, places, routes) {
+// ─── Classify marker type ─────────────────────────────────────────────
+// current: first place   major: >1 word country or index % 5 === 0
+// small: ≤4 char city    visited: everything else
+function markerType(place, index, total) {
+  if (index === 0) return 'current'
+  if (place.country && place.country.split(' ').length > 1) return 'major'
+  if (index % 5 === 0 && index !== total - 1) return 'major'
+  if (place.city && place.city.length <= 4) return 'small'
+  return 'visited'
+}
+
+// ─── Build SVG marker icon ────────────────────────────────────────────
+function makeMarkerIcon(type) {
+  var c = MARKER_COLORS[type]
+  var size, fontSize, dotR, strokeW, pulsing
+
+  if (type === 'current') {
+    size = 36; fontSize = 14; dotR = 4; strokeW = 2; pulsing = true
+  } else if (type === 'major') {
+    size = 28; fontSize = 11; dotR = 3.5; strokeW = 2; pulsing = false
+  } else if (type === 'small') {
+    size = 18; fontSize = 0; dotR = 3; strokeW = 1.5; pulsing = false
+  } else {
+    size = 22; fontSize = 0; dotR = 3.5; strokeW = 2; pulsing = false
+  }
+
+  var pulseRing = pulsing
+    ? '<circle cx="18" cy="18" r="14" fill="none" stroke="' + c.fill + '" stroke-width="1.5" opacity="0.5">' +
+      '<animate attributeName="r" from="10" to="17" dur="2s" repeatCount="indefinite"/>' +
+      '<animate attributeName="opacity" from="0.6" to="0" dur="2s" repeatCount="indefinite"/>' +
+    '</circle>'
+    : ''
+
+  var starIcon = type === 'major'
+    ? '<text x="18" y="21" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">★</text>'
+    : ''
+
+  var svg =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '">' +
+    pulseRing +
+    '<circle cx="18" cy="18" r="' + dotR + '" fill="' + c.fill + '" stroke="' + c.stroke + '" stroke-width="' + strokeW + '"/>' +
+    starIcon +
+    '</svg>'
+
+  return L.divIcon({
+    html: svg,
+    className: 'travel-marker travel-marker--' + type,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+    popupAnchor: [0, -size / 2 - 4],
+  })
+}
+
+// ─── Premium popup HTML ───────────────────────────────────────────────
+function popupHtml(p, type) {
+  var borderColor = MARKER_COLORS[type].fill
+  return '<div style="text-align:center;font-family:Gabarito,sans-serif;padding:8px 12px;min-width:120px">' +
+    '<div style="font-size:1.4rem;margin-bottom:2px">' + p.emoji + '</div>' +
+    '<strong style="font-size:0.85rem;color:#fafafa">' + p.city + '</strong><br/>' +
+    '<span style="font-size:0.7rem;color:#a1a1aa">' + p.country + ' · ' + p.date + '</span>' +
+    '</div>'
+}
+
+// ─── Animate route draw (SVG stroke-dashoffset) ───────────────────────
+// After Leaflet renders the SVG polylines, calculates each path's length
+// and animates it from hidden to fully drawn over ANIM_DURATION ms.
+var ANIM_DURATION = 4000
+function animateRouteDraw() {
+  requestAnimationFrame(function () {
+    var paths = document.querySelectorAll('.leaflet-pane.leaflet-overlay-pane path')
+    paths.forEach(function (path) {
+      // Skip glow layer paths — only animate the main (non-glow) ones
+      if (path.style.opacity === '0.4') return
+      var len = path.getTotalLength()
+      if (!len || len === 0) return
+      path.style.strokeDasharray = len
+      path.style.strokeDashoffset = len
+      path.style.transition = 'stroke-dashoffset ' + ANIM_DURATION + 'ms cubic-bezier(0.4,0,0.2,1)'
+      requestAnimationFrame(function () { path.style.strokeDashoffset = '0' })
+    })
+  })
+}
+
+// ─── render layers on map ─────────────────────────────────────────────
+// Clears non-tile layers, draws glow → route → markers.
+// Accepts an `animate` flag to trigger the draw-in animation.
+export function renderLayers(map, places, routes, animate) {
   map.eachLayer(function (layer) {
     if (!(layer instanceof L.TileLayer)) map.removeLayer(layer)
   })
 
-  // Draw route polylines
+  // 1. Route segments
   if (places.length >= 2) {
     for (var i = 0; i < places.length - 1; i++) {
       var key = routeKey(places[i], places[i + 1])
-      var coords
-      if (routes && routes[key]) {
-        coords = routes[key]
-      } else {
-        // Straight-line fallback while routes load or if missing
-        coords = [[places[i].lat, places[i].lng], [places[i + 1].lat, places[i + 1].lng]]
-      }
+      var coords = (routes && routes[key])
+        ? routes[key]
+        : [[places[i].lat, places[i].lng], [places[i + 1].lat, places[i + 1].lng]]
+
+      // Glow layer (wider, blurred, behind main route)
+      L.polyline(coords, GLOW_STYLE).addTo(map)
+      // Main route
       L.polyline(coords, ROUTE_STYLE).addTo(map)
     }
+    // Trigger draw animation after SVG is in DOM
+    if (animate) animateRouteDraw()
   }
 
-  // Draw markers with popups
-  places.forEach(function (p) {
-    var isFirst = p === places[0]
-    var marker = L.circleMarker([p.lat, p.lng], {
-      radius: isFirst ? 10 : 4,
-      color: ROUTE_COLOR,
-      fillColor: ROUTE_COLOR,
-      fillOpacity: 1,
-      weight: isFirst ? 3 : 1.5,
-    }).addTo(map)
-    marker.bindPopup(
-      '<div style="text-align:center;font-family:Inter,sans-serif;padding:2px 6px">' +
-      '<span style="font-size:1.2rem">' + p.emoji + '</span><br/>' +
-      '<strong style="font-size:0.85rem">' + p.city + '</strong><br/>' +
-      '<span style="font-size:0.7rem;color:#71717a">' + p.country + ' · ' + p.date + '</span></div>',
-      { closeButton: false, offset: [0, -8] }
-    )
+  // 2. Markers
+  var total = places.length
+  places.forEach(function (p, i) {
+    var type = markerType(p, i, total)
+    var icon = makeMarkerIcon(type)
+    var marker = L.marker([p.lat, p.lng], { icon: icon, riseOnHover: true }).addTo(map)
+
+    // Hover scale effect via CSS class
+    marker.on('mouseover', function () {
+      var el = marker.getElement()
+      if (el) el.classList.add('travel-marker--hover')
+    })
+    marker.on('mouseout', function () {
+      var el = marker.getElement()
+      if (el) el.classList.remove('travel-marker--hover')
+    })
+
+    marker.bindPopup(popupHtml(p, type), {
+      closeButton: false, offset: [0, -8], maxWidth: 220,
+      className: 'travel-popup',
+    })
   })
 }
+
+// ─── Tile layer config (CartoDB Dark Matter) ─────────────────────────
+export var DARK_TILES = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+export var TILE_OPTIONS = { attribution: '', maxZoom: 19, subdomains: 'abcd' }
