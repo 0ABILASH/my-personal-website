@@ -2,8 +2,8 @@ import { motion } from 'framer-motion'
 import { User, Download } from 'lucide-react'
 
 const TRAITS = [
-  { icon: '\u2615', label: 'Chai Person', sub: 'over coffee, always' },
-  { icon: '\u{1F319}', label: 'Night Owl', sub: '2am coding sessions' },
+  { icon: '\u2615', label: 'Status', sub: 'Single' },
+  { icon: '\u{1F319}', label: 'Profession', sub: 'Software Engineer' },
   { icon: '\u{1F3A7}', label: 'Lo-fi & Indie', sub: 'always on repeat' },
   { icon: '\u{1F415}', label: 'Dog Person', sub: 'no debate' },
 ]
@@ -87,7 +87,7 @@ export default function Profile({ onCvOpen }) {
             className="bg-surface border border-border rounded-2xl p-5 sm:p-6 hover:border-border-hover transition-all duration-300"
           >
             <h3 className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono mb-4">
-              Traits
+              Status
             </h3>
             <div className="flex flex-col gap-2">
               {TRAITS.map((t, i) => (
