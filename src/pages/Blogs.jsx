@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PenLine, ArrowRight, X, Clock } from 'lucide-react'
 
+const profileModules = import.meta.glob('../images/profile.*', { eager: true })
+const profileImg = Object.values(profileModules)[0]?.default || null
+
 const POSTS = [
   { id: 1, title: 'Building My First React App', excerpt: 'How I got started with React and what I learned along the way.', tag: 'tutorial', date: 'Jan 2025', read: '5 min' },
   { id: 2, title: 'Why I Love Open Source', excerpt: 'The community, the learning, and the impact of contributing.', tag: 'thoughts', date: 'Feb 2025', read: '4 min' },
@@ -138,7 +141,11 @@ export default function Writing() {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-green flex items-center justify-center text-[10px] font-bold text-white">A</div>
+                    {profileImg ? (
+                      <img src={profileImg} alt="Abilash" className="w-8 h-8 rounded-lg object-cover" />
+                    ) : (
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-green flex items-center justify-center text-[10px] font-bold text-white">A</div>
+                    )}
                     <div>
                       <strong className="text-[12px] block leading-tight">Abilash</strong>
                       <span className="text-[10px] text-text-tertiary leading-tight">Developer & Writer</span>
