@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowUpRight, Download, Menu, X } from 'lucide-react'
+import { ArrowUpRight, Download } from 'lucide-react'
 import profileImg from '../services/profileImg'
 
 const NAV = [
@@ -72,9 +72,11 @@ export default function Shell({ children, onCvOpen }) {
             </a>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden w-7 h-7 rounded-lg bg-surface border border-border flex items-center justify-center text-text-tertiary hover:text-text hover:border-border-hover transition-all cursor-pointer"
+              className="md:hidden relative w-7 h-7 rounded-lg bg-surface border border-border flex items-center justify-center text-text-tertiary hover:text-text hover:border-border-hover transition-all cursor-pointer"
+              aria-label="Toggle menu"
             >
-              {mobileOpen ? <X size={13} /> : <Menu size={13} />}
+              <span className={`block w-3.5 h-[1.5px] bg-current rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobileOpen ? 'rotate-45 translate-y-[0]' : '-translate-y-[3px]'}`} />
+              <span className={`block w-3.5 h-[1.5px] bg-current rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobileOpen ? '-rotate-45 translate-y-[0]' : 'translate-y-[3px]'}`} />
             </button>
           </div>
         </div>
@@ -83,36 +85,48 @@ export default function Shell({ children, onCvOpen }) {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed top-14 left-0 right-0 z-40 bg-bg/95 backdrop-blur-xl border-b border-border overflow-hidden md:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-40 bg-bg flex flex-col items-center justify-center gap-2 md:hidden"
           >
-            <div className="px-5 py-3 flex flex-col gap-0.5">
-              {NAV.map(link => (
+            {NAV.map((link, i) => (
+              <motion.div
+                key={link.to}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ delay: 0.05 + i * 0.06, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              >
                 <Link
-                  key={link.to}
                   to={link.to}
                   onClick={() => setMobileOpen(false)}
-                  className={`px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all ${
+                  className={`block px-6 py-3 rounded-xl text-[16px] font-semibold transition-all ${
                     isActive(link.to)
                       ? 'bg-accent-soft text-accent'
-                      : 'text-text-tertiary hover:text-text-secondary hover:bg-surface-hover'
+                      : 'text-text-secondary hover:text-text hover:bg-surface-hover'
                   }`}
                 >
                   {link.label}
                 </Link>
-              ))}
-              <div className="h-px bg-border my-1.5" />
+              </motion.div>
+            ))}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ delay: 0.3, duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-4"
+            >
               <button
                 onClick={() => { onCvOpen(); setMobileOpen(false); }}
-                className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-[13px] font-medium text-text-tertiary hover:text-text-secondary hover:bg-surface-hover transition-all text-left cursor-pointer"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-surface border border-border hover:border-border-hover text-[14px] font-medium text-text-secondary hover:text-text transition-all cursor-pointer"
               >
-                <Download size={13} />
+                <Download size={14} />
                 Download Data
               </button>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
