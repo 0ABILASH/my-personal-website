@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, MapPin, PenLine, User, Sparkles, X } from "lucide-react";
+import signatureImg from "../images/signature-BA4A181CB65FD4B2C980CBAFA3A1BAE9.png";
 
 const stagger = {
   hidden: {},
@@ -117,9 +118,7 @@ export default function Home({ onCvOpen }) {
             variants={fadeUp}
             className="hidden md:flex flex-shrink-0 items-center justify-center"
           >
-            <div className="text-8xl lg:text-9xl text-white select-none leading-none whitespace-nowrap -rotate-12" style={{ fontFamily: '"Cedarville Cursive", cursive' }}>
-              Abilash
-            </div>
+            <img src={signatureImg} alt="Abilash signature" className="h-34 lg:h-42 w-auto -rotate-12 select-none" />
           </motion.div>
           
         </motion.div>
