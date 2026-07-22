@@ -117,7 +117,7 @@ export default function Home({ onCvOpen }) {
             variants={fadeUp}
             className="hidden md:flex flex-shrink-0 items-center justify-center"
           >
-            <div className="text-6xl lg:text-7xl text-accent/20 select-none leading-none tracking-tight whitespace-nowrap" style={{ fontFamily: '"Cedarville Cursive", cursive' }}>
+            <div className="text-8xl lg:text-9xl text-white select-none leading-none whitespace-nowrap -rotate-12" style={{ fontFamily: '"Cedarville Cursive", cursive' }}>
               Abilash
             </div>
           </motion.div>
