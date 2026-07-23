@@ -6,9 +6,9 @@ export const FALLBACK_PLACES = [
 
 // ─── Route style ─────────────────────────────────────────────────────
 // Gradient route via SVG linearGradient (amber → orange).
-export const ROUTE_COLOR = '#f4b300d0'
+export const ROUTE_COLOR = '#f4b300bb'
 const ROUTE_STYLE = {
-  color: '#F4B400', weight: 1.6, opacity: 0.7,
+  color: '#f4b300bd', weight: 1.6, opacity: 0.7,
   lineCap: 'round', lineJoin: 'round',
 }
 
@@ -121,50 +121,52 @@ export function markerType(place, index) {
 // ─── Build SVG marker icon ────────────────────────────────────────────
 function makeMarkerIcon(type) {
   var c = MARKER_COLORS[type]
-  var size, dotR, strokeW, pulsing
+  var size, pulsing
 
   if (type === 'current') {
-    size = 36; dotR = 4; strokeW = 2; pulsing = true
+    size = 36; pulsing = true
   } else if (type === 'major') {
-    size = 28; dotR = 3.5; strokeW = 2; pulsing = false
+    size = 24; pulsing = false
   } else if (type === 'small') {
-    size = 18; dotR = 3; strokeW = 1.5; pulsing = false
+    size = 14; pulsing = false
   } else {
-    size = 22; dotR = 3.5; strokeW = 2; pulsing = false
+    size = 20; pulsing = false
   }
 
   var pulseRing = pulsing
     ? '<circle cx="18" cy="18" r="14" fill="none" stroke="' + c.fill + '" stroke-width="1.5" opacity="0.5">' +
       '<animate attributeName="r" from="10" to="17" dur="2s" repeatCount="indefinite"/>' +
       '<animate attributeName="opacity" from="0.6" to="0" dur="2s" repeatCount="indefinite"/>' +
-    '</circle>'
+    '</circle>' +
+    '<circle cx="18" cy="18" r="5" fill="' + c.fill + '" stroke="#fff" stroke-width="2"/>'
     : ''
 
-  var innerIcon = ''
+  var svg = ''
+
   if (type === 'major') {
-    // Flag icon
-    innerIcon =
-      '<path d="M18 7 L18 20" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>' +
-      '<path d="M18 7 L24 9.5 L18 12" fill="#fff" opacity="0.9"/>'
+    // Flag icon — no circle
+    svg =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '" viewBox="0 0 24 24">' +
+      '<path d="M4 3v18" stroke="' + c.fill + '" stroke-width="2" stroke-linecap="round"/>' +
+      '<path d="M4 4 C4 4 8 2 14 4 C20 6 20 10 14 12 C8 14 4 12 4 12" fill="' + c.fill + '" opacity="0.9"/>' +
+      '</svg>'
   } else if (type === 'visited') {
-    // Checkmark icon
-    innerIcon =
-      '<polyline points="14,18 17,21 23,14" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+    // Map pin icon — no circle
+    svg =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '" viewBox="0 0 24 24">' +
+      '<path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="' + c.fill + '"/>' +
+      '<circle cx="12" cy="9" r="3" fill="#fff"/>' +
+      '</svg>'
   } else if (type === 'small') {
-    // Dash icon
-    innerIcon =
-      '<line x1="15" y1="18" x2="21" y2="18" stroke="#fff" stroke-width="2" stroke-linecap="round"/>'
+    // Diamond icon — no circle
+    svg =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '" viewBox="0 0 24 24">' +
+      '<path d="M12 2 L20 12 L12 22 L4 12 Z" fill="' + c.fill + '" stroke="#fff" stroke-width="1.5"/>' +
+      '</svg>'
   }
 
-  var svg =
-    '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '" viewBox="0 0 36 36">' +
-    pulseRing +
-    '<circle cx="18" cy="18" r="' + dotR + '" fill="' + c.fill + '" stroke="' + c.stroke + '" stroke-width="' + strokeW + '"/>' +
-    innerIcon +
-    '</svg>'
-
   return L.divIcon({
-    html: svg,
+    html: pulseRing ? pulseRing + svg : svg,
     className: 'travel-marker travel-marker--' + type,
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
