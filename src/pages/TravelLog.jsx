@@ -137,42 +137,6 @@ export default function Space() {
         >
           <div ref={mapRef} className="w-full h-[380px] sm:h-[480px] bg-bg rounded-2xl" />
 
-          {/* Toggle pills — positioned over the map */}
-          {!loading && !error && (
-            <div className="absolute top-3 right-3 z-[1000] flex gap-1.5">
-              <button
-                onClick={function () { setShowMajor(function (v) { return !v }) }}
-                className={
-                  "map-toggle " +
-                  (showMajor ? "map-toggle--amber" : "")
-                }
-              >
-                <span className="map-toggle-dot" style={{ background: showMajor ? '#ef4444' : '#52525b' }} />
-                Major
-              </button>
-              <button
-                onClick={function () { setShowVisited(function (v) { return !v }) }}
-                className={
-                  "map-toggle " +
-                  (showVisited ? "map-toggle--blue" : "")
-                }
-              >
-                <span className="map-toggle-dot" style={{ background: showVisited ? '#3b82f6' : '#52525b' }} />
-                Visited
-              </button>
-              <button
-                onClick={function () { setShowSmall(function (v) { return !v }) }}
-                className={
-                  "map-toggle " +
-                  (showSmall ? "map-toggle--purple" : "")
-                }
-              >
-                <span className="map-toggle-dot" style={{ background: showSmall ? '#8b5cf6' : '#52525b' }} />
-                Stops
-              </button>
-            </div>
-          )}
-
           {/* Loading overlay */}
           {loading && (
             <div className="absolute inset-0 z-[1000] flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm gap-3">
