@@ -193,7 +193,7 @@ function animateRouteDraw() {
 // ─── render layers on map ─────────────────────────────────────────────
 // Clears non-tile layers, draws glow → route → markers.
 // Accepts an `animate` flag to trigger the draw-in animation.
-export function renderLayers(map, places, routes, animate) {
+export function renderLayers(map, places, routes, animate, showMajor) {
   map.eachLayer(function (layer) {
     if (!(layer instanceof L.TileLayer)) map.removeLayer(layer)
   })
@@ -213,10 +213,11 @@ export function renderLayers(map, places, routes, animate) {
     if (animate) animateRouteDraw()
   }
 
-  // 2. Markers
+  // 2. Markers — filter by visible types
   var total = places.length
   places.forEach(function (p, i) {
     var type = markerType(p, i)
+    if (type === 'major' && !showMajor) return
     var icon = makeMarkerIcon(type)
     var marker = L.marker([p.lat, p.lng], { icon: icon, riseOnHover: true }).addTo(map)
 

@@ -12,6 +12,7 @@ export default function Space() {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState({ done: 0, total: 0 });
   const [error, setError] = useState(false);
+  const [showMajor, setShowMajor] = useState(false);
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const mapReady = useRef(false);
@@ -84,9 +85,9 @@ export default function Space() {
   useEffect(() => {
     if (!mapReady.current || !mapInstance.current) return;
     var shouldAnimate = routes !== null && !animDone.current
-    renderLayers(mapInstance.current, places, routes, shouldAnimate)
+    renderLayers(mapInstance.current, places, routes, shouldAnimate, showMajor)
     if (shouldAnimate) animDone.current = true
-  }, [places, routes]);
+  }, [places, routes, showMajor]);
 
   // Fly to first place (current location from sheet)
   useEffect(() => {
@@ -133,6 +134,21 @@ export default function Space() {
           className="rounded-2xl overflow-hidden border border-border mb-4 relative"
         >
           <div ref={mapRef} className="w-full h-[380px] sm:h-[480px] bg-bg" />
+
+          {/* Major destinations toggle */}
+          {!loading && !error && (
+            <button
+              onClick={function () { setShowMajor(function (v) { return !v }) }}
+              className={
+                "absolute top-3 right-3 z-[1000] px-3 py-1.5 rounded-lg text-[11px] font-medium border transition-all cursor-pointer " +
+                (showMajor
+                  ? "bg-amber-soft border-amber/30 text-amber"
+                  : "bg-bg/85 backdrop-blur-md border-border text-text-tertiary hover:text-text-secondary")
+              }
+            >
+              {showMajor ? '★ Major On' : '★ Major Off'}
+            </button>
+          )}
 
           {/* Loading overlay */}
           {loading && (
