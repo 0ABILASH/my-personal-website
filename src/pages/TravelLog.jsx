@@ -14,6 +14,7 @@ export default function Space() {
   const [error, setError] = useState(false);
   const [showMajor, setShowMajor] = useState(false);
   const [showSmall, setShowSmall] = useState(false);
+  const [showVisited, setShowVisited] = useState(false);
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const mapReady = useRef(false);
@@ -86,9 +87,9 @@ export default function Space() {
   useEffect(() => {
     if (!mapReady.current || !mapInstance.current) return;
     var shouldAnimate = routes !== null && !animDone.current
-    renderLayers(mapInstance.current, places, routes, shouldAnimate, showMajor, showSmall)
+    renderLayers(mapInstance.current, places, routes, shouldAnimate, showMajor, showSmall, showVisited)
     if (shouldAnimate) animDone.current = true
-  }, [places, routes, showMajor, showSmall]);
+  }, [places, routes, showMajor, showSmall, showVisited]);
 
   // Fly to first place (current location from sheet)
   useEffect(() => {
@@ -150,6 +151,16 @@ export default function Space() {
                 Major
               </button>
               <button
+                onClick={function () { setShowVisited(function (v) { return !v }) }}
+                className={
+                  "map-toggle " +
+                  (showVisited ? "map-toggle--blue" : "")
+                }
+              >
+                <span className="map-toggle-dot" style={{ background: showVisited ? '#3b82f6' : '#52525b' }} />
+                Visited
+              </button>
+              <button
                 onClick={function () { setShowSmall(function (v) { return !v }) }}
                 className={
                   "map-toggle " +
@@ -197,6 +208,7 @@ export default function Space() {
           {places.filter(function (p, i) {
             var t = markerType(p, i);
             if (!showMajor && t === 'major') return false;
+            if (!showVisited && t === 'visited') return false;
             if (!showSmall && t === 'small') return false;
             return true;
           }).map(function (p, i) {

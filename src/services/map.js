@@ -6,9 +6,9 @@ export const FALLBACK_PLACES = [
 
 // ─── Route style ─────────────────────────────────────────────────────
 // Gradient route via SVG linearGradient (amber → orange).
-export const ROUTE_COLOR = '#f4b300bb'
+export const ROUTE_COLOR = '#f2bf34d0'
 const ROUTE_STYLE = {
-  color: '#f4b300bd', weight: 1.6, opacity: 0.7,
+  color: '#f4b300bd', weight: 1.5, opacity: 0.5,
   lineCap: 'round', lineJoin: 'round',
 }
 
@@ -148,15 +148,15 @@ function makeMarkerIcon(type) {
       '<circle cx="12" cy="9" r="3" fill="#fff"/>' +
       '</svg>'
   } else if (type === 'small') {
-    // Diamond icon
+    // Circle icon
     svg =
       '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">' +
-      '<path d="M12 2 L20 12 L12 22 L4 12 Z" fill="' + c.fill + '" stroke="#fff" stroke-width="1.5"/>' +
+      '<circle cx="12" cy="12" r="9" fill="' + c.fill + '" stroke="#fff" stroke-width="1.5"/>' +
       '</svg>'
   }
 
-  var anchor = type === 'current' ? [18, 18] : type === 'major' ? [13, 24] : type === 'visited' ? [11, 22] : type === 'small' ? [8, 16] : [11, 11]
-  var popupOff = type === 'current' ? [0, -22] : type === 'major' ? [0, -28] : type === 'visited' ? [0, -26] : [0, -20]
+  var anchor = type === 'current' ? [18, 18] : type === 'major' ? [13, 24] : type === 'visited' ? [11, 22] : type === 'small' ? [8, 8] : [11, 11]
+  var popupOff = type === 'current' ? [0, -22] : type === 'major' ? [0, -28] : type === 'visited' ? [0, -26] : [0, -14]
   var iconSz = type === 'current' ? [36, 36] : type === 'major' ? [26, 26] : type === 'visited' ? [22, 22] : [16, 16]
 
   return L.divIcon({
@@ -197,8 +197,8 @@ function animateRouteDraw() {
 }
 
 // ─── render layers on map ─────────────────────────────────────────────
-// Accepts `animate` for draw-in animation, `showMajor` and `showSmall` for filtering.
-export function renderLayers(map, places, routes, animate, showMajor, showSmall) {
+// Accepts `animate` for draw-in animation, `showMajor`, `showSmall`, and `showVisited` for filtering.
+export function renderLayers(map, places, routes, animate, showMajor, showSmall, showVisited) {
   map.eachLayer(function (layer) {
     if (!(layer instanceof L.TileLayer)) map.removeLayer(layer)
   })
@@ -220,6 +220,7 @@ export function renderLayers(map, places, routes, animate, showMajor, showSmall)
   places.forEach(function (p, i) {
     var type = markerType(p, i)
     if (type === 'major' && !showMajor) return
+    if (type === 'visited' && !showVisited) return
     if (type === 'small' && !showSmall) return
     var icon = makeMarkerIcon(type)
     var marker = L.marker([p.lat, p.lng], { icon: icon, riseOnHover: true }).addTo(map)
