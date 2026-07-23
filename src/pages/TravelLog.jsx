@@ -13,6 +13,7 @@ export default function Space() {
   const [progress, setProgress] = useState({ done: 0, total: 0 });
   const [error, setError] = useState(false);
   const [showMajor, setShowMajor] = useState(false);
+  const [showSmall, setShowSmall] = useState(false);
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const mapReady = useRef(false);
@@ -85,9 +86,9 @@ export default function Space() {
   useEffect(() => {
     if (!mapReady.current || !mapInstance.current) return;
     var shouldAnimate = routes !== null && !animDone.current
-    renderLayers(mapInstance.current, places, routes, shouldAnimate, showMajor)
+    renderLayers(mapInstance.current, places, routes, shouldAnimate, showMajor, showSmall)
     if (shouldAnimate) animDone.current = true
-  }, [places, routes, showMajor]);
+  }, [places, routes, showMajor, showSmall]);
 
   // Fly to first place (current location from sheet)
   useEffect(() => {
@@ -131,23 +132,34 @@ export default function Space() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.4 }}
-          className="rounded-2xl overflow-hidden border border-border mb-4 relative"
+          className="rounded-2xl border border-border mb-4 relative"
         >
-          <div ref={mapRef} className="w-full h-[380px] sm:h-[480px] bg-bg" />
+          <div ref={mapRef} className="w-full h-[380px] sm:h-[480px] bg-bg rounded-2xl" />
 
-          {/* Major destinations toggle */}
+          {/* Toggle pills — positioned over the map */}
           {!loading && !error && (
-            <button
-              onClick={function () { setShowMajor(function (v) { return !v }) }}
-              className={
-                "absolute top-3 right-3 z-[1000] px-3 py-1.5 rounded-lg text-[11px] font-medium border transition-all cursor-pointer " +
-                (showMajor
-                  ? "bg-amber-soft border-amber/30 text-amber"
-                  : "bg-bg/85 backdrop-blur-md border-border text-text-tertiary hover:text-text-secondary")
-              }
-            >
-              {showMajor ? '★ Major On' : '★ Major Off'}
-            </button>
+            <div className="absolute top-3 right-3 z-[1000] flex gap-1.5">
+              <button
+                onClick={function () { setShowMajor(function (v) { return !v }) }}
+                className={
+                  "map-toggle " +
+                  (showMajor ? "map-toggle--amber" : "")
+                }
+              >
+                <span className="map-toggle-dot" style={{ background: showMajor ? '#F4B400' : '#52525b' }} />
+                Major
+              </button>
+              <button
+                onClick={function () { setShowSmall(function (v) { return !v }) }}
+                className={
+                  "map-toggle " +
+                  (showSmall ? "map-toggle--purple" : "")
+                }
+              >
+                <span className="map-toggle-dot" style={{ background: showSmall ? '#8b5cf6' : '#52525b' }} />
+                Stops
+              </button>
+            </div>
           )}
 
           {/* Loading overlay */}
@@ -183,7 +195,9 @@ export default function Space() {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
           {places.filter(function (p, i) {
-            if (!showMajor && markerType(p, i) === 'major') return false;
+            var t = markerType(p, i);
+            if (!showMajor && t === 'major') return false;
+            if (!showSmall && t === 'small') return false;
             return true;
           }).map(function (p, i) {
             return (

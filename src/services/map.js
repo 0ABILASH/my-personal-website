@@ -5,12 +5,10 @@ export const FALLBACK_PLACES = [
 ]
 
 // ─── Route style ─────────────────────────────────────────────────────
-// Premium amber dashed route with rounded caps/joins.
-// Glow layer sits behind the main route for a soft neon effect.
+// Gradient route via SVG linearGradient (amber → orange).
 export const ROUTE_COLOR = '#F4B400'
-const ROUTE_PRIMARY = '#F4B400'
 const ROUTE_STYLE = {
-  color: ROUTE_PRIMARY, weight: 1.5, opacity: 0.6,
+  weight: 2, opacity: 0.9,
   lineCap: 'round', lineJoin: 'round',
 }
 
@@ -192,13 +190,30 @@ function animateRouteDraw() {
 
 // ─── render layers on map ─────────────────────────────────────────────
 // Clears non-tile layers, draws glow → route → markers.
-// Accepts an `animate` flag to trigger the draw-in animation.
-export function renderLayers(map, places, routes, animate, showMajor) {
+// Accepts `animate` for draw-in animation, `showMajor` and `showSmall` for filtering.
+export function renderLayers(map, places, routes, animate, showMajor, showSmall) {
   map.eachLayer(function (layer) {
     if (!(layer instanceof L.TileLayer)) map.removeLayer(layer)
   })
 
-  // 1. Route segments
+  // Inject SVG gradient definition into the overlay pane
+  var overlayPane = map.getPane('overlayPane')
+  if (overlayPane) {
+    var existingGrad = overlayPane.querySelector('#route-gradient-def')
+    if (existingGrad) existingGrad.remove()
+    var svgEl = overlayPane.querySelector('svg') || overlayPane
+    var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs')
+    defs.id = 'route-gradient-def'
+    defs.innerHTML =
+      '<linearGradient id="route-gradient" x1="0%" y1="0%" x2="100%" y2="0%">' +
+      '<stop offset="0%" stop-color="#F4B400"/>' +
+      '<stop offset="50%" stop-color="#FF8F00"/>' +
+      '<stop offset="100%" stop-color="#F4B400"/>' +
+      '</linearGradient>'
+    svgEl.insertBefore(defs, svgEl.firstChild)
+  }
+
+  // 1. Route segments — use gradient stroke
   if (places.length >= 2) {
     for (var i = 0; i < places.length - 1; i++) {
       var key = routeKey(places[i], places[i + 1])
@@ -206,18 +221,16 @@ export function renderLayers(map, places, routes, animate, showMajor) {
         ? routes[key]
         : [[places[i].lat, places[i].lng], [places[i + 1].lat, places[i + 1].lng]]
 
-      // Main route
-      L.polyline(coords, ROUTE_STYLE).addTo(map)
+      L.polyline(coords, Object.assign({}, ROUTE_STYLE, { color: 'url(#route-gradient)' })).addTo(map)
     }
-    // Trigger draw animation after SVG is in DOM
     if (animate) animateRouteDraw()
   }
 
   // 2. Markers — filter by visible types
-  var total = places.length
   places.forEach(function (p, i) {
     var type = markerType(p, i)
     if (type === 'major' && !showMajor) return
+    if (type === 'small' && !showSmall) return
     var icon = makeMarkerIcon(type)
     var marker = L.marker([p.lat, p.lng], { icon: icon, riseOnHover: true }).addTo(map)
 
