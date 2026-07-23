@@ -6,16 +6,16 @@ export const FALLBACK_PLACES = [
 
 // ─── Route style ─────────────────────────────────────────────────────
 // Gradient route via SVG linearGradient (amber → orange).
-export const ROUTE_COLOR = '#F4B400'
+export const ROUTE_COLOR = '#f4b300d0'
 const ROUTE_STYLE = {
-  color: '#F4B400', weight: 2, opacity: 0.9,
+  color: '#F4B400', weight: 1.6, opacity: 0.7,
   lineCap: 'round', lineJoin: 'round',
 }
 
 // ─── Marker color palette ────────────────────────────────────────────
 var MARKER_COLORS = {
   current:  { fill: '#22c55e', stroke: '#ffffff', glow: 'rgba(34,197,94,0.4)' },
-  major:    { fill: '#F4B400', stroke: '#ffffff', glow: 'rgba(244,180,0,0.4)' },
+  major:    { fill: '#f4b300db', stroke: '#ffffff', glow: 'rgba(244,180,0,0.4)' },
   visited:  { fill: '#3b82f6', stroke: '#ffffff', glow: 'rgba(59,130,246,0.3)' },
   small:    { fill: '#8b5cf6', stroke: '#ffffff', glow: 'rgba(139,92,246,0.2)' },
 }
@@ -121,16 +121,16 @@ export function markerType(place, index) {
 // ─── Build SVG marker icon ────────────────────────────────────────────
 function makeMarkerIcon(type) {
   var c = MARKER_COLORS[type]
-  var size, fontSize, dotR, strokeW, pulsing
+  var size, dotR, strokeW, pulsing
 
   if (type === 'current') {
-    size = 36; fontSize = 14; dotR = 4; strokeW = 2; pulsing = true
+    size = 36; dotR = 4; strokeW = 2; pulsing = true
   } else if (type === 'major') {
-    size = 28; fontSize = 11; dotR = 3.5; strokeW = 2; pulsing = false
+    size = 28; dotR = 3.5; strokeW = 2; pulsing = false
   } else if (type === 'small') {
-    size = 18; fontSize = 0; dotR = 3; strokeW = 1.5; pulsing = false
+    size = 18; dotR = 3; strokeW = 1.5; pulsing = false
   } else {
-    size = 22; fontSize = 0; dotR = 3.5; strokeW = 2; pulsing = false
+    size = 22; dotR = 3.5; strokeW = 2; pulsing = false
   }
 
   var pulseRing = pulsing
@@ -140,15 +140,27 @@ function makeMarkerIcon(type) {
     '</circle>'
     : ''
 
-  var starIcon = type === 'major'
-    ? '<text x="18" y="21" text-anchor="middle" font-size="9" fill="#fff" font-weight="bold">★</text>'
-    : ''
+  var innerIcon = ''
+  if (type === 'major') {
+    // Flag icon
+    innerIcon =
+      '<path d="M18 7 L18 20" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>' +
+      '<path d="M18 7 L24 9.5 L18 12" fill="#fff" opacity="0.9"/>'
+  } else if (type === 'visited') {
+    // Checkmark icon
+    innerIcon =
+      '<polyline points="14,18 17,21 23,14" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+  } else if (type === 'small') {
+    // Dash icon
+    innerIcon =
+      '<line x1="15" y1="18" x2="21" y2="18" stroke="#fff" stroke-width="2" stroke-linecap="round"/>'
+  }
 
   var svg =
-    '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '">' +
+    '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '" viewBox="0 0 36 36">' +
     pulseRing +
     '<circle cx="18" cy="18" r="' + dotR + '" fill="' + c.fill + '" stroke="' + c.stroke + '" stroke-width="' + strokeW + '"/>' +
-    starIcon +
+    innerIcon +
     '</svg>'
 
   return L.divIcon({
