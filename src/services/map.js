@@ -10,7 +10,7 @@ export const FALLBACK_PLACES = [
 export const ROUTE_COLOR = '#F4B400'
 const ROUTE_PRIMARY = '#F4B400'
 const ROUTE_STYLE = {
-  color: ROUTE_PRIMARY, weight: 1, opacity: 0.5,
+  color: ROUTE_PRIMARY, weight: 1.8, opacity: 0.8,
   lineCap: 'round', lineJoin: 'round',
 }
 
@@ -113,7 +113,7 @@ export function clearRouteCache() {
 // ─── Classify marker type ─────────────────────────────────────────────
 // Uses the `type` field from Google Sheet if present.
 // Fallback rules: current = first place, visited = everything else.
-function markerType(place, index) {
+export function markerType(place, index) {
   var t = (place.type || '').toLowerCase().trim()
   if (t === 'current' || t === 'major' || t === 'small' || t === 'visited') return t
   if (index === 0) return 'current'

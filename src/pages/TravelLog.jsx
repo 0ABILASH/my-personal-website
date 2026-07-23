@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Globe, Loader2, RefreshCw } from "lucide-react";
-import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS, addLegend } from "../services/map";
+import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS, addLegend, markerType } from "../services/map";
 
 export default function Space() {
   const [places, setPlaces] = useState(FALLBACK_PLACES);
@@ -182,7 +182,10 @@ export default function Space() {
         </motion.div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-          {places.map(function (p, i) {
+          {places.filter(function (p, i) {
+            if (!showMajor && markerType(p, i) === 'major') return false;
+            return true;
+          }).map(function (p, i) {
             return (
               <motion.button
                 key={i}
