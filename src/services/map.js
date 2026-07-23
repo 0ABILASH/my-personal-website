@@ -111,13 +111,12 @@ export function clearRouteCache() {
 }
 
 // ─── Classify marker type ─────────────────────────────────────────────
-// current: first place   major: >1 word country or index % 5 === 0
-// small: ≤4 char city    visited: everything else
-function markerType(place, index, total) {
+// Uses the `type` field from Google Sheet if present.
+// Fallback rules: current = first place, visited = everything else.
+function markerType(place, index) {
+  var t = (place.type || '').toLowerCase().trim()
+  if (t === 'current' || t === 'major' || t === 'small' || t === 'visited') return t
   if (index === 0) return 'current'
-  if (place.country && place.country.split(' ').length > 1) return 'major'
-  if (index % 5 === 0 && index !== total - 1) return 'major'
-  if (place.city && place.city.length <= 4) return 'small'
   return 'visited'
 }
 
@@ -217,7 +216,7 @@ export function renderLayers(map, places, routes, animate) {
   // 2. Markers
   var total = places.length
   places.forEach(function (p, i) {
-    var type = markerType(p, i, total)
+    var type = markerType(p, i)
     var icon = makeMarkerIcon(type)
     var marker = L.marker([p.lat, p.lng], { icon: icon, riseOnHover: true }).addTo(map)
 
