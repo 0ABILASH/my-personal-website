@@ -12,6 +12,9 @@ export default function Space() {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState({ done: 0, total: 0 });
   const [error, setError] = useState(false);
+  const [showMajor, setShowMajor] = useState(false);
+  const [showSmall, setShowSmall] = useState(false);
+  const [showVisited, setShowVisited] = useState(false);
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const mapReady = useRef(false);
@@ -84,9 +87,9 @@ export default function Space() {
   useEffect(() => {
     if (!mapReady.current || !mapInstance.current) return;
     var shouldAnimate = routes !== null && !animDone.current
-    renderLayers(mapInstance.current, places, routes, shouldAnimate)
+    renderLayers(mapInstance.current, places, routes, shouldAnimate, showMajor, showSmall, showVisited)
     if (shouldAnimate) animDone.current = true
-  }, [places, routes]);
+  }, [places, routes, showMajor, showSmall, showVisited]);
 
   // Fly to first place (current location from sheet)
   useEffect(() => {
@@ -134,6 +137,42 @@ export default function Space() {
         >
           <div ref={mapRef} className="w-full h-[380px] sm:h-[480px] bg-bg rounded-2xl" />
 
+          {/* Toggle pills — positioned over the map */}
+          {!loading && !error && (
+            <div className="absolute top-3 right-3 z-[1000] flex gap-1.5">
+              <button
+                onClick={function () { setShowMajor(function (v) { return !v }) }}
+                className={
+                  "map-toggle " +
+                  (showMajor ? "map-toggle--amber" : "")
+                }
+              >
+                <span className="map-toggle-dot" style={{ background: showMajor ? '#ef4444' : '#52525b' }} />
+                Major
+              </button>
+              <button
+                onClick={function () { setShowVisited(function (v) { return !v }) }}
+                className={
+                  "map-toggle " +
+                  (showVisited ? "map-toggle--blue" : "")
+                }
+              >
+                <span className="map-toggle-dot" style={{ background: showVisited ? '#3b82f6' : '#52525b' }} />
+                Visited
+              </button>
+              <button
+                onClick={function () { setShowSmall(function (v) { return !v }) }}
+                className={
+                  "map-toggle " +
+                  (showSmall ? "map-toggle--purple" : "")
+                }
+              >
+                <span className="map-toggle-dot" style={{ background: showSmall ? '#8b5cf6' : '#52525b' }} />
+                Stops
+              </button>
+            </div>
+          )}
+
           {/* Loading overlay */}
           {loading && (
             <div className="absolute inset-0 z-[1000] flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm gap-3">
@@ -167,7 +206,11 @@ export default function Space() {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
           {places.filter(function (p, i) {
-            return markerType(p, i) !== 'major';
+            var t = markerType(p, i);
+            if (!showMajor && t === 'major') return false;
+            if (!showVisited && t === 'visited') return false;
+            if (!showSmall && t === 'small') return false;
+            return true;
           }).map(function (p, i) {
             return (
               <motion.button
