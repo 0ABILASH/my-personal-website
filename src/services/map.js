@@ -121,56 +121,50 @@ export function markerType(place, index) {
 // ─── Build SVG marker icon ────────────────────────────────────────────
 function makeMarkerIcon(type) {
   var c = MARKER_COLORS[type]
-  var size, pulsing
-
-  if (type === 'current') {
-    size = 36; pulsing = true
-  } else if (type === 'major') {
-    size = 24; pulsing = false
-  } else if (type === 'small') {
-    size = 14; pulsing = false
-  } else {
-    size = 20; pulsing = false
-  }
-
-  var pulseRing = pulsing
-    ? '<circle cx="18" cy="18" r="14" fill="none" stroke="' + c.fill + '" stroke-width="1.5" opacity="0.5">' +
-      '<animate attributeName="r" from="10" to="17" dur="2s" repeatCount="indefinite"/>' +
-      '<animate attributeName="opacity" from="0.6" to="0" dur="2s" repeatCount="indefinite"/>' +
-    '</circle>' +
-    '<circle cx="18" cy="18" r="5" fill="' + c.fill + '" stroke="#fff" stroke-width="2"/>'
-    : ''
-
   var svg = ''
 
-  if (type === 'major') {
-    // Flag icon — no circle
+  if (type === 'current') {
+    // Green pulsing dot
     svg =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '" viewBox="0 0 24 24">' +
-      '<path d="M4 3v18" stroke="' + c.fill + '" stroke-width="2" stroke-linecap="round"/>' +
-      '<path d="M4 4 C4 4 8 2 14 4 C20 6 20 10 14 12 C8 14 4 12 4 12" fill="' + c.fill + '" opacity="0.9"/>' +
+      '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">' +
+      '<circle cx="18" cy="18" r="14" fill="none" stroke="' + c.fill + '" stroke-width="1.5" opacity="0.5">' +
+        '<animate attributeName="r" from="10" to="17" dur="2s" repeatCount="indefinite"/>' +
+        '<animate attributeName="opacity" from="0.6" to="0" dur="2s" repeatCount="indefinite"/>' +
+      '</circle>' +
+      '<circle cx="18" cy="18" r="5" fill="' + c.fill + '" stroke="#fff" stroke-width="2"/>' +
+      '</svg>'
+  } else if (type === 'major') {
+    // Flag icon
+    svg =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24">' +
+      '<path d="M5 3v18" stroke="' + c.fill + '" stroke-width="2" stroke-linecap="round"/>' +
+      '<path d="M5 4 C5 4 9 2 14 4 C19 6 19 10 14 12 C9 14 5 12 5 12" fill="' + c.fill + '"/>' +
       '</svg>'
   } else if (type === 'visited') {
-    // Map pin icon — no circle
+    // Map pin icon
     svg =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '" viewBox="0 0 24 24">' +
+      '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">' +
       '<path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="' + c.fill + '"/>' +
       '<circle cx="12" cy="9" r="3" fill="#fff"/>' +
       '</svg>'
   } else if (type === 'small') {
-    // Diamond icon — no circle
+    // Diamond icon
     svg =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '" viewBox="0 0 24 24">' +
+      '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">' +
       '<path d="M12 2 L20 12 L12 22 L4 12 Z" fill="' + c.fill + '" stroke="#fff" stroke-width="1.5"/>' +
       '</svg>'
   }
 
+  var anchor = type === 'current' ? [18, 18] : type === 'major' ? [13, 24] : type === 'visited' ? [11, 22] : type === 'small' ? [8, 16] : [11, 11]
+  var popupOff = type === 'current' ? [0, -22] : type === 'major' ? [0, -28] : type === 'visited' ? [0, -26] : [0, -20]
+  var iconSz = type === 'current' ? [36, 36] : type === 'major' ? [26, 26] : type === 'visited' ? [22, 22] : [16, 16]
+
   return L.divIcon({
-    html: pulseRing ? pulseRing + svg : svg,
+    html: svg,
     className: 'travel-marker travel-marker--' + type,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
-    popupAnchor: [0, -size / 2 - 4],
+    iconSize: iconSz,
+    iconAnchor: anchor,
+    popupAnchor: popupOff,
   })
 }
 
