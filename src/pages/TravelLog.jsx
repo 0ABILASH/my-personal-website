@@ -147,7 +147,7 @@ export default function Space() {
                   (showMajor ? "map-toggle--amber" : "")
                 }
               >
-                <span className="map-toggle-dot" style={{ background: showMajor ? '#F4B400' : '#52525b' }} />
+                <span className="map-toggle-dot" style={{ background: showMajor ? '#ef4444' : '#52525b' }} />
                 Major
               </button>
               <button

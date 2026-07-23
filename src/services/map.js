@@ -15,7 +15,7 @@ const ROUTE_STYLE = {
 // ─── Marker color palette ────────────────────────────────────────────
 var MARKER_COLORS = {
   current:  { fill: '#22c55e', stroke: '#ffffff', glow: 'rgba(34,197,94,0.4)' },
-  major:    { fill: '#f4b300db', stroke: '#ffffff', glow: 'rgba(244,180,0,0.4)' },
+  major:    { fill: '#ef4444', stroke: '#ffffff', glow: 'rgba(239,68,68,0.4)' },
   visited:  { fill: '#3b82f6', stroke: '#ffffff', glow: 'rgba(59,130,246,0.3)' },
   small:    { fill: '#8b5cf6', stroke: '#ffffff', glow: 'rgba(139,92,246,0.2)' },
 }
