@@ -134,11 +134,11 @@ function makeMarkerIcon(type) {
       '<circle cx="18" cy="18" r="5" fill="' + c.fill + '" stroke="#fff" stroke-width="2"/>' +
       '</svg>'
   } else if (type === 'major') {
-    // Flag icon
+    // Flag icon — pennant style
     svg =
       '<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24">' +
-      '<path d="M5 3v18" stroke="' + c.fill + '" stroke-width="2" stroke-linecap="round"/>' +
-      '<path d="M5 4 C5 4 9 2 14 4 C19 6 19 10 14 12 C9 14 5 12 5 12" fill="' + c.fill + '"/>' +
+      '<path d="M4 4v16" stroke="' + c.fill + '" stroke-width="2" stroke-linecap="round"/>' +
+      '<path d="M4 4h12l-3 4 3 4H4" fill="' + c.fill + '"/>' +
       '</svg>'
   } else if (type === 'visited') {
     // Map pin icon
@@ -155,7 +155,7 @@ function makeMarkerIcon(type) {
       '</svg>'
   }
 
-  var anchor = type === 'current' ? [18, 18] : type === 'major' ? [13, 24] : type === 'visited' ? [11, 22] : type === 'small' ? [8, 8] : [11, 11]
+  var anchor = type === 'current' ? [18, 18] : type === 'major' ? [4, 22] : type === 'visited' ? [11, 22] : type === 'small' ? [8, 8] : [11, 11]
   var popupOff = type === 'current' ? [0, -22] : type === 'major' ? [0, -28] : type === 'visited' ? [0, -26] : [0, -14]
   var iconSz = type === 'current' ? [36, 36] : type === 'major' ? [26, 26] : type === 'visited' ? [22, 22] : [16, 16]
 
