@@ -189,13 +189,7 @@ function animateRouteDraw() {
 }
 
 // ─── render layers on map ─────────────────────────────────────────────
-// Clears non-tile layers, draws glow → route → markers.
 // Accepts `animate` for draw-in animation, `showMajor` and `showSmall` for filtering.
-export function renderLayers(map, places, routes, animate, showMajor, showSmall) {
-  map.eachLayer(function (layer) {
-    if (!(layer instanceof L.TileLayer)) map.removeLayer(layer)
-  })
-
 export function renderLayers(map, places, routes, animate, showMajor, showSmall) {
   map.eachLayer(function (layer) {
     if (!(layer instanceof L.TileLayer)) map.removeLayer(layer)
