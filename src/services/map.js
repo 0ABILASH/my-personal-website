@@ -6,9 +6,9 @@ export const FALLBACK_PLACES = [
 
 // ─── Route style ─────────────────────────────────────────────────────
 // Gradient route via SVG linearGradient (amber → orange).
-export const ROUTE_COLOR = '#f2bf34d0'
+export const ROUTE_COLOR = '#f4b400'
 const ROUTE_STYLE = {
-  color: '#f4b300bd', weight: 1.5, opacity: 0.5,
+  color: '#f4b400', weight: 2.5, opacity: 0.85,
   lineCap: 'round', lineJoin: 'round',
 }
 
@@ -26,8 +26,8 @@ var ORS_KEY = import.meta.env.VITE_ORS_API_KEY || ''
 var OSRM_BASE = 'https://router.project-osrm.org'
 var CACHE_KEY = 'travel_routes_v4'
 var CACHE_HASH_KEY = 'travel_places_hash'
-var BATCH_SIZE = 5
-var BATCH_DELAY = 600
+var BATCH_SIZE = 8
+var BATCH_DELAY = 200
 
 // ─── localStorage cache ───────────────────────────────────────────────
 function getRouteCache() {
@@ -113,7 +113,7 @@ export function clearRouteCache() {
 // Fallback rules: current = first place, visited = everything else.
 export function markerType(place, index) {
   var t = (place.type || '').toLowerCase().trim()
-  if (t === 'current' || t === 'major' || t === 'small' || t === 'visited') return t
+  if (t === 'current' || t === 'small' || t === 'visited') return t
   if (index === 0) return 'current'
   return 'visited'
 }
@@ -198,7 +198,7 @@ function animateRouteDraw() {
 
 // ─── render layers on map ─────────────────────────────────────────────
 // Accepts `animate` for draw-in animation, `showMajor`, `showSmall`, and `showVisited` for filtering.
-export function renderLayers(map, places, routes, animate, showMajor, showSmall, showVisited) {
+export function renderLayers(map, places, routes, animate) {
   map.eachLayer(function (layer) {
     if (!(layer instanceof L.TileLayer)) map.removeLayer(layer)
   })
@@ -216,12 +216,9 @@ export function renderLayers(map, places, routes, animate, showMajor, showSmall,
     if (animate) animateRouteDraw()
   }
 
-  // 2. Markers — filter by visible types
+  // 2. Markers — show all (major excluded via markerType)
   places.forEach(function (p, i) {
     var type = markerType(p, i)
-    if (type === 'major' && !showMajor) return
-    if (type === 'visited' && !showVisited) return
-    if (type === 'small' && !showSmall) return
     var icon = makeMarkerIcon(type)
     var marker = L.marker([p.lat, p.lng], { icon: icon, riseOnHover: true }).addTo(map)
 
@@ -247,7 +244,6 @@ export function addLegend(map) {
       '<div class="travel-legend-inner">' +
         '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#22c55e"></span><span>Current Location</span></div>' +
         '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#3b82f6"></span><span>Visited City</span></div>' +
-        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#F4B400"></span><span>Major Destination</span></div>' +
         '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#8b5cf6"></span><span>Small Stop</span></div>' +
         '<div class="travel-legend-item"><span class="travel-legend-line"></span><span>Travel Route</span></div>' +
       '</div>'
