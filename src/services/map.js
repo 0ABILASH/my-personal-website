@@ -113,7 +113,7 @@ export function clearRouteCache() {
 // Fallback rules: current = first place, visited = everything else.
 export function markerType(place, index) {
   var t = (place.type || '').toLowerCase().trim()
-  if (t === 'current' || t === 'major' || t === 'small' || t === 'visited') return t
+  if (t === 'current' || t === 'small' || t === 'visited') return t
   if (index === 0) return 'current'
   return 'visited'
 }
@@ -198,7 +198,7 @@ function animateRouteDraw() {
 
 // ─── render layers on map ─────────────────────────────────────────────
 // Accepts `animate` for draw-in animation, `showMajor`, `showSmall`, and `showVisited` for filtering.
-export function renderLayers(map, places, routes, animate, showMajor, showSmall, showVisited) {
+export function renderLayers(map, places, routes, animate, showVisited, showSmall) {
   map.eachLayer(function (layer) {
     if (!(layer instanceof L.TileLayer)) map.removeLayer(layer)
   })
@@ -219,7 +219,6 @@ export function renderLayers(map, places, routes, animate, showMajor, showSmall,
   // 2. Markers — filter by visible types
   places.forEach(function (p, i) {
     var type = markerType(p, i)
-    if (type === 'major' && !showMajor) return
     if (type === 'visited' && !showVisited) return
     if (type === 'small' && !showSmall) return
     var icon = makeMarkerIcon(type)

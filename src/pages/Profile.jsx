@@ -77,7 +77,7 @@ export default function Profile() {
                 <div className="w-px h-3.5 bg-border" /> */}
                 <div className="flex items-center gap-1.5 text-[11px] text-green">
                   <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
-                  Available for opportunities
+                  Available
                 </div>
               </div>
             </div>
