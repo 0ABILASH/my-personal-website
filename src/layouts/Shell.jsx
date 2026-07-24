@@ -54,14 +54,6 @@ export default function Shell({ children, onCvOpen }) {
           </nav>
 
           <div className="flex items-center gap-2">
-            <button
-              onClick={onCvOpen}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-[12px] font-medium text-text-secondary hover:text-text transition-all cursor-pointer"
-            >
-              <Download size={12} />
-              Data
-            </button>
-            <div className="w-px h-4 bg-border hidden sm:block" />
             <a
               href="https://abilash-profile.onrender.com"
               target="_blank"
@@ -71,6 +63,14 @@ export default function Shell({ children, onCvOpen }) {
               <ArrowUpRight size={12} />
               Portfolio
             </a>
+            <div className="w-px h-4 bg-border hidden sm:block" />
+            <button
+              onClick={onCvOpen}
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-[12px] font-medium text-text-secondary hover:text-text transition-all cursor-pointer"
+            >
+              <Download size={12} />
+              Data
+            </button>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="md:hidden relative w-7 h-7 rounded-lg bg-surface border border-border flex items-center justify-center hover:border-border-hover transition-all cursor-pointer"
