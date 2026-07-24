@@ -180,6 +180,7 @@ export default function Writing() {
                 </div>
               </div>
             </motion.div>
+            </motion.div>
           </>
         )}
       </AnimatePresence>
