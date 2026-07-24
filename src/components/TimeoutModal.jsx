@@ -34,7 +34,7 @@ export default function TimeoutModal({ onRetry }) {
 
         <button
           onClick={onRetry}
-          className="flex items-center justify-center gap-2 w-full px-5 py-3 rounded-xl bg-accent hover:bg-accent-hover text-white text-[13px] font-semibold shadow-[0_2px_16px_rgba(124,106,255,0.3)] transition-all cursor-pointer"
+          className="flex items-center justify-center gap-2 w-full px-5 py-3 rounded-xl bg-accent hover:bg-accent-hover text-white text-[13px] font-semibold shadow-[0_2px_16px_rgba(59,130,246,0.3)] transition-all cursor-pointer"
         >
           <RotateCcw size={14} />
           Try Again

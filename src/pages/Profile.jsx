@@ -51,9 +51,9 @@ export default function Profile() {
           <div className="relative flex flex-col sm:flex-row items-center sm:items-start gap-5 p-6 sm:p-8">
             <div className="relative flex-shrink-0">
               {profileImg ? (
-                <img src={profileImg} alt="Profile" className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-[0_0_40px_rgba(124,106,255,0.25)]" />
+                <img src={profileImg} alt="Profile" className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-[0_0_40px_rgba(59,130,246,0.25)]" />
               ) : (
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-accent to-green flex items-center justify-center text-2xl sm:text-3xl font-black text-white shadow-[0_0_40px_rgba(124,106,255,0.25)]">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-accent to-green flex items-center justify-center text-2xl sm:text-3xl font-black text-white shadow-[0_0_40px_rgba(59,130,246,0.25)]">
                   A
                 </div>
               )}

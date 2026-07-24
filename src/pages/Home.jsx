@@ -98,7 +98,7 @@ export default function Home({ onCvOpen }) {
             <motion.div variants={fadeUp} className="flex flex-wrap gap-2.5">
               <button
                 onClick={onCvOpen}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white text-[13px] font-semibold shadow-[0_2px_16px_rgba(124,106,255,0.3)] transition-all cursor-pointer"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white text-[13px] font-semibold shadow-[0_2px_16px_rgba(59,130,246,0.3)] transition-all cursor-pointer"
               >
                 Download My Data
                 <ArrowRight size={13} />

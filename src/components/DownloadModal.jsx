@@ -92,7 +92,7 @@ export default function DownloadModal({ open, onClose }) {
               <button
                 onClick={handleSubmit}
                 disabled={!name.trim() || submitting}
-                className="flex items-center gap-1.5 px-5 py-2 rounded-xl bg-accent hover:bg-accent-hover text-white text-[12px] font-semibold shadow-[0_2px_10px_rgba(124,106,255,0.3)] disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-5 py-2 rounded-xl bg-accent hover:bg-accent-hover text-white text-[12px] font-semibold shadow-[0_2px_16px_rgba(59,130,246,0.3)] disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
               >
                 {submitting ? (
                   <><Loader2 size={12} className="animate-spin" />Saving...</>
