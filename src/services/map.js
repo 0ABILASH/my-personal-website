@@ -224,9 +224,9 @@ export function addLegend(map) {
     div.innerHTML =
       '<div class="travel-legend-inner">' +
         '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#3bf66a"></span><span>Current Location</span></div>' +
-        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#8f072b"></span><span>Visited City</span></div>' +
-        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#ffffff;border:1px solid #edde16"></span><span>Small Stop</span></div>' +
-        '<div class="travel-legend-item"><span class="travel-legend-line"></span><span>Travel Route</span></div>' +
+        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#3b82f6"></span><span>Visited City</span></div>' +
+        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#ffffff;border:1px solid #8f072b"></span><span>Small Stop</span></div>' +
+        '<div class="travel-legend-item"><span class="travel-legend-line style="background:#edde16""></span><span>Travel Route</span></div>' +
       '</div>'
     return div
   }
