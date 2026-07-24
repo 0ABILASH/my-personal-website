@@ -86,7 +86,7 @@ app.get('/api/route', async function (req, res) {
     var to = req.query.to      // "lng,lat"
     if (!from || !to) return res.json({ error: 'missing from/to' })
 
-    var url = 'https://router.project-osrm.org/route/v1/driving/' + from + ';' + to + '?overview=full&geometries=geojson'
+    var url = 'https://router.project-osrm.org/route/v1/driving/' + from + ';' + to + '?overview=simplified&geometries=geojson'
     var osrmRes = await fetch(url)
     var data = await osrmRes.json()
 

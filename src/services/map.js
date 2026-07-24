@@ -26,8 +26,8 @@ var ORS_KEY = import.meta.env.VITE_ORS_API_KEY || ''
 var OSRM_BASE = 'https://router.project-osrm.org'
 var CACHE_KEY = 'travel_routes_v4'
 var CACHE_HASH_KEY = 'travel_places_hash'
-var BATCH_SIZE = 5
-var BATCH_DELAY = 600
+var BATCH_SIZE = 10
+var BATCH_DELAY = 50
 
 // ─── localStorage cache ───────────────────────────────────────────────
 function getRouteCache() {
