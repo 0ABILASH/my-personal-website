@@ -55,24 +55,22 @@ export default function Space() {
     };
   }, []);
 
-  // Fetch road routes and render
+  // Fetch road routes in background — markers show immediately
   const loadRoutes = useCallback(async function () {
     if (places.length < 2) {
       setRoutes({});
-      setLoading(false);
       return;
     }
     setLoading(true);
-    setError(false);
     setProgress({ done: 0, total: places.length - 1 });
     try {
       var r = await fetchAllRoutes(places, function (done, total) {
         setProgress({ done: done, total: total });
       });
       setRoutes(r);
-      setLoading(false);
     } catch {
       setError(true);
+    } finally {
       setLoading(false);
     }
   }, [places]);
@@ -81,7 +79,7 @@ export default function Space() {
     loadRoutes();
   }, [loadRoutes]);
 
-  // Render layers — animate on first render after routes load
+  // Render layers — markers show immediately, routes update as they arrive
   var animDone = useRef(false)
   useEffect(() => {
     if (!mapReady.current || !mapInstance.current) return;
