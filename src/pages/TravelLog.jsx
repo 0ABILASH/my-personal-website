@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Globe, Loader2, RefreshCw } from "lucide-react";
+import { Globe, RefreshCw } from "lucide-react";
 import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS, addLegend, markerType } from "../services/map";
 
 export default function Space() {
@@ -160,14 +160,10 @@ export default function Space() {
             </div>
           )}
 
-          {/* Loading overlay */}
+          {/* Loading — small top bar, map stays interactive */}
           {loading && (
-            <div className="absolute inset-0 z-[800] flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm gap-3">
-              <Loader2 size={20} className="text-accent animate-spin" />
-              <p className="text-[12px] text-text-secondary font-medium">
-                Calculating road routes... {progress.done}/{progress.total}
-              </p>
-              <div className="w-40 h-1 rounded-full bg-border overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 z-[800]">
+              <div className="h-0.5 bg-border overflow-hidden rounded-t-2xl">
                 <div
                   className="h-full bg-accent rounded-full transition-all duration-300"
                   style={{ width: progressPct + '%' }}

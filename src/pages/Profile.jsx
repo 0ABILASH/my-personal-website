@@ -73,8 +73,8 @@ export default function Profile() {
                 <motion.div
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-lg bg-surface border border-border text-[10px] font-semibold whitespace-nowrap shadow-lg z-10"
-                  style={{ color: '#22c55e' }}
+                  className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-lg bg-surface border border-border text-[10px] font-semibold whitespace-nowrap shadow-lg z-10 style={ color: '#22c55e' }"
+                  
                 >
                   Available
                 </motion.div>

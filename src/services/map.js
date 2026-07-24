@@ -5,22 +5,22 @@ export const FALLBACK_PLACES = [
 ]
 
 // ─── Route style ─────────────────────────────────────────────────────
-export const ROUTE_COLOR = '#3b82f6'
+export const ROUTE_COLOR = '#edde16'
 const ROUTE_STYLE = {
-  color: '#3b82f6', weight: 2, opacity: 0.7,
+  color: '#f7e309c2', weight: 2, opacity: 0.7,
   lineCap: 'round', lineJoin: 'round',
 }
 
 // ─── Marker color palette ────────────────────────────────────────────
 var MARKER_COLORS = {
-  current:  { fill: '#3b82f6', stroke: '#ffffff', glow: 'rgba(59,130,246,0.4)' },
+  current:  { fill: '#3bf66a', stroke: '#ffffff', glow: 'rgba(59,130,246,0.4)' },
   visited:  { fill: '#3b82f6', stroke: '#ffffff', glow: 'rgba(59,130,246,0.3)' },
-  small:    { fill: '#ffffff', stroke: '#3b82f6', glow: 'rgba(255,255,255,0.2)' },
+  small:    { fill: '#a40787', stroke: '#3b82f6', glow: 'rgba(255,255,255,0.2)' },
 }
 
 // ─── API providers ──────────────────────────────────────────────────
 var OSRM_BASE = 'https://router.project-osrm.org'
-var CACHE_KEY = 'travel_routes_v5'
+var CACHE_KEY = 'travel_routes_v6'
 var CACHE_HASH_KEY = 'travel_places_hash'
 var BATCH_SIZE = 15
 var BATCH_DELAY = 0
