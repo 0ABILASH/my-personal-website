@@ -141,11 +141,10 @@ function makeMarkerIcon(type) {
       '<path d="M4 4h12l-3 4 3 4H4" fill="' + c.fill + '"/>' +
       '</svg>'
   } else if (type === 'visited') {
-    // Map pin icon
+    // Circle icon (same shape as small)
     svg =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">' +
-      '<path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="' + c.fill + '"/>' +
-      '<circle cx="12" cy="9" r="3" fill="#fff"/>' +
+      '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">' +
+      '<circle cx="12" cy="12" r="9" fill="' + c.fill + '" stroke="#fff" stroke-width="1.5"/>' +
       '</svg>'
   } else if (type === 'small') {
     // Circle icon
@@ -155,9 +154,9 @@ function makeMarkerIcon(type) {
       '</svg>'
   }
 
-  var anchor = type === 'current' ? [18, 18] : type === 'major' ? [4, 22] : type === 'visited' ? [11, 22] : type === 'small' ? [8, 8] : [11, 11]
-  var popupOff = type === 'current' ? [0, -22] : type === 'major' ? [0, -28] : type === 'visited' ? [0, -26] : [0, -14]
-  var iconSz = type === 'current' ? [36, 36] : type === 'major' ? [26, 26] : type === 'visited' ? [22, 22] : [16, 16]
+  var anchor = type === 'current' ? [18, 18] : type === 'major' ? [4, 22] : type === 'visited' ? [10, 10] : type === 'small' ? [8, 8] : [11, 11]
+  var popupOff = type === 'current' ? [0, -22] : type === 'major' ? [0, -28] : type === 'visited' ? [0, -14] : [0, -14]
+  var iconSz = type === 'current' ? [36, 36] : type === 'major' ? [26, 26] : type === 'visited' ? [20, 20] : [16, 16]
 
   return L.divIcon({
     html: svg,
