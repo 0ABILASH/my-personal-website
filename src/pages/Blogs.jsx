@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PenLine, ArrowRight, X, Clock } from 'lucide-react'
 import profileImg from '../services/profileImg'
@@ -23,6 +23,26 @@ const FILTERS = ['all', 'tutorial', 'thoughts', 'update']
 export default function Writing() {
   const [filter, setFilter] = useState('all')
   const [openPost, setOpenPost] = useState(null)
+  const blogRef = useRef(null)
+  const cursorRef = useRef(null)
+
+  useEffect(() => {
+    if (!openPost) return
+    const onMove = (e) => {
+      const el = blogRef.current
+      if (!el || !cursorRef.current) return
+      const r = el.getBoundingClientRect()
+      if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) {
+        cursorRef.current.style.opacity = '1'
+        cursorRef.current.style.left = e.clientX + 'px'
+        cursorRef.current.style.top = e.clientY + 'px'
+      } else {
+        cursorRef.current.style.opacity = '0'
+      }
+    }
+    window.addEventListener('mousemove', onMove)
+    return () => window.removeEventListener('mousemove', onMove)
+  }, [openPost])
 
   const items = filter === 'all' ? POSTS : POSTS.filter(p => p.tag === filter)
 
@@ -90,8 +110,10 @@ export default function Writing() {
 
       <AnimatePresence>
         {openPost && (
-          <motion.div
-            className="fixed inset-0 z-[80] flex items-center justify-center p-4"
+          <>
+            <div ref={cursorRef} className="blog-cursor" style={{ opacity: 0 }} />
+            <motion.div
+              className="fixed inset-0 z-[80] flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -129,7 +151,7 @@ export default function Writing() {
 
                 <div className="h-px bg-border mb-5" />
 
-                <div className="space-y-3 text-[13px] sm:text-[14px] text-text-secondary leading-relaxed blog-content">
+                <div ref={blogRef} className="space-y-3 text-[13px] sm:text-[14px] text-text-secondary leading-relaxed blog-content">
                   <p>This is a full article about {openPost.title.toLowerCase()}. It covers the key insights, lessons learned, and practical tips gathered along the way.</p>
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                   <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
@@ -158,7 +180,7 @@ export default function Writing() {
                 </div>
               </div>
             </motion.div>
-          </motion.div>
+          </>
         )}
       </AnimatePresence>
     </div>

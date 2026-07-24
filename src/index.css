@@ -246,20 +246,20 @@
   transition: background 0.2s ease;
 }
 
-/* ─── Blog content highlighter cursor ────────────────────────────── */
+/* ─── Blog content yellow cursor highlighter ─────────────────────── */
 .blog-content {
-  cursor: text;
-  line-height: 1.8;
+  cursor: none;
 }
-.blog-content p {
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: background 0.2s ease;
-}
-.blog-content p:hover {
-  background: rgba(59, 130, 246, 0.06);
-}
-.blog-content ::selection {
-  background: rgba(59, 130, 246, 0.3);
-  color: #fafafa;
+.blog-cursor {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(250, 204, 21, 0.12);
+  border: 1.5px solid rgba(250, 204, 21, 0.35);
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: width 0.15s ease, height 0.15s ease, opacity 0.15s ease;
+  mix-blend-mode: screen;
 }

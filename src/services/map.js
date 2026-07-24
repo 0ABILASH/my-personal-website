@@ -15,7 +15,7 @@ const ROUTE_STYLE = {
 var MARKER_COLORS = {
   current:  { fill: '#3bf66a', stroke: '#ffffff', glow: 'rgba(59,130,246,0.4)' },
   visited:  { fill: '#3b82f6', stroke: '#ffffff', glow: 'rgba(59,130,246,0.3)' },
-  small:    { fill: '#a40787', stroke: '#3b82f6', glow: 'rgba(255,255,255,0.2)' },
+  small:    { fill: '#8f072b', stroke: '#3b82f6', glow: 'rgba(255,255,255,0.2)' },
 }
 
 // ─── API providers ──────────────────────────────────────────────────
@@ -128,12 +128,12 @@ function makeMarkerIcon(type) {
   } else if (type === 'visited') {
     svg =
       '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">' +
-      '<circle cx="12" cy="12" r="9" fill="' + c.fill + '" stroke="#fff" stroke-width="1.5"/>' +
+      '<circle cx="5" cy="5" r="5" fill="' + c.fill + '" stroke="#fff" stroke-width="1.5"/>' +
       '</svg>'
   } else if (type === 'small') {
     svg =
       '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">' +
-      '<circle cx="12" cy="12" r="9" fill="' + c.fill + '" stroke="' + c.stroke + '" stroke-width="1.5"/>' +
+      '<circle cx="2" cy="2" r="5" fill="' + c.fill + '" stroke="' + c.stroke + '" stroke-width="1.5"/>' +
       '</svg>'
   }
 
@@ -223,9 +223,9 @@ export function addLegend(map) {
     var div = L.DomUtil.create('div', 'travel-legend')
     div.innerHTML =
       '<div class="travel-legend-inner">' +
-        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#3b82f6"></span><span>Current Location</span></div>' +
-        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#3b82f6"></span><span>Visited City</span></div>' +
-        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#ffffff;border:1px solid #3b82f6"></span><span>Small Stop</span></div>' +
+        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#3bf66a"></span><span>Current Location</span></div>' +
+        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#8f072b"></span><span>Visited City</span></div>' +
+        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#ffffff;border:1px solid #edde16"></span><span>Small Stop</span></div>' +
         '<div class="travel-legend-item"><span class="travel-legend-line"></span><span>Travel Route</span></div>' +
       '</div>'
     return div
