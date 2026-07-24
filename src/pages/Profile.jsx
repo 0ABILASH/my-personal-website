@@ -58,14 +58,14 @@ export default function Profile() {
               onMouseLeave={() => setImgHover(false)}
             >
               {profileImg ? (
-                <img src={profileImg} alt="Profile" className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover shadow-[0_0_40px_rgba(59,130,246,0.25)]" />
+                <img src={profileImg} alt="Profile" className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover" style={{ boxShadow: '0 0 40px rgba(34,197,94,0.25)' }} />
               ) : (
                 <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-2xl sm:text-3xl font-black text-white shadow-[0_0_40px_rgba(59,130,246,0.25)]">
                   A
                 </div>
               )}
               {/* Status dot — always visible */}
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green border-2 border-surface flex items-center justify-center">
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-surface flex items-center justify-center" style={{ background: '#22c55e' }}>
                 <span className="w-2 h-2 rounded-full bg-white" />
               </div>
               {/* Hover tooltip */}
@@ -73,7 +73,8 @@ export default function Profile() {
                 <motion.div
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-lg bg-surface border border-border text-[10px] font-semibold text-green whitespace-nowrap shadow-lg z-10"
+                  className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-lg bg-surface border border-border text-[10px] font-semibold whitespace-nowrap shadow-lg z-10"
+                  style={{ color: '#22c55e' }}
                 >
                   Available
                 </motion.div>

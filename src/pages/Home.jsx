@@ -119,7 +119,7 @@ export default function Home({ onCvOpen }) {
             className="flex items-center gap-3 mt-10"
           >
            <div className="flex items-center gap-1.5 text-[11px] text-text-tertiary">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse style={{ color: '#22c55e' }}" />
               Coimbatore, India
             </div>
             <div className="w-px h-3.5 bg-border" />

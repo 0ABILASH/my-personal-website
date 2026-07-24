@@ -187,11 +187,9 @@ export function renderLayers(map, places, routes, animate, showVisited, showSmal
       var key = routeKey(places[i], places[i + 1])
       var coords = (routes && routes[key])
         ? routes[key]
-        : null
+        : [[places[i].lat, places[i].lng], [places[i + 1].lat, places[i + 1].lng]]
 
-      if (coords) {
-        L.polyline(coords, ROUTE_STYLE).addTo(map)
-      }
+      L.polyline(coords, ROUTE_STYLE).addTo(map)
     }
     if (animate) animateRouteDraw()
   }
