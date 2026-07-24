@@ -73,7 +73,7 @@ export default function Home({ onCvOpen }) {
           <div className="flex-1 min-w-0">
             <motion.div variants={fadeUp}>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border text-[11px] font-mono font-medium text-text-tertiary mb-5">
-                <Sparkles size={11} className="text-accent" />
+                {/* <Sparkles size={11} className="text-accent" /> */}
                 Software Engineer
               </span>
             </motion.div>

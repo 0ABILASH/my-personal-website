@@ -50,7 +50,7 @@
     background: var(--color-bg);
   }
 
-  input, textarea {
+  input, textarea, .blog-content {
     user-select: text;
     -webkit-user-select: text;
   }
@@ -244,4 +244,22 @@
   border-radius: 50%;
   flex-shrink: 0;
   transition: background 0.2s ease;
+}
+
+/* ─── Blog content highlighter cursor ────────────────────────────── */
+.blog-content {
+  cursor: text;
+  line-height: 1.8;
+}
+.blog-content p {
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+.blog-content p:hover {
+  background: rgba(59, 130, 246, 0.06);
+}
+.blog-content ::selection {
+  background: rgba(59, 130, 246, 0.3);
+  color: #fafafa;
 }

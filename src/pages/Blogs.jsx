@@ -129,7 +129,7 @@ export default function Writing() {
 
                 <div className="h-px bg-border mb-5" />
 
-                <div className="space-y-3 text-[13px] sm:text-[14px] text-text-secondary leading-relaxed">
+                <div className="space-y-3 text-[13px] sm:text-[14px] text-text-secondary leading-relaxed blog-content">
                   <p>This is a full article about {openPost.title.toLowerCase()}. It covers the key insights, lessons learned, and practical tips gathered along the way.</p>
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                   <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
