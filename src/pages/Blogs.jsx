@@ -13,9 +13,9 @@ const POSTS = [
 ]
 
 const TAG_COLORS = {
-  tutorial: { text: 'text-blue', bg: 'bg-blue-soft' },
+  tutorial: { text: 'text-accent', bg: 'bg-accent-soft' },
   thoughts: { text: 'text-accent', bg: 'bg-accent-soft' },
-  update: { text: 'text-green', bg: 'bg-green-soft' },
+  update: { text: 'text-accent', bg: 'bg-accent-soft' },
 }
 
 const FILTERS = ['all', 'tutorial', 'thoughts', 'update']

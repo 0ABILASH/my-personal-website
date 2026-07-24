@@ -5,25 +5,22 @@ export const FALLBACK_PLACES = [
 ]
 
 // ─── Route style ─────────────────────────────────────────────────────
-// Gradient route via SVG linearGradient (amber → orange).
-export const ROUTE_COLOR = '#f2bf34d0'
+export const ROUTE_COLOR = '#3b82f6'
 const ROUTE_STYLE = {
-  color: '#f4b300bd', weight: 1.5, opacity: 0.5,
+  color: '#3b82f6', weight: 2, opacity: 0.7,
   lineCap: 'round', lineJoin: 'round',
 }
 
 // ─── Marker color palette ────────────────────────────────────────────
 var MARKER_COLORS = {
-  current:  { fill: '#22c55e', stroke: '#ffffff', glow: 'rgba(34,197,94,0.4)' },
+  current:  { fill: '#3b82f6', stroke: '#ffffff', glow: 'rgba(59,130,246,0.4)' },
   visited:  { fill: '#3b82f6', stroke: '#ffffff', glow: 'rgba(59,130,246,0.3)' },
-  small:    { fill: '#8b5cf6', stroke: '#ffffff', glow: 'rgba(139,92,246,0.2)' },
+  small:    { fill: '#ffffff', stroke: '#3b82f6', glow: 'rgba(255,255,255,0.2)' },
 }
 
-// ─── API providers (ORS preferred, OSRM fallback) ────────────────────
-var ORS_BASE = 'https://api.openrouteservice.org/v2/directions/driving'
-var ORS_KEY = import.meta.env.VITE_ORS_API_KEY || ''
+// ─── API providers ──────────────────────────────────────────────────
 var OSRM_BASE = 'https://router.project-osrm.org'
-var CACHE_KEY = 'travel_routes_v4'
+var CACHE_KEY = 'travel_routes_v5'
 var CACHE_HASH_KEY = 'travel_places_hash'
 var BATCH_SIZE = 15
 var BATCH_DELAY = 0
@@ -52,13 +49,10 @@ function invalidateCacheIfPlacesChanged(places) {
   } catch {}
 }
 function routeKey(a, b) {
-  var lo = a.lat < b.lat ? a : b
-  var hi = a.lat >= b.lat ? a : b
-  return lo.lat.toFixed(4) + ',' + lo.lng.toFixed(4) + '|' + hi.lat.toFixed(4) + ',' + hi.lng.toFixed(4)
+  return a.lat.toFixed(4) + ',' + a.lng.toFixed(4) + '|' + b.lat.toFixed(4) + ',' + b.lng.toFixed(4)
 }
 
 // ─── single-route fetch (server proxy → OSRM) ────────────────────────
-// Routes through our own server to avoid browser CORS/rate-limit issues.
 async function fetchSingleRoute(from, to) {
   var fromCoord = from.lng + ',' + from.lat
   var toCoord = to.lng + ',' + to.lat
@@ -108,8 +102,6 @@ export function clearRouteCache() {
 }
 
 // ─── Classify marker type ─────────────────────────────────────────────
-// Uses the `type` field from Google Sheet if present.
-// Fallback rules: current = first place, visited = everything else.
 export function markerType(place, index) {
   var t = (place.type || '').toLowerCase().trim()
   if (t === 'current') return 'current'
@@ -124,7 +116,6 @@ function makeMarkerIcon(type) {
   var svg = ''
 
   if (type === 'current') {
-    // Green pulsing dot
     svg =
       '<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">' +
       '<circle cx="18" cy="18" r="14" fill="none" stroke="' + c.fill + '" stroke-width="1.5" opacity="0.5">' +
@@ -133,30 +124,21 @@ function makeMarkerIcon(type) {
       '</circle>' +
       '<circle cx="18" cy="18" r="5" fill="' + c.fill + '" stroke="#fff" stroke-width="2"/>' +
       '</svg>'
-  } else if (type === 'major') {
-    // Flag icon — pennant style
-    svg =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24">' +
-      '<path d="M4 4v16" stroke="' + c.fill + '" stroke-width="2" stroke-linecap="round"/>' +
-      '<path d="M4 4h12l-3 4 3 4H4" fill="' + c.fill + '"/>' +
-      '</svg>'
   } else if (type === 'visited') {
-    // Circle icon (same shape as small)
     svg =
       '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">' +
       '<circle cx="12" cy="12" r="9" fill="' + c.fill + '" stroke="#fff" stroke-width="1.5"/>' +
       '</svg>'
   } else if (type === 'small') {
-    // Circle icon
     svg =
       '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">' +
-      '<circle cx="12" cy="12" r="9" fill="' + c.fill + '" stroke="#fff" stroke-width="1.5"/>' +
+      '<circle cx="12" cy="12" r="9" fill="' + c.fill + '" stroke="' + c.stroke + '" stroke-width="1.5"/>' +
       '</svg>'
   }
 
-  var anchor = type === 'current' ? [18, 18] : type === 'major' ? [4, 22] : type === 'visited' ? [10, 10] : type === 'small' ? [8, 8] : [11, 11]
-  var popupOff = type === 'current' ? [0, -22] : type === 'major' ? [0, -28] : type === 'visited' ? [0, -14] : [0, -14]
-  var iconSz = type === 'current' ? [36, 36] : type === 'major' ? [26, 26] : type === 'visited' ? [20, 20] : [16, 16]
+  var anchor = type === 'current' ? [18, 18] : type === 'visited' ? [10, 10] : type === 'small' ? [8, 8] : [11, 11]
+  var popupOff = type === 'current' ? [0, -22] : type === 'visited' ? [0, -14] : [0, -14]
+  var iconSz = type === 'current' ? [36, 36] : type === 'visited' ? [20, 20] : [16, 16]
 
   return L.divIcon({
     html: svg,
@@ -169,7 +151,6 @@ function makeMarkerIcon(type) {
 
 // ─── Premium popup HTML ───────────────────────────────────────────────
 function popupHtml(p, type) {
-  var borderColor = MARKER_COLORS[type].fill
   return '<div style="text-align:center;font-family:Gabarito,sans-serif;padding:8px 12px;min-width:120px">' +
     '<div style="font-size:1.4rem;margin-bottom:2px">' + p.emoji + '</div>' +
     '<strong style="font-size:0.85rem;color:#fafafa">' + p.city + '</strong><br/>' +
@@ -178,8 +159,6 @@ function popupHtml(p, type) {
 }
 
 // ─── Animate route draw (SVG stroke-dashoffset) ───────────────────────
-// After Leaflet renders the SVG polylines, calculates each path's length
-// and animates it from hidden to fully drawn over ANIM_DURATION ms.
 var ANIM_DURATION = 4000
 function animateRouteDraw() {
   requestAnimationFrame(function () {
@@ -196,21 +175,22 @@ function animateRouteDraw() {
 }
 
 // ─── render layers on map ─────────────────────────────────────────────
-// Accepts `animate` for draw-in animation, `showMajor`, `showSmall`, and `showVisited` for filtering.
 export function renderLayers(map, places, routes, animate, showVisited, showSmall) {
   map.eachLayer(function (layer) {
     if (!(layer instanceof L.TileLayer)) map.removeLayer(layer)
   })
 
-  // 1. Route segments — solid amber line
+  // 1. Route segments — blue line
   if (places.length >= 2) {
     for (var i = 0; i < places.length - 1; i++) {
       var key = routeKey(places[i], places[i + 1])
       var coords = (routes && routes[key])
         ? routes[key]
-        : [[places[i].lat, places[i].lng], [places[i + 1].lat, places[i + 1].lng]]
+        : null
 
-      L.polyline(coords, ROUTE_STYLE).addTo(map)
+      if (coords) {
+        L.polyline(coords, ROUTE_STYLE).addTo(map)
+      }
     }
     if (animate) animateRouteDraw()
   }
@@ -244,10 +224,9 @@ export function addLegend(map) {
     var div = L.DomUtil.create('div', 'travel-legend')
     div.innerHTML =
       '<div class="travel-legend-inner">' +
-        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#22c55e"></span><span>Current Location</span></div>' +
+        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#3b82f6"></span><span>Current Location</span></div>' +
         '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#3b82f6"></span><span>Visited City</span></div>' +
-        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#F4B400"></span><span>Major Destination</span></div>' +
-        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#8b5cf6"></span><span>Small Stop</span></div>' +
+        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#ffffff;border:1px solid #3b82f6"></span><span>Small Stop</span></div>' +
         '<div class="travel-legend-item"><span class="travel-legend-line"></span><span>Travel Route</span></div>' +
       '</div>'
     return div

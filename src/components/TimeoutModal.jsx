@@ -20,11 +20,11 @@ export default function TimeoutModal({ onRetry }) {
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       >
         <motion.div
-          className="w-14 h-14 rounded-2xl bg-amber-soft border border-amber/15 flex items-center justify-center mx-auto mb-5"
+          className="w-14 h-14 rounded-2xl bg-accent-soft border border-accent/15 flex items-center justify-center mx-auto mb-5"
           animate={{ rotate: [0, -10, 10, -10, 0] }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <Clock size={24} className="text-amber" />
+          <Clock size={24} className="text-accent" />
         </motion.div>
 
         <h2 className="text-lg font-bold tracking-tight mb-2">Session Timeout</h2>

@@ -26,7 +26,7 @@ export default function Shell({ children, onCvOpen }) {
 
   return (
     <div className="min-h-screen bg-bg text-text flex flex-col">
-      <header className="fixed top-0 left-0 right-0 z-50 bg-bg/80 backdrop-blur-xl border-b border-border">
+      <header className="fixed top-0 left-0 right-0 z-[2000] bg-bg/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-5xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group" onClick={() => setMobileOpen(false)}>
             {profileImg ? (
@@ -63,12 +63,13 @@ export default function Shell({ children, onCvOpen }) {
             </button>
             <div className="w-px h-4 bg-border hidden sm:block" />
             <a
-              href="https://github.com"
+              href="https://abilash-profile.onrender.com"
               target="_blank"
               rel="noreferrer"
-              className="hidden sm:flex w-7 h-7 items-center justify-center text-text-quaternary hover:text-text-secondary transition-colors"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-[12px] font-medium text-text-secondary hover:text-text transition-all"
             >
-              <ArrowUpRight size={14} />
+              <ArrowUpRight size={12} />
+              Portfolio
             </a>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}

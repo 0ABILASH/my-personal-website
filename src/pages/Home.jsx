@@ -22,16 +22,16 @@ const PANELS = [
     icon: User,
     label: "Profile",
     desc: "Who I am and what I do.",
-    color: "text-amber",
-    bg: "bg-amber-soft",
+    color: "text-accent",
+    bg: "bg-accent-soft",
   },
   {
     to: "/travel-log",
     icon: MapPin,
     label: "Travel Log",
     desc: "Places I've been — interactive travel map.",
-    color: "text-green",
-    bg: "bg-green-soft",
+    color: "text-accent",
+    bg: "bg-accent-soft",
   },
   {
     to: "/blogs",
@@ -119,7 +119,7 @@ export default function Home({ onCvOpen }) {
             className="flex items-center gap-3 mt-10"
           >
            <div className="flex items-center gap-1.5 text-[11px] text-text-tertiary">
-              <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
               Coimbatore, India
             </div>
             <div className="w-px h-3.5 bg-border" />
@@ -250,8 +250,8 @@ export default function Home({ onCvOpen }) {
       <footer className="max-w-5xl mx-auto px-5 sm:px-6 pb-10">
         <div className="h-px bg-border mb-8" />
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-text-quaternary">
-          <p>&copy; {new Date().getFullYear()} Licenced Under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC NC-ND-4.0</a></p>
-          <p className="font-mono">Developed by Abilash</p>
+          <p>Licenced Under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" className="hover:text-accent transition-colors">CC NC-ND-4.0</a></p>
+          <p className="font-mono">Developed by <span className="hover:text-accent transition-colors cursor-default">Abilash</span></p>
         </div>
       </footer>
 
