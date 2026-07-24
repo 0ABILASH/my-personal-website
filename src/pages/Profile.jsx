@@ -65,7 +65,7 @@ export default function Profile() {
                 </div>
               )}
               {/* Status dot — always visible */}
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green border-2 border-surface flex items-center justify-center">
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-accent border-2 border-surface flex items-center justify-center">
                 <span className="w-2 h-2 rounded-full bg-white" />
               </div>
               {/* Hover tooltip */}
@@ -73,7 +73,7 @@ export default function Profile() {
                 <motion.div
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-lg bg-surface border border-border text-[10px] font-semibold text-green whitespace-nowrap shadow-lg z-10"
+                  className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-lg bg-surface border border-border text-[10px] font-semibold text-accent whitespace-nowrap shadow-lg z-10"
                 >
                   Available
                 </motion.div>
@@ -87,8 +87,8 @@ export default function Profile() {
                 and getting way too deep into rabbit holes.
               </p>
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
-                <div className="flex items-center gap-1.5 text-[11px] text-green">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green animate-pulse" />
+                <div className="flex items-center gap-1.5 text-[11px] text-accent">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                   Available
                 </div>
               </div>

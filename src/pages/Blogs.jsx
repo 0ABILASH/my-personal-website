@@ -142,7 +142,7 @@ export default function Writing() {
                     {profileImg ? (
                       <img src={profileImg} alt="Abilash" className="w-8 h-8 rounded-lg object-cover" />
                     ) : (
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-green flex items-center justify-center text-[10px] font-bold text-white">A</div>
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-[10px] font-bold text-white">A</div>
                     )}
                     <div>
                       <strong className="text-[12px] block leading-tight">Abilash</strong>

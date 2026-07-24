@@ -111,10 +111,10 @@ export default function Space() {
       >
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
           <div className="relative">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green to-accent flex items-center justify-center shadow-[0_0_24px_rgba(34,197,94,0.15)]">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center shadow-[0_0_24px_rgba(59,130,246,0.15)]">
               <Globe size={20} className="text-white" />
             </div>
-            <div className="absolute -inset-1 rounded-[14px] border border-green/10 animate-glow" />
+            <div className="absolute -inset-1 rounded-[14px] border border-accent/10 animate-glow" />
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight mb-1">
@@ -151,7 +151,7 @@ export default function Space() {
                 onClick={function () { setShowSmall(function (v) { return !v }) }}
                 className={
                   "map-toggle " +
-                  (showSmall ? "map-toggle--purple" : "")
+                  (showSmall ? "map-toggle--blue" : "")
                 }
               >
                 <span className="map-toggle-dot" style={{ background: showSmall ? '#8b5cf6' : '#52525b' }} />
@@ -179,7 +179,7 @@ export default function Space() {
           {/* Error overlay */}
           {error && (
             <div className="absolute inset-0 z-[1000] flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm gap-3">
-              <p className="text-[12px] text-red font-medium">Route calculation failed</p>
+              <p className="text-[12px] text-text-secondary font-medium">Route calculation failed</p>
               <button
                 onClick={loadRoutes}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-[11px] font-medium text-text-secondary hover:text-text transition-all cursor-pointer"

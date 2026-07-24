@@ -61,7 +61,7 @@ export default function Home({ onCvOpen }) {
       <section className="relative max-w-5xl mx-auto px-5 sm:px-6 pt-8 pb-16 sm:pt-12 sm:pb-24">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[500px] h-[500px] sm:w-[700px] sm:h-[700px] bg-accent/[0.03] rounded-full blur-[100px]" />
-          <div className="absolute top-32 left-1/4 w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] bg-green/[0.02] rounded-full blur-[80px]" />
+          <div className="absolute top-32 left-1/4 w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] bg-accent/[0.02] rounded-full blur-[80px]" />
         </div>
 
         <motion.div
@@ -311,7 +311,7 @@ export default function Home({ onCvOpen }) {
               </motion.div>
 
               <motion.h1
-                className="text-4xl sm:text-6xl font-black tracking-tight bg-gradient-to-r from-accent via-green to-accent bg-clip-text text-transparent"
+                className="text-4xl sm:text-6xl font-black tracking-tight bg-gradient-to-r from-accent via-white to-accent bg-clip-text text-transparent"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}

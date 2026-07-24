@@ -108,7 +108,7 @@ export default function DownloadModal({ open, onClose }) {
               <motion.p
                 initial={{ opacity: 0, y: 3 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-3 text-[11px] text-green font-medium text-center"
+                className="mt-3 text-[11px] text-accent font-medium text-center"
               >
                 {status}
               </motion.p>
