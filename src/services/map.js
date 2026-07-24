@@ -107,6 +107,7 @@ export function markerType(place, index) {
   if (t === 'current') return 'current'
   if (t === 'visited') return 'visited'
   if (t === 'small') return 'small'
+  if (index === 0) return 'current'
   return null
 }
 

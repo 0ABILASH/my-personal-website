@@ -136,7 +136,7 @@ export default function Space() {
 
           {/* Toggle pills — positioned over the map */}
           {!loading && !error && (
-            <div className="absolute top-3 right-3 z-[1000] flex gap-1.5">
+            <div className="absolute top-3 right-3 z-[800] flex gap-1.5">
               <button
                 onClick={function () { setShowVisited(function (v) { return !v }) }}
                 className={
@@ -162,7 +162,7 @@ export default function Space() {
 
           {/* Loading overlay */}
           {loading && (
-            <div className="absolute inset-0 z-[1000] flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm gap-3">
+            <div className="absolute inset-0 z-[800] flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm gap-3">
               <Loader2 size={20} className="text-accent animate-spin" />
               <p className="text-[12px] text-text-secondary font-medium">
                 Calculating road routes... {progress.done}/{progress.total}
@@ -178,7 +178,7 @@ export default function Space() {
 
           {/* Error overlay */}
           {error && (
-            <div className="absolute inset-0 z-[1000] flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm gap-3">
+            <div className="absolute inset-0 z-[800] flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm gap-3">
               <p className="text-[12px] text-text-secondary font-medium">Route calculation failed</p>
               <button
                 onClick={loadRoutes}
