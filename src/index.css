@@ -266,31 +266,17 @@
 
 /* ─── Screenshot protection — black screen ──────────────────────── */
 @media print {
-  * {
+  body * {
     visibility: hidden !important;
-    display: none !important;
   }
-  body::after {
+  body::before {
     content: '';
     position: fixed;
     inset: 0;
     background: #000 !important;
-    z-index: 9999999 !important;
+    z-index: 999999 !important;
     display: block !important;
   }
-}
-
-body.screenshot-hide > * {
-  display: none !important;
-}
-
-body.screenshot-hide::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: #000;
-  z-index: 9999999;
-  display: block;
 }
 
 #screenshot-block {
