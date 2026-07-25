@@ -41,10 +41,10 @@ const PANELS = [
 ];
 
 const TRAITS = [
-  { img: 'https://picsum.photos/seed/tea/80/80', name: "Tea Person", sub: "Proud Teetotaler" },
-  { img: 'https://picsum.photos/seed/night/80/80', name: "Im Batman", sub: "Night Person" },
-  { img: 'https://picsum.photos/seed/music/80/80', name: "Music Addict", sub: "Yes I'm" },
-  { img: 'https://picsum.photos/seed/dog/80/80', name: "Pet", sub: "Soon" },
+  { img: '/src/images/tea.webp', name: "Tea Person", sub: "Proud Teetotaler" },
+  { img: '/src/images/batman.webp', name: "Im Batman", sub: "Night Person" },
+  { img: '/src/images/music.webp', name: "Music Addict", sub: "Yes I'm" },
+  { img: '/src/images/pet.jpg', name: "Pet", sub: "Soon" },
   { img: 'https://picsum.photos/seed/globe/80/80', name: "God", sub: "Trust" },
   { img: 'https://picsum.photos/seed/moto/80/80', name: "Motorcyclist", sub: "Two Wheels Freedom" },
 ];
