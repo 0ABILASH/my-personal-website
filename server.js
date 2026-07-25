@@ -33,13 +33,40 @@ async function gasGet(params) {
 
 app.post('/api/track', async function (req, res) {
   try {
-    var params = new URLSearchParams()
     var body = req.body || {}
+
+    // Get IP from request headers or fallback
+    var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || ''
+    if (ip.indexOf(',') > -1) ip = ip.split(',')[0].trim()
+    if (ip === '::1' || ip === '127.0.0.1') ip = ''
+
+    // Lookup IP details if available
+    var ipInfo = {}
+    if (ip && ip !== '127.0.0.1') {
+      try {
+        var ipRes = await fetch('https://ipapi.co/' + ip + '/json/')
+        var ipData = await ipRes.json()
+        ipInfo = {
+          ip: ip,
+          city: ipData.city || '',
+          country: ipData.country_name || '',
+          region: ipData.region || '',
+        }
+      } catch (e) {
+        ipInfo = { ip: ip, city: '', country: '', region: '' }
+      }
+    }
+
+    var params = new URLSearchParams()
     Object.keys(body).forEach(function (key) {
       if (body[key] !== undefined && body[key] !== null) {
         params.append(key, String(body[key]))
       }
     })
+    if (ipInfo.ip) params.append('ip', ipInfo.ip)
+    if (ipInfo.city) params.append('city', ipInfo.city)
+    if (ipInfo.country) params.append('country', ipInfo.country)
+    if (ipInfo.region) params.append('region', ipInfo.region)
     params.append('_', Date.now().toString())
     await gasGet(params)
   } catch (err) {}

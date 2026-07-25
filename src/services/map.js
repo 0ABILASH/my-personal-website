@@ -15,7 +15,7 @@ const ROUTE_STYLE = {
 var MARKER_COLORS = {
   current:  { fill: '#3bf66a', stroke: '#ffffff', glow: 'rgba(59,130,246,0.4)' },
   visited:  { fill: '#3b82f6', stroke: '#ffffff', glow: 'rgba(59,130,246,0.3)' },
-  small:    { fill: '#8f072b', stroke: '#3b82f6', glow: 'rgba(255,255,255,0.2)' },
+  small:    { fill: '#e60303f5', stroke: '#fbfbfc', glow: 'rgba(255,255,255,0.2)' },
 }
 
 // ─── API providers ──────────────────────────────────────────────────

@@ -59,6 +59,29 @@ function getOS() {
   return 'Other'
 }
 
+function getBrand() {
+  var ua = navigator.userAgent
+  if (ua.indexOf('Samsung') > -1) return 'Samsung'
+  if (ua.indexOf('iPhone') > -1 || ua.indexOf('iPad') > -1) return 'Apple'
+  if (ua.indexOf('Pixel') > -1) return 'Google'
+  if (ua.indexOf('OnePlus') > -1) return 'OnePlus'
+  if (ua.indexOf('Xiaomi') > -1 || ua.indexOf('Mi ') > -1) return 'Xiaomi'
+  if (ua.indexOf('Redmi') > -1) return 'Xiaomi'
+  if (ua.indexOf('Realme') > -1) return 'Realme'
+  if (ua.indexOf('OPPO') > -1) return 'OPPO'
+  if (ua.indexOf('Vivo') > -1) return 'Vivo'
+  if (ua.indexOf('Huawei') > -1) return 'Huawei'
+  if (ua.indexOf('Motorola') > -1 || ua.indexOf('Moto') > -1) return 'Motorola'
+  if (ua.indexOf('Nokia') > -1) return 'Nokia'
+  if (ua.indexOf('Sony') > -1) return 'Sony'
+  if (ua.indexOf('Nothing') > -1) return 'Nothing'
+  if (ua.indexOf('Android') > -1) return 'Android Device'
+  if (ua.indexOf('Windows') > -1 || ua.indexOf('Win') > -1) return 'Windows PC'
+  if (ua.indexOf('Mac') > -1) return 'Apple Mac'
+  if (ua.indexOf('Linux') > -1) return 'Linux PC'
+  return 'Unknown'
+}
+
 export function trackVisitor(action) {
   var now = new Date()
   send({
@@ -69,6 +92,7 @@ export function trackVisitor(action) {
     time: formatTime(now),
     browser: getBrowser(),
     device: getDevice(),
+    brand: getBrand(),
     os: getOS(),
     screen: screen.width + 'x' + screen.height,
     language: navigator.language || 'Unknown',
@@ -87,6 +111,7 @@ export function trackDataDownload(name) {
     time: formatTime(now),
     browser: getBrowser(),
     device: getDevice(),
+    brand: getBrand(),
     os: getOS(),
     screen: screen.width + 'x' + screen.height,
     language: navigator.language || 'Unknown',
