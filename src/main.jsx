@@ -7,21 +7,23 @@ import './index.css'
 // Screenshot protection — deterrent only (not bulletproof)
 ;(function () {
   if (typeof document === 'undefined') return
+  var block = document.getElementById('screenshot-block')
+
+  function flashBlack() {
+    if (!block) return
+    block.style.display = 'block'
+    setTimeout(function () { block.style.display = 'none' }, 500)
+  }
 
   // Block right-click
   document.addEventListener('contextmenu', function (e) { e.preventDefault() }, true)
 
-  // Block PrintScreen key
+  // Block keys + flash black on PrintScreen
   document.addEventListener('keydown', function (e) {
-    // PrintScreen
-    if (e.key === 'PrintScreen') { e.preventDefault(); return }
-    // Ctrl+Shift+S (Firefox screenshot)
-    if (e.ctrlKey && e.shiftKey && e.key === 'S') { e.preventDefault(); return }
-    // Ctrl+P (Print)
-    if (e.ctrlKey && e.key === 'p') { e.preventDefault(); return }
-    // Ctrl+U (View Source)
+    if (e.key === 'PrintScreen') { e.preventDefault(); flashBlack(); return }
+    if (e.ctrlKey && e.shiftKey && e.key === 'S') { e.preventDefault(); flashBlack(); return }
+    if (e.ctrlKey && e.key === 'p') { e.preventDefault(); flashBlack(); return }
     if (e.ctrlKey && e.key === 'u') { e.preventDefault(); return }
-    // Ctrl+Shift+I / Ctrl+Shift+J / F12 (DevTools)
     if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) { e.preventDefault(); return }
     if (e.key === 'F12') { e.preventDefault(); return }
   }, true)
@@ -30,6 +32,11 @@ import './index.css'
   document.addEventListener('dragstart', function (e) {
     if (e.target.tagName === 'IMG') e.preventDefault()
   }, true)
+
+  // Flash black when window loses focus (snipping tools trigger this)
+  window.addEventListener('blur', function () { flashBlack() })
+
+  // CSS print protection — already handled in index.css @media print
 })()
 
 createRoot(document.getElementById('root')).render(

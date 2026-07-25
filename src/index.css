@@ -263,3 +263,27 @@
   transition: width 0.15s ease, height 0.15s ease, opacity 0.15s ease;
   mix-blend-mode: screen;
 }
+
+/* ─── Screenshot protection — black screen ──────────────────────── */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: #000 !important;
+    z-index: 999999 !important;
+    display: block !important;
+  }
+}
+
+#screenshot-block {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 9999999;
+  display: none;
+  pointer-events: none;
+}
