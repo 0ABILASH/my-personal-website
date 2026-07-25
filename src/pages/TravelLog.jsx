@@ -109,21 +109,25 @@ export default function Space() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-8">
-          <div className="relative">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center shadow-[0_0_24px_rgba(59,130,246,0.15)]">
-              <Globe size={20} className="text-white" />
-            </div>
-            <div className="absolute -inset-1 rounded-[14px] border border-accent/10 animate-glow" />
-          </div>
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight mb-1">
+        <div className="mb-8">
+          <div className="flex items-center gap-2.5 mb-3">
+            <Globe size={16} className="text-accent" />
+            <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">
               Travel Log
-            </h1>
-            <p className="text-[13px] text-text-secondary max-w-lg leading-relaxed">
-              Destinations I&apos;ve visited, roads I&apos;ve traveled, and the moments that made each journey unforgettable.
-            </p>
+            </span>
+            <div className="flex-1 h-px bg-border" />
+            {!loading && places.length > 0 && (
+              <span className="text-[10px] font-mono text-text-quaternary">
+                {places.length} places
+              </span>
+            )}
           </div>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight mb-1">
+            Travel Log
+          </h1>
+          <p className="text-[13px] text-text-secondary max-w-lg leading-relaxed">
+            Destinations I&apos;ve visited, roads I&apos;ve traveled, and the moments that made each journey unforgettable.
+          </p>
         </div>
 
         <motion.div
