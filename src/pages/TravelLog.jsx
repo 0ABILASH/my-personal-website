@@ -138,9 +138,9 @@ export default function Space() {
         >
           <div ref={mapRef} className="w-full h-[380px] sm:h-[480px] bg-bg rounded-2xl" />
 
-          {/* Toggle pills — positioned over the map */}
+          {/* Toggle pills — positioned over the map, below header */}
           {!loading && !error && (
-            <div className="absolute top-3 right-3 z-[800] flex gap-1.5">
+            <div className="absolute top-16 sm:top-3 right-3 z-[100] flex gap-1.5">
               <button
                 onClick={function () { setShowVisited(function (v) { return !v }) }}
                 className={
@@ -166,7 +166,7 @@ export default function Space() {
 
           {/* Loading — small top bar, map stays interactive */}
           {loading && (
-            <div className="absolute top-0 left-0 right-0 z-[800]">
+            <div className="absolute top-0 left-0 right-0 z-[100]">
               <div className="h-0.5 bg-border overflow-hidden rounded-t-2xl">
                 <div
                   className="h-full bg-accent rounded-full transition-all duration-300"
@@ -178,7 +178,7 @@ export default function Space() {
 
           {/* Error overlay */}
           {error && (
-            <div className="absolute inset-0 z-[800] flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm gap-3">
+            <div className="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm gap-3">
               <p className="text-[12px] text-text-secondary font-medium">Route calculation failed</p>
               <button
                 onClick={loadRoutes}

@@ -137,19 +137,36 @@ export default function Shell({ children, onCvOpen }) {
                 ))}
               </nav>
               <div className="p-3 border-t border-border">
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.35, duration: 0.3 }}
-                >
-                  <button
-                    onClick={() => { onCvOpen(); setMobileOpen(false); }}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl bg-bg border border-border hover:border-border-hover text-[14px] font-medium text-text-secondary hover:text-text transition-all w-full cursor-pointer"
+                <div className="flex flex-col gap-1">
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.35, duration: 0.3 }}
                   >
-                    <Download size={14} />
-                    Download Data
-                  </button>
-                </motion.div>
+                    <a
+                      href="https://abilash-profile.onrender.com"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-bg border border-border hover:border-border-hover text-[14px] font-medium text-text-secondary hover:text-text transition-all"
+                    >
+                      <ArrowUpRight size={14} />
+                      Portfolio
+                    </a>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4, duration: 0.3 }}
+                  >
+                    <button
+                      onClick={() => { onCvOpen(); setMobileOpen(false); }}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-bg border border-border hover:border-border-hover text-[14px] font-medium text-text-secondary hover:text-text transition-all w-full cursor-pointer"
+                    >
+                      <Download size={14} />
+                      Download Data
+                    </button>
+                  </motion.div>
+                </div>
               </div>
             </motion.div>
           </>

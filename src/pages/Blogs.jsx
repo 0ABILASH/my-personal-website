@@ -53,14 +53,21 @@ export default function Writing() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-accent-soft flex items-center justify-center">
-            <PenLine size={18} className="text-accent" />
+        <div className="mb-8">
+          <div className="flex items-center gap-2.5 mb-3">
+            <PenLine size={16} className="text-accent" />
+            <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">
+              Blogs
+            </span>
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-[10px] font-mono text-text-quaternary">
+              {POSTS.length} posts
+            </span>
           </div>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">Blogs</h1>
-            <p className="text-[12px] text-text-tertiary">Thoughts, tutorials, and updates.</p>
-          </div>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+            Blogs
+          </h1>
+          <p className="text-[12px] text-text-tertiary">Thoughts, tutorials, and updates.</p>
         </div>
 
         <div className="flex gap-2 mb-8">
