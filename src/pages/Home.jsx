@@ -5,7 +5,7 @@ import { ArrowRight, MapPin, PenLine, User, X } from "lucide-react";
 import teaImg from "../images/tea.webp";
 import batmanImg from "../images/batman.webp";
 import musicImg from "../images/music.webp";
-import petImg from "../images/pet.jpg";
+import petImg from "../images/pet.webp";
 import profileImg from "../images/profile.jpeg";
 
 const stagger = {
