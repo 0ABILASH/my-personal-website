@@ -22,24 +22,21 @@ const PANELS = [
     icon: User,
     label: "Profile",
     desc: "Who I am and what I do.",
-    color: "text-accent",
-    bg: "bg-accent-soft",
+    num: "01",
   },
   {
     to: "/travel-log",
     icon: MapPin,
     label: "Travel Log",
     desc: "Places I've been — interactive travel map.",
-    color: "text-accent",
-    bg: "bg-accent-soft",
+    num: "02",
   },
   {
     to: "/blogs",
     icon: PenLine,
     label: "Blogs",
     desc: "Thoughts, tutorials, and updates.",
-    color: "text-accent",
-    bg: "bg-accent-soft",
+    num: "03",
   },
 ];
 
@@ -222,23 +219,40 @@ export default function Home({ onCvOpen }) {
               >
                 <Link
                   to={panel.to}
-                  className="block bg-surface border border-border hover:border-border-hover rounded-2xl p-5 sm:p-6 transition-all duration-300 group hover:shadow-[0_6px_24px_rgba(0,0,0,0.12)] hover:-translate-y-0.5"
+                  className="group relative block overflow-hidden rounded-2xl border border-border hover:border-border-hover bg-surface transition-all duration-500"
                 >
-                  <div
-                    className={`w-9 h-9 rounded-xl ${panel.bg} flex items-center justify-center mb-3`}
-                  >
-                    <Icon size={16} className={panel.color} />
+                  {/* Top gradient line */}
+                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                  <div className="p-5 sm:p-6">
+                    {/* Number + Icon row */}
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="text-[10px] font-mono font-bold text-text-quaternary/50">
+                        {panel.num}
+                      </span>
+                      <div className="w-10 h-10 rounded-xl bg-bg border border-border group-hover:border-accent/30 group-hover:bg-accent/5 flex items-center justify-center transition-all duration-500">
+                        <Icon size={16} className="text-text-tertiary group-hover:text-accent transition-colors duration-500" />
+                      </div>
+                    </div>
+
+                    {/* Label + Arrow */}
+                    <div className="flex items-center gap-2 mb-2">
+                      <h3 className="text-[15px] font-bold tracking-tight">
+                        {panel.label}
+                      </h3>
+                      <ArrowRight
+                        size={13}
+                        className="text-text-quaternary -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+                      />
+                    </div>
+
+                    <p className="text-[12px] text-text-tertiary leading-relaxed">
+                      {panel.desc}
+                    </p>
                   </div>
-                  <h3 className="text-[14px] font-bold mb-1 flex items-center gap-1.5">
-                    {panel.label}
-                    <ArrowRight
-                      size={12}
-                      className="text-text-quaternary group-hover:text-text-secondary group-hover:translate-x-0.5 transition-all"
-                    />
-                  </h3>
-                  <p className="text-[12px] text-text-tertiary leading-relaxed">
-                    {panel.desc}
-                  </p>
+
+                  {/* Bottom hover line */}
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                 </Link>
               </motion.div>
             );
