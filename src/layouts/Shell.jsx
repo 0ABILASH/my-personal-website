@@ -29,7 +29,7 @@ export default function Shell({ children, onCvOpen }) {
     <div className="min-h-screen bg-bg text-text flex flex-col">
       <header className="fixed top-0 left-0 right-0 z-[2000] bg-bg/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-5xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 group" onClick={() => setMobileOpen(false)}>
+          <div className="flex items-center gap-2">
             {profileImg ? (
               <button
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); setImgOpen(true); }}
@@ -45,8 +45,8 @@ export default function Shell({ children, onCvOpen }) {
                 <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_16px_rgba(59,130,246,0.25)]">A</div>
               </button>
             )}
-            <span className="text-[13px] font-semibold tracking-tight text-text group-hover:text-accent transition-colors">Abilash</span>
-          </Link>
+            <span className="text-[13px] font-semibold tracking-tight text-text">Abilash</span>
+          </div>
 
           <nav className="hidden md:flex items-center gap-0.5">
             {NAV.map(link => (
