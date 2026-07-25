@@ -128,12 +128,12 @@ function makeMarkerIcon(type) {
   } else if (type === 'visited') {
     svg =
       '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">' +
-      '<circle cx="4" cy="4" r="5" fill="' + c.fill + '" stroke="#fff" stroke-width="1.5"/>' +
+      '<circle cx="5" cy="5" r="5" fill="' + c.fill + '" stroke="#fff" stroke-width="1.5"/>' +
       '</svg>'
   } else if (type === 'small') {
     svg =
       '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">' +
-      '<circle cx="4" cy="4" r="5" fill="' + c.fill + '" stroke="' + c.stroke + '" stroke-width="1.5"/>' +
+      '<circle cx="2" cy="2" r="5" fill="' + c.fill + '" stroke="' + c.stroke + '" stroke-width="1.5"/>' +
       '</svg>'
   }
 
