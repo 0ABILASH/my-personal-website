@@ -41,12 +41,12 @@ const PANELS = [
 ];
 
 const TRAITS = [
-  { icon: "\u2615", name: "Tea Person", sub: "Proud Teetotaler" },
-  { icon: "\u{1F319}", name: "Im Batman", sub: "Night Person" },
-  { icon: "\u{1F3A7}", name: "Music Addict", sub: "Yes I'm" },
-  { icon: "\u{1F415}", name: "Pet", sub: "Soon" },
-  { icon: "\u{1F30D}", name: "God", sub: "Trust" },
-  { icon: "\u{1F6B4}", name: "Motorcyclist", sub: "Two Wheels Freedom" },
+  { img: 'https://picsum.photos/seed/tea/80/80', name: "Tea Person", sub: "Proud Teetotaler" },
+  { img: 'https://picsum.photos/seed/night/80/80', name: "Im Batman", sub: "Night Person" },
+  { img: 'https://picsum.photos/seed/music/80/80', name: "Music Addict", sub: "Yes I'm" },
+  { img: 'https://picsum.photos/seed/dog/80/80', name: "Pet", sub: "Soon" },
+  { img: 'https://picsum.photos/seed/globe/80/80', name: "God", sub: "Trust" },
+  { img: 'https://picsum.photos/seed/moto/80/80', name: "Motorcyclist", sub: "Two Wheels Freedom" },
 ];
 
 export default function Home({ onCvOpen }) {
@@ -174,7 +174,7 @@ export default function Home({ onCvOpen }) {
                   key={i}
                   className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-bg border border-border hover:border-border-hover transition-all duration-200"
                 >
-                  <span className="text-base flex-shrink-0">{t.icon}</span>
+                  <img src={t.img} alt={t.name} className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
                   <div className="min-w-0">
                     <div className="text-[12px] font-semibold leading-tight">
                       {t.name}
