@@ -4,26 +4,26 @@ import { ExternalLink } from 'lucide-react'
 import profileImg from '../services/profileImg'
 
 const TRAITS = [
-  { icon: '\u{1F4AC}', label: 'R-Status', sub: 'Single' },
-  { icon: '\u{1F4BB}', label: 'Role', sub: 'Developer' },
-  { icon: '\u{1F3B5}', label: 'Profession', sub: 'Software Engineer' },
-  { icon: '\u{1F415}', label: 'Passion', sub: 'Traveler' },
+  { label: 'R-Status', sub: 'Single' },
+  { label: 'Role', sub: 'Developer' },
+  { label: 'Profession', sub: 'Software Engineer' },
+  { label: 'Passion', sub: 'Traveler' },
 ]
 
 const LINKS = [
-  { label: 'Instagram', href: 'https://instagram.com', icon: 'IG' },
-  { label: 'Chess', href: 'https://chess.com', icon: 'CH' },
-  { label: 'Twitter', href: 'https://twitter.com', icon: 'X' },
-  { label: 'Email', href: 'mailto:mailtoabilashy@gmail.com', icon: '@' },
+  { label: 'Instagram', href: 'https://instagram.com' },
+  { label: 'Chess', href: 'https://chess.com' },
+  { label: 'Twitter', href: 'https://twitter.com' },
+  { label: 'Email', href: 'mailto:mailtoabilashy@gmail.com' },
 ]
 
 const INTERESTS = [
-  { icon: '\u{1F30D}', name: 'Traveling', sub: 'Exploring new places' },
-  { icon: '\u{1F6B4}', name: 'Biking', sub: 'Two wheels, infinite freedom' },
-  { icon: '\u{1F3A7}', name: 'Music', sub: 'Lo-fi & Indie always on repeat' },
-  { icon: '\u2615', name: 'Tea', sub: 'Proud teetotaler' },
-  { icon: '\u{1F4F1}', name: 'Tech', sub: 'Building random projects at 2am' },
-  { icon: '\u{1F319}', name: 'Night Owl', sub: 'Best ideas come after midnight' },
+  { name: 'Traveling', sub: 'Exploring new places' },
+  { name: 'Biking', sub: 'Two wheels, infinite freedom' },
+  { name: 'Music', sub: 'Lo-fi & Indie always on repeat' },
+  { name: 'Tea', sub: 'Proud teetotaler' },
+  { name: 'Tech', sub: 'Building random projects at 2am' },
+  { name: 'Night Owl', sub: 'Best ideas come after midnight' },
 ]
 
 const stagger = {
@@ -113,7 +113,6 @@ export default function Profile() {
                   key={i}
                   className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-bg border border-border hover:border-border-hover hover:bg-surface-hover transition-all duration-200 cursor-default"
                 >
-                  <span className="text-sm flex-shrink-0">{t.icon}</span>
                   <div className="min-w-0">
                     <div className="text-[10px] font-bold text-text-quaternary uppercase tracking-wider">{t.label}</div>
                     <div className="text-[11px] font-semibold text-text truncate">{t.sub}</div>
@@ -139,9 +138,6 @@ export default function Profile() {
                   rel="noreferrer"
                   className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-bg border border-border hover:border-border-hover hover:bg-surface-hover transition-all duration-200 group"
                 >
-                  <span className="w-7 h-7 rounded-lg bg-surface border border-border flex items-center justify-center text-[10px] font-bold text-text-tertiary font-mono flex-shrink-0 group-hover:border-border-hover">
-                    {l.icon}
-                  </span>
                   <span className="text-[12px] font-semibold flex-1">{l.label}</span>
                   <ExternalLink size={10} className="text-text-quaternary group-hover:text-accent transition-colors flex-shrink-0" />
                 </a>
@@ -198,7 +194,6 @@ export default function Profile() {
                 key={i}
                 className="flex items-center gap-3 px-3.5 py-3 rounded-xl bg-bg border border-border hover:border-border-hover hover:bg-surface-hover transition-all duration-200 cursor-default group"
               >
-                <span className="text-base flex-shrink-0 group-hover:scale-110 transition-transform duration-200">{item.icon}</span>
                 <div className="min-w-0">
                   <div className="text-[12px] font-semibold text-text">{item.name}</div>
                   <div className="text-[10px] text-text-quaternary truncate">{item.sub}</div>
