@@ -134,13 +134,13 @@ export default function Space() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.4 }}
-          className="rounded-2xl border border-border mb-4 relative"
+          className="rounded-2xl border border-border mb-4 relative overflow-hidden"
         >
           <div ref={mapRef} className="w-full h-[380px] sm:h-[480px] bg-bg rounded-2xl" />
 
           {/* Toggle pills — positioned over the map, below header */}
           {!loading && !error && (
-            <div className="absolute top-16 sm:top-3 right-3 z-[100] flex gap-1.5">
+            <div className="absolute top-3 right-3 z-[100] flex gap-1.5">
               <button
                 onClick={function () { setShowVisited(function (v) { return !v }) }}
                 className={
