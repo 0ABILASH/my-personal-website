@@ -9,37 +9,23 @@ import './index.css'
 
   var block = document.getElementById('screenshot-block')
 
-  // Hide page content — show black screen
   function hideContent() {
-    document.documentElement.style.background = '#000'
-    document.body.style.background = '#000'
-    document.body.style.overflow = 'hidden'
-    var root = document.getElementById('root')
-    if (root) root.style.visibility = 'hidden'
     if (block) block.style.display = 'block'
+    document.body.classList.add('screenshot-hide')
   }
 
-  // Restore page content
   function showContent() {
-    document.documentElement.style.background = ''
-    document.body.style.background = ''
-    document.body.style.overflow = ''
-    var root = document.getElementById('root')
-    if (root) root.style.visibility = 'visible'
     if (block) block.style.display = 'none'
+    document.body.classList.remove('screenshot-hide')
   }
 
-  // Page loses focus (user tabs away, opens snipping tool, etc.)
+  // Hide on blur (alt-tab, snipping tool overlay)
   window.addEventListener('blur', hideContent)
   window.addEventListener('focus', showContent)
 
-  // Page visibility change (alt-tab, minimized, etc.)
+  // Hide on visibility change (tab switch, minimize)
   document.addEventListener('visibilitychange', function () {
-    if (document.hidden) {
-      hideContent()
-    } else {
-      showContent()
-    }
+    document.hidden ? hideContent() : showContent()
   })
 
   // Block right-click
@@ -47,9 +33,9 @@ import './index.css'
 
   // Block dangerous keys
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'PrintScreen') { e.preventDefault(); hideContent(); setTimeout(showContent, 800); return }
-    if (e.ctrlKey && e.shiftKey && e.key === 'S') { e.preventDefault(); return }
-    if (e.ctrlKey && e.key === 'p') { e.preventDefault(); return }
+    if (e.key === 'PrintScreen') { e.preventDefault(); hideContent(); setTimeout(showContent, 1000); return }
+    if (e.ctrlKey && e.shiftKey && e.key === 'S') { e.preventDefault(); hideContent(); setTimeout(showContent, 1000); return }
+    if (e.ctrlKey && e.key === 'p') { e.preventDefault(); hideContent(); setTimeout(showContent, 1000); return }
     if (e.ctrlKey && e.key === 'u') { e.preventDefault(); return }
     if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) { e.preventDefault(); return }
     if (e.key === 'F12') { e.preventDefault(); return }
