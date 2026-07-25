@@ -30,9 +30,13 @@ export default function Shell({ children, onCvOpen }) {
         <div className="max-w-5xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group" onClick={() => setMobileOpen(false)}>
             {profileImg ? (
-              <img src={profileImg} alt="Abilash" className="w-5 h-5 rounded-full object-cover shadow-[0_0_16px_rgba(59,130,246,0.25)]" />
+              <Link to="/profile" onClick={(e) => { e.stopPropagation(); setMobileOpen(false); }}>
+                <img src={profileImg} alt="Abilash" className="w-5 h-5 rounded-full object-cover shadow-[0_0_16px_rgba(59,130,246,0.25)]" />
+              </Link>
             ) : (
-              <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_16px_rgba(59,130,246,0.25)]">A</div>
+              <Link to="/profile" onClick={(e) => { e.stopPropagation(); setMobileOpen(false); }}>
+                <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_16px_rgba(59,130,246,0.25)]">A</div>
+              </Link>
             )}
             <span className="text-[13px] font-semibold tracking-tight text-text group-hover:text-accent transition-colors">Abilash</span>
           </Link>

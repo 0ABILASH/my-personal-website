@@ -35,38 +35,40 @@ app.post('/api/track', async function (req, res) {
   try {
     var body = req.body || {}
 
-    // Get IP from request headers or fallback
-    var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || ''
-    if (ip.indexOf(',') > -1) ip = ip.split(',')[0].trim()
-    if (ip === '::1' || ip === '127.0.0.1') ip = ''
-
-    // Lookup IP details if available
-    var ipInfo = {}
-    if (ip && ip !== '127.0.0.1') {
-      try {
-        var ipRes = await fetch('https://ipapi.co/' + ip + '/json/')
-        var ipData = await ipRes.json()
-        ipInfo = {
-          ip: ip,
-          city: ipData.city || '',
-          country: ipData.country_name || '',
-          region: ipData.region || '',
-        }
-      } catch (e) {
-        ipInfo = { ip: ip, city: '', country: '', region: '' }
-      }
+    // Get IP from request headers
+    var ip = ''
+    var fwd = req.headers['x-forwarded-for']
+    if (fwd) {
+      ip = String(fwd).split(',')[0].trim()
+    }
+    if (!ip) {
+      ip = req.socket.remoteAddress || ''
+    }
+    // Strip IPv6 prefix
+    if (ip === '::1' || ip === '::ffff:127.0.0.1' || ip === '127.0.0.1') {
+      ip = ''
     }
 
     var params = new URLSearchParams()
     Object.keys(body).forEach(function (key) {
-      if (body[key] !== undefined && body[key] !== null) {
+      if (body[key] !== undefined && body[key] !== null && body[key] !== '') {
         params.append(key, String(body[key]))
       }
     })
-    if (ipInfo.ip) params.append('ip', ipInfo.ip)
-    if (ipInfo.city) params.append('city', ipInfo.city)
-    if (ipInfo.country) params.append('country', ipInfo.country)
-    if (ipInfo.region) params.append('region', ipInfo.region)
+    if (ip) {
+      params.append('ip', ip)
+      // Lookup city/country from IP (best-effort, non-blocking)
+      fetch('https://ipapi.co/' + ip + '/json/').then(function (r) { return r.json() }).then(function (d) {
+        var extra = new URLSearchParams()
+        if (d.city) extra.append('city', d.city)
+        if (d.country_name) extra.append('country', d.country_name)
+        if (d.region) extra.append('region', d.region)
+        // Fire-and-forget: re-send with location data
+        var full = new URLSearchParams(params.toString() + '&' + extra.toString())
+        full.append('_', Date.now().toString())
+        fetch(GAS_URL + '?' + full.toString(), { redirect: 'manual' }).catch(function () {})
+      }).catch(function () {})
+    }
     params.append('_', Date.now().toString())
     await gasGet(params)
   } catch (err) {}
