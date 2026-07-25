@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, MapPin, PenLine, User, Sparkles, X } from "lucide-react";
+import { ArrowRight, MapPin, PenLine, User, X } from "lucide-react";
+import teaImg from "../images/tea.webp";
+import batmanImg from "../images/batman.webp";
+import musicImg from "../images/music.webp";
+import petImg from "../images/pet.jpg";
+import profileImg from "../images/profile.jpeg";
 
 const stagger = {
   hidden: {},
@@ -41,12 +46,12 @@ const PANELS = [
 ];
 
 const TRAITS = [
-  { img: '/src/images/tea.webp', name: "Tea Person", sub: "Proud Teetotaler" },
-  { img: '/src/images/batman.webp', name: "Im Batman", sub: "Night Person" },
-  { img: '/src/images/music.webp', name: "Music Addict", sub: "Yes I'm" },
-  { img: '/src/images/pet.jpg', name: "Pet", sub: "Soon" },
-  { img: 'https://picsum.photos/seed/globe/80/80', name: "God", sub: "Trust" },
-  { img: 'https://picsum.photos/seed/moto/80/80', name: "Motorcyclist", sub: "Two Wheels Freedom" },
+  { img: teaImg, name: "Tea Person", sub: "Proud Teetotaler" },
+  { img: batmanImg, name: "Im Batman", sub: "Night Person" },
+  { img: musicImg, name: "Music Addict", sub: "Yes I'm" },
+  { img: petImg, name: "Pet", sub: "Soon" },
+  { img: profileImg, name: "God", sub: "Trust" },
+  { img: profileImg, name: "Motorcyclist", sub: "Two Wheels Freedom" },
 ];
 
 export default function Home({ onCvOpen }) {
