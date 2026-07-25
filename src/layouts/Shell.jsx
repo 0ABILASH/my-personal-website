@@ -104,7 +104,7 @@ export default function Shell({ children, onCvOpen }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+              className="fixed inset-0 z-[2400] bg-black/60 backdrop-blur-sm md:hidden"
               onClick={() => setMobileOpen(false)}
             />
             <motion.div
@@ -112,7 +112,7 @@ export default function Shell({ children, onCvOpen }) {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed top-0 right-0 bottom-0 z-50 w-[280px] bg-surface border-l border-border flex flex-col md:hidden"
+              className="fixed top-0 right-0 bottom-0 z-[2450] w-[280px] bg-surface border-l border-border flex flex-col md:hidden"
             >
               <div className="flex items-center justify-between px-5 h-14 border-b border-border">
                 <span className="text-[13px] font-semibold text-text">Menu</span>
