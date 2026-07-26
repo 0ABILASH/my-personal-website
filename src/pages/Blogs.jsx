@@ -4,12 +4,93 @@ import { PenLine, ArrowRight, X, Clock } from 'lucide-react'
 import profileImg from '../services/profileImg'
 
 const POSTS = [
-  { id: 1, title: 'Building My First React App', excerpt: 'How I got started with React and what I learned along the way.', tag: 'tutorial', date: 'Jan 2025', read: '5 min' },
-  { id: 2, title: 'Why I Love Open Source', excerpt: 'The community, the learning, and the impact of contributing.', tag: 'thoughts', date: 'Feb 2025', read: '4 min' },
-  { id: 3, title: 'New Portfolio Launch', excerpt: 'Behind the scenes of this website rebuild.', tag: 'update', date: 'Mar 2025', read: '3 min' },
-  { id: 4, title: 'TypeScript Tips I Wish I Knew', excerpt: 'Helpful patterns that improved my code quality.', tag: 'tutorial', date: 'Apr 2025', read: '6 min' },
-  { id: 5, title: 'What I Read This Year', excerpt: 'My favorite books and articles from 2025.', tag: 'thoughts', date: 'May 2025', read: '4 min' },
-  { id: 6, title: 'Deploying with Docker', excerpt: 'A practical guide to containerizing your apps.', tag: 'tutorial', date: 'Jun 2025', read: '7 min' },
+  {
+    id: 1,
+    title: 'Building My First React App',
+    excerpt: 'How I got started with React and what I learned along the way.',
+    tag: 'tutorial',
+    date: 'Jan 2025',
+    read: '5 min',
+    content: [
+      'I still remember the first time I opened VS Code and typed npx create-react-app. It felt like opening a door to a whole new world. Coming from vanilla JavaScript, React\'s component-based architecture was a breath of fresh air.',
+      'The first few days were overwhelming. JSX looked like HTML mixed with JavaScript, and I kept mixing up props and state. But once the mental model clicked — everything is a function that returns UI based on data — it all started making sense.',
+      'What surprised me most was the ecosystem. There\'s a library for everything: routing, state management, animations, form handling. It can be paralyzing at first, but I learned to start simple and add complexity only when needed.',
+      'My biggest takeaway: don\'t try to learn everything at once. Pick a small project, build it, break it, fix it. That cycle teaches you more than any tutorial ever will.',
+    ],
+  },
+  {
+    id: 2,
+    title: 'Why I Love Open Source',
+    excerpt: 'The community, the learning, and the impact of contributing.',
+    tag: 'thoughts',
+    date: 'Feb 2025',
+    read: '4 min',
+    content: [
+      'Open source changed the way I think about software. It\'s not just about code — it\'s about people coming together to build something bigger than themselves.',
+      'I started contributing with tiny fixes: updating docs, fixing typos, reporting bugs. It felt insignificant at first, but every contribution matters. Maintainers notice the effort, and suddenly you\'re part of a global team.',
+      'The learning aspect is incredible. Reading well-written open source code is like attending a masterclass. You see patterns, architecture decisions, and testing strategies that you\'d never come up with on your own.',
+      'If you\'re on the fence about contributing, just start. Fork a repo, fix something small, open a PR. The community is welcoming, and the experience is invaluable.',
+    ],
+  },
+  {
+    id: 3,
+    title: 'New Portfolio Launch',
+    excerpt: 'Behind the scenes of this website rebuild.',
+    tag: 'update',
+    date: 'Mar 2025',
+    read: '3 min',
+    content: [
+      'I finally rebuilt my portfolio from scratch. The old one was a template I barely understood, and every time I wanted to change something, I ended up breaking three other things.',
+      'This time, I built it with React, Vite, and Tailwind CSS. No unnecessary dependencies, no bloated frameworks. Just clean, fast, minimal code that I actually understand.',
+      'The biggest change is the Travel Log — an interactive map that shows all the places I\'ve visited, connected by road routes. It took forever to get the OSRM routing working, but seeing those blue lines trace real roads across India made it worth it.',
+      'Sometimes the best project is the one you build for yourself. You know exactly what you want, and every line of code serves a purpose.',
+    ],
+  },
+  {
+    id: 4,
+    title: 'TypeScript Tips I Wish I Knew',
+    excerpt: 'Helpful patterns that improved my code quality.',
+    tag: 'tutorial',
+    date: 'Apr 2025',
+    read: '6 min',
+    content: [
+      'I resisted TypeScript for the longest time. "JavaScript is fine," I\'d tell myself. Then I spent three hours debugging a bug caused by passing a string where a number was expected. That was the day I switched.',
+      'Tip one: use discriminated unions instead of optional properties. Instead of { type?: string, data?: any }, use { type: "success", data: User } | { type: "error", message: string }. TypeScript narrows the type automatically.',
+      'Tip two: embrace `never`. When you\'ve handled all cases in a switch statement, the remaining type should be `never`. If it\'s not, you missed a case. It\'s like having the compiler write your tests.',
+      'Tip three: generic constraints are your friend. Instead of accepting any array, accept `T[]` where `T extends HasId`. You get type safety without losing flexibility.',
+      'TypeScript isn\'t about adding complexity — it\'s about catching mistakes before your users do.',
+    ],
+  },
+  {
+    id: 5,
+    title: 'What I Read This Year',
+    excerpt: 'My favorite books and articles from 2025.',
+    tag: 'thoughts',
+    date: 'May 2025',
+    read: '4 min',
+    content: [
+      'This year I made a conscious effort to read more — not just technical books, but fiction, philosophy, and biographies. Here are the ones that stuck with me.',
+      '"Atomic Habits" by James Clear completely changed how I approach daily routines. The idea that 1% improvements compound over time sounds obvious, but applying it to coding practice was a game-changer.',
+      '"The Pragmatic Programmer" is a classic I finally got around to. The DRY principle and the tracer bullet concept are now how I approach every project.',
+      'On the technical side, the React docs got a complete rewrite and they\'re fantastic now. If you haven\'t read them recently, go back. They\'re some of the best documentation I\'ve seen.',
+      'Reading isn\'t just about learning new things — it\'s about seeing familiar problems from different angles.',
+    ],
+  },
+  {
+    id: 6,
+    title: 'Deploying with Docker',
+    excerpt: 'A practical guide to containerizing your apps.',
+    tag: 'tutorial',
+    date: 'Jun 2025',
+    read: '7 min',
+    content: [
+      'Docker used to terrify me. The word "containerization" sounded like something only enterprise developers dealt with. Turns out, it\'s one of the most useful tools for any developer.',
+      'Here\'s the simplest mental model: Docker is a way to package your app with everything it needs to run — the OS, the runtime, the dependencies — into a box that works anywhere.',
+      'For a React + Node app, you need two Dockerfiles: one for the frontend (served by Nginx), one for the backend (Node runtime). Then a docker-compose.yml to tie them together.',
+      'The real magic is in deployment. Once your app is containerized, you can deploy it to Render, Railway, AWS, or literally anywhere that runs Docker. No more "it works on my machine" problems.',
+      'Start with a simple Dockerfile, get it running locally, then worry about optimization. Perfect is the enemy of deployed.',
+    ],
+  },
 ]
 
 const TAG_COLORS = {
@@ -67,7 +148,7 @@ export default function Writing() {
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
             Blogs
           </h1>
-          <p className="text-[12px] text-text-tertiary">Thoughts, tutorials, and updates.</p>
+          <p className="text-[12px] text-text-tertiary">Experiance, life, and updates.</p>
         </div>
 
         <div className="flex gap-2 mb-8">
@@ -159,9 +240,9 @@ export default function Writing() {
                 <div className="h-px bg-border mb-5" />
 
                 <div ref={blogRef} className="space-y-3 text-[13px] sm:text-[14px] text-text-secondary leading-relaxed blog-content">
-                  <p>This is a full article about {openPost.title.toLowerCase()}. It covers the key insights, lessons learned, and practical tips gathered along the way.</p>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                  <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                  {openPost.content.map((para, i) => (
+                    <p key={i}>{para}</p>
+                  ))}
                 </div>
 
                 <div className="h-px bg-border my-5" />

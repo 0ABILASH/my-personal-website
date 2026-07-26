@@ -130,7 +130,7 @@ export default function Home({ onCvOpen }) {
             <div className="flex items-center gap-1.5">
               {[
                 { label: "IG", href: "https://instagram.com/0abilash" },
-                { label: "C", href: "https://https://www.chess.com/member/abilashcx" },
+                { label: "C", href: "https://https://https://www.chess.com/member/abilashcx" },
                 { label: "X", href: "https://twitter.com/0ABILASHH" },
               ].map(({ label, href }) => (
                 <a
