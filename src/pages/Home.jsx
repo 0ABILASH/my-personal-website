@@ -6,6 +6,8 @@ import teaImg from "../images/tea.webp";
 import batmanImg from "../images/batman.jpg";
 import musicImg from "../images/music.jpg";
 import petImg from "../images/pet.webp";
+import godImg from "../images/god.webp";
+import bikeImg from "../images/bike.jpg";
 import profileImg from "../images/profile.jpeg";
 
 const stagger = {
