@@ -63,9 +63,7 @@ app.post('/api/track', async function (req, res) {
 
     var params = new URLSearchParams()
     Object.keys(body).forEach(function (key) {
-      if (body[key] !== undefined && body[key] !== null && body[key] !== '') {
-        params.append(key, String(body[key]))
-      }
+      params.append(key, body[key] !== undefined && body[key] !== null ? String(body[key]) : '')
     })
     if (ip) params.append('ip', ip)
     if (ipData.city) params.append('city', ipData.city)
