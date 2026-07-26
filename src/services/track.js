@@ -77,11 +77,6 @@ function getBrand() {
 }
 
 export function trackVisitor(action) {
-  // Deduplicate pageview on same session
-  var key = 'tracked_' + window.location.pathname
-  if (action === 'pageview' && sessionStorage.getItem(key)) return
-  if (action === 'pageview') sessionStorage.setItem(key, '1')
-
   var now = new Date()
   send({
     type: 'Visitor',

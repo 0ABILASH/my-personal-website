@@ -15,15 +15,28 @@ app.use(express.static(join(__dirname, 'dist')))
 
 async function gasGet(params) {
   var url = GAS_URL + '?' + params.toString()
-  var res = await fetch(url, { redirect: 'follow' })
+  var res = await fetch(url, { redirect: 'manual' })
+
+  if (res.status >= 300 && res.status < 400) {
+    var location = res.headers.get('location')
+    if (location) {
+      if (location.startsWith('/')) {
+        location = new URL(url).origin + location
+      }
+      if (location.indexOf('?') === -1) {
+        location += '?' + params.toString()
+      }
+      var finalRes = await fetch(location)
+      return finalRes
+    }
+  }
   return res
 }
 
 app.post('/api/track', async function (req, res) {
-  res.json({ ok: true })
-
   try {
     var body = req.body || {}
+    console.log('[track] received:', JSON.stringify(body))
 
     var ip = ''
     var fwd = req.headers['x-forwarded-for']
@@ -59,8 +72,13 @@ app.post('/api/track', async function (req, res) {
     if (ipData.country_name) params.append('country', ipData.country_name)
     if (ipData.region) params.append('region', ipData.region)
     params.append('_', Date.now().toString())
+    console.log('[track] sending to GAS:', params.toString().substring(0, 200))
     await gasGet(params)
-  } catch (err) {}
+    console.log('[track] GAS success')
+  } catch (err) {
+    console.error('[track] error:', err.message)
+  }
+  res.json({ ok: true })
 })
 
 app.get('/api/travel', async function (req, res) {
