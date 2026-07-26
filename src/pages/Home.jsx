@@ -40,7 +40,7 @@ const PANELS = [
     to: "/blogs",
     icon: PenLine,
     label: "Blogs",
-    desc: "Thoughts, tutorials, and updates.",
+    desc: "Experiance,life, and updates.",
     num: "03",
   },
 ];
@@ -50,8 +50,8 @@ const TRAITS = [
   { img: batmanImg, name: "Im Batman", sub: "Night Person" },
   { img: musicImg, name: "Music Addict", sub: "Yes I'm" },
   { img: petImg, name: "Pet", sub: "Soon" },
-  { img: profileImg, name: "God", sub: "Trust" },
-  { img: profileImg, name: "Motorcyclist", sub: "Two Wheels Freedom" },
+  { img: godImg, name: "God", sub: "Trust" },
+  { img: bikeImg, name: "Motorcyclist", sub: "Two Wheels Freedom" },
 ];
 
 export default function Home({ onCvOpen }) {
@@ -128,8 +128,8 @@ export default function Home({ onCvOpen }) {
             <div className="flex items-center gap-1.5">
               {[
                 { label: "IG", href: "https://instagram.com/0abilash" },
-                { label: "C", href: "https://" },
-                { label: "X", href: "https://twitter.com/0abilash" },
+                { label: "C", href: "https://https://www.chess.com/member/abilashcx" },
+                { label: "X", href: "https://twitter.com/0ABILASHH" },
               ].map(({ label, href }) => (
                 <a
                   key={label}
@@ -159,9 +159,8 @@ export default function Home({ onCvOpen }) {
               &ldquo;
             </div>
             <p className="text-[14px] text-text-secondary leading-relaxed mb-4">
-              Hey! I&apos;m Abilash &mdash; a curious soul who believes every journey has
-              something to teach. I love exploring new places, building modern
-              web applications, and diving into ideas that challenge the way I
+              A curious soul who believes every journey has
+              something to teach. I love exploring new places and diving into ideas that challenge the way I
               think. Whether it's crossing random state borders at 2 AM,
               listening to good music on a long drive, I'm always
               chasing experiences that inspire growth, creativity, and
