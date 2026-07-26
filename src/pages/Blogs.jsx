@@ -8,21 +8,18 @@ const POSTS = [
     id: 1,
     title: 'Building My First React App',
     excerpt: 'How I got started with React and what I learned along the way.',
-    tag: 'tutorial',
+    tag: 'Experiance',
     date: 'Jan 2025',
     read: '5 min',
     content: [
-      'I still remember the first time I opened VS Code and typed npx create-react-app. It felt like opening a door to a whole new world. Coming from vanilla JavaScript, React\'s component-based architecture was a breath of fresh air.',
-      'The first few days were overwhelming. JSX looked like HTML mixed with JavaScript, and I kept mixing up props and state. But once the mental model clicked — everything is a function that returns UI based on data — it all started making sense.',
-      'What surprised me most was the ecosystem. There\'s a library for everything: routing, state management, animations, form handling. It can be paralyzing at first, but I learned to start simple and add complexity only when needed.',
-      'My biggest takeaway: don\'t try to learn everything at once. Pick a small project, build it, break it, fix it. That cycle teaches you more than any tutorial ever will.',
+      'Soon'
     ],
   },
   {
     id: 2,
     title: 'Why I Love Open Source',
     excerpt: 'The community, the learning, and the impact of contributing.',
-    tag: 'thoughts',
+    tag: 'Experiance',
     date: 'Feb 2025',
     read: '4 min',
     content: [
@@ -34,23 +31,20 @@ const POSTS = [
   },
   {
     id: 3,
-    title: 'New Portfolio Launch',
-    excerpt: 'Behind the scenes of this website rebuild.',
+    title: 'Web Update',
+    excerpt: 'Soon gonna a fix',
     tag: 'update',
     date: 'Mar 2025',
     read: '3 min',
     content: [
-      'I finally rebuilt my portfolio from scratch. The old one was a template I barely understood, and every time I wanted to change something, I ended up breaking three other things.',
-      'This time, I built it with React, Vite, and Tailwind CSS. No unnecessary dependencies, no bloated frameworks. Just clean, fast, minimal code that I actually understand.',
-      'The biggest change is the Travel Log — an interactive map that shows all the places I\'ve visited, connected by road routes. It took forever to get the OSRM routing working, but seeing those blue lines trace real roads across India made it worth it.',
-      'Sometimes the best project is the one you build for yourself. You know exactly what you want, and every line of code serves a purpose.',
+      'Im making a few improvements behind the scenes. Some pages are still under construction while I add new content and polish the overall experience. Check back soon—theres more on the way!',
     ],
   },
   {
     id: 4,
     title: 'TypeScript Tips I Wish I Knew',
     excerpt: 'Helpful patterns that improved my code quality.',
-    tag: 'tutorial',
+    tag: 'life',
     date: 'Apr 2025',
     read: '6 min',
     content: [
@@ -65,7 +59,7 @@ const POSTS = [
     id: 5,
     title: 'What I Read This Year',
     excerpt: 'My favorite books and articles from 2025.',
-    tag: 'thoughts',
+    tag: 'life',
     date: 'May 2025',
     read: '4 min',
     content: [
@@ -80,7 +74,7 @@ const POSTS = [
     id: 6,
     title: 'Deploying with Docker',
     excerpt: 'A practical guide to containerizing your apps.',
-    tag: 'tutorial',
+    tag: 'Experiance',
     date: 'Jun 2025',
     read: '7 min',
     content: [
