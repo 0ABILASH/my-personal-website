@@ -44,31 +44,30 @@ app.post('/api/track', async function (req, res) {
     if (!ip) {
       ip = req.socket.remoteAddress || ''
     }
-    // Strip IPv6 prefix
     if (ip === '::1' || ip === '::ffff:127.0.0.1' || ip === '127.0.0.1') {
       ip = ''
     }
 
+    // Lookup IP details first (if available)
+    var ipData = {}
+    if (ip) {
+      try {
+        var ipRes = await fetch('https://ipapi.co/' + ip + '/json/')
+        ipData = await ipRes.json()
+      } catch (e) {}
+    }
+
+    // Build params once — with all data
     var params = new URLSearchParams()
     Object.keys(body).forEach(function (key) {
       if (body[key] !== undefined && body[key] !== null && body[key] !== '') {
         params.append(key, String(body[key]))
       }
     })
-    if (ip) {
-      params.append('ip', ip)
-      // Lookup city/country from IP (best-effort, non-blocking)
-      fetch('https://ipapi.co/' + ip + '/json/').then(function (r) { return r.json() }).then(function (d) {
-        var extra = new URLSearchParams()
-        if (d.city) extra.append('city', d.city)
-        if (d.country_name) extra.append('country', d.country_name)
-        if (d.region) extra.append('region', d.region)
-        // Fire-and-forget: re-send with location data
-        var full = new URLSearchParams(params.toString() + '&' + extra.toString())
-        full.append('_', Date.now().toString())
-        fetch(GAS_URL + '?' + full.toString(), { redirect: 'manual' }).catch(function () {})
-      }).catch(function () {})
-    }
+    if (ip) params.append('ip', ip)
+    if (ipData.city) params.append('city', ipData.city)
+    if (ipData.country_name) params.append('country', ipData.country_name)
+    if (ipData.region) params.append('region', ipData.region)
     params.append('_', Date.now().toString())
     await gasGet(params)
   } catch (err) {}
