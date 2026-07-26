@@ -17,12 +17,6 @@ function formatTime(d) {
 function send(fields) {
   var payload = Object.assign({}, fields, { _: Date.now().toString() })
 
-  if (navigator.sendBeacon) {
-    var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' })
-    var sent = navigator.sendBeacon(API_URL, blob)
-    if (sent) return
-  }
-
   fetch(API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

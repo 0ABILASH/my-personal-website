@@ -15,27 +15,16 @@ app.use(express.static(join(__dirname, 'dist')))
 
 async function gasGet(params) {
   var url = GAS_URL + '?' + params.toString()
-  var res = await fetch(url, { redirect: 'manual' })
-
-  if (res.status >= 300 && res.status < 400) {
-    var location = res.headers.get('location')
-    if (location) {
-      if (location.startsWith('/')) {
-        location = new URL(url).origin + location
-      }
-      if (location.indexOf('?') === -1) {
-        location += '?' + params.toString()
-      }
-      await fetch(location)
-    }
-  }
+  var res = await fetch(url, { redirect: 'follow' })
+  return res
 }
 
 app.post('/api/track', async function (req, res) {
+  res.json({ ok: true })
+
   try {
     var body = req.body || {}
 
-    // Get IP from request headers
     var ip = ''
     var fwd = req.headers['x-forwarded-for']
     if (fwd) {
@@ -48,16 +37,17 @@ app.post('/api/track', async function (req, res) {
       ip = ''
     }
 
-    // Lookup IP details first (if available)
     var ipData = {}
     if (ip) {
       try {
-        var ipRes = await fetch('https://ipapi.co/' + ip + '/json/')
+        var controller = new AbortController()
+        var timeout = setTimeout(function () { controller.abort() }, 3000)
+        var ipRes = await fetch('https://ipapi.co/' + ip + '/json/', { signal: controller.signal })
+        clearTimeout(timeout)
         ipData = await ipRes.json()
       } catch (e) {}
     }
 
-    // Build params once — with all data
     var params = new URLSearchParams()
     Object.keys(body).forEach(function (key) {
       if (body[key] !== undefined && body[key] !== null && body[key] !== '') {
@@ -71,7 +61,6 @@ app.post('/api/track', async function (req, res) {
     params.append('_', Date.now().toString())
     await gasGet(params)
   } catch (err) {}
-  res.json({ ok: true })
 })
 
 app.get('/api/travel', async function (req, res) {
