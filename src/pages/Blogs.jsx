@@ -88,12 +88,12 @@ const POSTS = [
 ]
 
 const TAG_COLORS = {
-  tutorial: { text: 'text-emerald-400', bg: 'bg-emerald-500/15' },
-  thoughts: { text: 'text-red-400', bg: 'bg-red-500/15' },
+  Experiance: { text: 'text-emerald-400', bg: 'bg-emerald-500/15' },
+  life: { text: 'text-red-400', bg: 'bg-red-500/15' },
   update: { text: 'text-violet-400', bg: 'bg-violet-500/15' },
 }
 
-const FILTERS = ['all', 'tutorial', 'thoughts', 'update']
+const FILTERS = ['all', 'Experiance', 'life', 'update']
 
 export default function Writing() {
   const [filter, setFilter] = useState('all')
