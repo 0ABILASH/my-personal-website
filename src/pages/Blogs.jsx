@@ -9,7 +9,7 @@ const POSTS = [
     title: 'Coming Soon',
     excerpt: 'This blog is under construction. Stay tuned.',
     tag: 'Experiance',
-    date: 'Jul 2026',
+    date: 'July 2026',
     read: '5 min',
     content: [
       'Coming soon. This blog is under construction.',
@@ -20,7 +20,7 @@ const POSTS = [
     title: 'Coming Soon',
     excerpt: 'This blog is under construction. Stay tuned.',
     tag: 'Experiance',
-    date: 'Jul 2026',
+    date: 'July 2026',
     read: '4 min',
     content: [
       'Coming soon. This blog is under construction.',
@@ -31,7 +31,7 @@ const POSTS = [
     title: 'Web Update',
     excerpt: 'Soon gonna a fix',
     tag: 'update',
-    date: 'Jul 2026',
+    date: 'July 2026',
     read: '3 min',
     content: [
       'Im making a few improvements behind the scenes. Some pages are still under construction while I add new content and polish the overall experience. Check back soon—theres more on the way!',
@@ -42,7 +42,7 @@ const POSTS = [
     title: 'Coming Soon',
     excerpt: 'This blog is under construction. Stay tuned.',
     tag: 'life',
-    date: 'Jul 2026',
+    date: 'July 2026',
     read: '6 min',
     content: [
       'Coming soon. This blog is under construction.',
@@ -53,7 +53,7 @@ const POSTS = [
     title: 'Coming Soon',
     excerpt: 'This blog is under construction. Stay tuned.',
     tag: 'life',
-    date: 'Jul 2026',
+    date: 'July 2026',
     read: '4 min',
     content: [
       'Coming soon. This blog is under construction.',
