@@ -112,6 +112,47 @@ app.get('/api/travel', async function (req, res) {
   }
 })
 
+// Blog like counts from Google Sheets (via GAS)
+app.get('/api/likes', async function (req, res) {
+  try {
+    var params = new URLSearchParams({ action: 'getLikes' })
+    var gasRes = await gasGet(params)
+    var text = await gasRes.text()
+    var data = JSON.parse(text)
+    if (data && typeof data.likes === 'object') {
+      res.json({ likes: data.likes })
+    } else {
+      res.json({ likes: data || {} })
+    }
+  } catch (err) {
+    res.json({ likes: {} })
+  }
+})
+
+app.post('/api/like', async function (req, res) {
+  try {
+    var body = req.body || {}
+    var postId = String(body.postId || '')
+    if (!postId) return res.json({ error: 'missing postId' })
+    var liked = body.liked === true || body.liked === 'true'
+    var params = new URLSearchParams({
+      action: liked ? 'addLike' : 'removeLike',
+      postId: postId,
+      _: Date.now().toString(),
+    })
+    var gasRes = await gasGet(params)
+    var text = await gasRes.text()
+    var data = JSON.parse(text)
+    if (data && typeof data.count === 'number') {
+      res.json(data)
+    } else {
+      res.json({ error: 'bad GAS response', postId: postId })
+    }
+  } catch (err) {
+    res.json({ error: err.message })
+  }
+})
+
 // Proxy OSRM route requests — avoids browser CORS/rate-limit issues
 app.get('/api/route', async function (req, res) {
   try {

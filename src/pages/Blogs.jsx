@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PenLine, ArrowRight, X, Clock, Play } from 'lucide-react'
+import { PenLine, ArrowRight, X, Clock, Play, Heart } from 'lucide-react'
 import profileImg from '../services/profileImg'
 
 const POSTS = [
@@ -107,9 +107,51 @@ export default function Writing() {
   const [openPost, setOpenPost] = useState(null)
   const [playing, setPlaying] = useState(false)
   const [audioError, setAudioError] = useState(false)
+  const [likes, setLikes] = useState({})
+  const [liking, setLiking] = useState(false)
+  const [likedPosts, setLikedPosts] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('blogLikes') || '{}')
+    } catch {
+      return {}
+    }
+  })
   const blogRef = useRef(null)
   const cursorRef = useRef(null)
   const audioRef = useRef(null)
+
+  useEffect(() => {
+    fetch('/api/likes')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d && typeof d.likes === 'object') setLikes(d.likes)
+      })
+      .catch(() => {})
+  }, [])
+
+  const toggleLike = async () => {
+    if (!openPost || liking) return
+    const id = String(openPost.id)
+    const already = !!likedPosts[id]
+    setLiking(true)
+    try {
+      const r = await fetch('/api/like', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId: id, liked: !already }),
+      })
+      const d = await r.json()
+      if (d && typeof d.count === 'number') {
+        setLikes((prev) => ({ ...prev, [id]: d.count }))
+        const next = { ...likedPosts, [id]: !already }
+        setLikedPosts(next)
+        localStorage.setItem('blogLikes', JSON.stringify(next))
+      }
+    } catch {
+      /* keep current state on failure */
+    }
+    setLiking(false)
+  }
 
   useEffect(() => {
     const a = new Audio()
@@ -234,6 +276,13 @@ export default function Writing() {
                   <span className="text-[13px] font-semibold truncate">{post.title}</span>
                 </div>
                 <div className="flex items-center gap-2.5 flex-shrink-0">
+                  <span className="flex items-center gap-1 text-[10px] font-mono text-text-quaternary">
+                    <Heart
+                      size={10}
+                      className={likes[post.id] ? 'text-red-400 fill-current' : ''}
+                    />
+                    {likes[post.id] || 0}
+                  </span>
                   <span className="text-[10px] text-text-quaternary font-mono hidden sm:inline">{post.read}</span>
                   <span className="text-[10px] text-text-quaternary font-mono">{post.date}</span>
                   <ArrowRight size={12} className="text-text-quaternary group-hover:text-accent transition-all" />
@@ -331,6 +380,31 @@ export default function Writing() {
                   {openPost.content.map((para, i) => (
                     <p key={i}>{para}</p>
                   ))}
+                </div>
+
+                <div className="flex justify-center pt-7">
+                  <button
+                    onClick={toggleLike}
+                    disabled={liking}
+                    className="flex flex-col items-center gap-1.5 group cursor-pointer disabled:opacity-60"
+                    aria-label={likedPosts[openPost.id] ? 'Unlike this blog' : 'Like this blog'}
+                  >
+                    <span
+                      className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${
+                        likedPosts[openPost.id]
+                          ? 'bg-red-500/15 border-red-500/30 text-red-400 scale-110'
+                          : 'bg-bg-subtle border-border text-text-tertiary group-hover:text-red-400 group-hover:border-red-500/30'
+                      }`}
+                    >
+                      <Heart size={18} className={likedPosts[openPost.id] ? 'fill-current' : ''} />
+                    </span>
+                    <span className="text-[11px] font-semibold text-text-secondary">
+                      {likes[openPost.id] || 0} {likes[openPost.id] === 1 ? 'like' : 'likes'}
+                    </span>
+                    <span className="text-[9px] font-mono text-text-quaternary">
+                      {likedPosts[openPost.id] ? 'You liked this blog' : 'Like this blog'}
+                    </span>
+                  </button>
                 </div>
 
                 <div className="h-px bg-border my-5" />
