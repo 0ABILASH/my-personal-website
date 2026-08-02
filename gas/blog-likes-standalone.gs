@@ -14,7 +14,13 @@
 //
 //  A "BlogLikes" sheet (postId, count) is created automatically
 //  in this project's spreadsheet on first use.
+//
+//  IMPORTANT (standalone scripts): paste YOUR spreadsheet ID below.
+//  How to find it: create a spreadsheet at https://sheets.new,
+//  then look at its URL: https://docs.google.com/spreadsheets/d/PASTE-THIS-PART/edit
 // =============================================================
+
+var LIKES_SPREADSHEET_ID = 'PASTE-YOUR-SPREADSHEET-ID-HERE';
 
 function doGet(e) {
   var action = (e && e.parameter && e.parameter.action) || '';
@@ -39,7 +45,12 @@ function jsonOutput(obj) {
 }
 
 function blogLikesSheet_() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = null;
+  try { ss = SpreadsheetApp.getActiveSpreadsheet(); } catch (e) {}
+  if (!ss && LIKES_SPREADSHEET_ID && LIKES_SPREADSHEET_ID.indexOf('PASTE-') === -1) {
+    ss = SpreadsheetApp.openById(LIKES_SPREADSHEET_ID);
+  }
+  if (!ss) throw new Error('BlogLikes: no spreadsheet available. Set LIKES_SPREADSHEET_ID or bind this script to a spreadsheet.');
   var sheet = ss.getSheetByName('BlogLikes');
   if (!sheet) {
     sheet = ss.insertSheet('BlogLikes');
