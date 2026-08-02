@@ -6,10 +6,10 @@ import profileImg from '../services/profileImg'
 const POSTS = [
   {
     id: 1,
-    title: 'Coming Soon',
-    excerpt: 'My Kind of Peace',
+    title: 'My Kind of Peace',
+    excerpt: 'This is What i need the most',
     tag: 'Experiance',
-    date: 'July 2026',
+    date: 'August 2026',
     read: '5 min',
     content: [
       'The way I see life is completely different from how most people do. Maybe that\u2019s why I often feel like I don\u2019t fit into society.',
@@ -21,13 +21,18 @@ const POSTS = [
   },
   {
     id: 2,
-    title: 'Coming Soon',
-    excerpt: 'This blog is under construction. Stay tuned.',
+    title: 'That Broken Love',
+    excerpt: 'Twice I Loved, Twice I Let Go',
     tag: 'Experiance',
-    date: 'July 2026',
+    date: 'August 2026',
     read: '4 min',
     content: [
-      'Coming soon. This blog is under construction.',
+      'Yes, I loved with all my heart, and I lost with a heart that was left empty.',
+'Yes, I fell in love twice, and I lost both times.',
+'The love I had for those who once meant the world to me was genuine. I gave my heart honestly, without pretending or holding back. Even today, I don\u2019t know where I failed or what I could have done differently to hold on to those relationships.',
+'Maybe that was simply my fate. Not every love story is meant to last forever, no matter how real it feels.',
+'Even so, I carry no resentment. I sincerely hope they find happiness, peace, and a beautiful life ahead. My love for them was never about possession—it was about wanting the best for them, even if that future didn\u2019t include me.',
+'Some people remain in our hearts, not because they stayed, but because they taught us how deeply we are capable of loving.'
     ],
   },
   {
