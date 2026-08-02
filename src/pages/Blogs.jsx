@@ -6,13 +6,13 @@ import profileImg from '../services/profileImg'
 const POSTS = [
   {
     id: 1,
-    title: 'My Kind of Peace',
-    excerpt: 'This is What i need the most',
+    title: 'Beyond the Miles',
+    excerpt: 'The Road Is My Therapy',
     tag: 'Experiance',
     date: 'August 2026',
     read: '5 min',
     content: [
-      'I have ridden More than &#x2014; 5,000 km alone, and those journeys make me feel truly alive. The feeling of being on the open road, with nothing but my thoughts and the endless horizon ahead, is one of the greatest joys of my life. It is a feeling I want to carry with me until my last day.',
+      'I have ridden More than- 5,000 km alone, and those journeys make me feel truly alive. The feeling of being on the open road, with nothing but my thoughts and the endless horizon ahead, is one of the greatest joys of my life. It is a feeling I want to carry with me until my last day.',
 'What makes these rides even more special are the people I meet along the way. Strangers have shown me kindness, cared for me, and offered me company when I was alone. Their warmth and generosity have taught me that beautiful connections can be found anywhere.',
 'The places I have visited have been breathtaking, each with its own beauty and memories. Every road, every sunrise, every small moment becomes a part of my story.',
 'That is why I want to keep riding, exploring new places, meeting new people, and experiencing the freedom and peace that these journeys bring, again and again.',
@@ -41,7 +41,7 @@ const POSTS = [
     excerpt: 'Soon gonna a fix',
     tag: 'update',
     date: 'July 2026',
-    read: '3 min',
+    read: '0 min',
     content: [
       'Im making a few improvements behind the scenes. Some pages are still under construction while I add new content and polish the overall experience. Check back soon—theres more on the way!',
     ],
@@ -67,7 +67,7 @@ const POSTS = [
     excerpt: 'This blog is under construction. Stay tuned.',
     tag: 'life',
     date: 'July 2026',
-    read: '4 min',
+    read: '0 min',
     content: [
       'Coming soon. This blog is under construction.',
     ],
