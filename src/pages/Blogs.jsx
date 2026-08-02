@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PenLine, ArrowRight, X, Clock, Play, Heart } from 'lucide-react'
+import { PenLine, ArrowRight, X, Clock, Play, Heart, Headphones } from 'lucide-react'
 import profileImg from '../services/profileImg'
 
 const POSTS = [
@@ -31,7 +31,7 @@ const POSTS = [
     date: 'August 2026',
     read: '4 min',
     audio: {
-      title: 'SoundHelix Song 9',
+      title: '',
       src: '/audio/Venmagam_clip.mp3',
     },
     content: [
@@ -109,6 +109,7 @@ export default function Writing() {
   const [audioError, setAudioError] = useState(false)
   const [likes, setLikes] = useState({})
   const pendingLikeRef = useRef({})
+  const [showTip, setShowTip] = useState(true)
   const [likedPosts, setLikedPosts] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem('blogLikes') || '{}')
@@ -129,6 +130,11 @@ export default function Writing() {
         if (d && typeof d.likes === 'object') setLikes(d.likes)
       })
       .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    const t = setTimeout(() => setShowTip(false), 6000)
+    return () => clearTimeout(t)
   }, [])
 
   const toggleLike = () => {
@@ -516,6 +522,34 @@ export default function Writing() {
             </motion.div>
             </motion.div>
           </>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showTip && (
+          <motion.div
+            key="headphone-tip"
+            initial={{ x: '110%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '110%', opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 320, damping: 28 }}
+            className="fixed top-20 right-4 z-[90] flex items-center gap-3 max-w-[320px] pl-3 pr-2 py-2.5 rounded-2xl bg-surface/90 backdrop-blur-xl border border-border shadow-2xl shadow-black/50"
+            role="status"
+          >
+            <span className="w-8 h-8 rounded-xl bg-accent-soft border border-accent/20 flex items-center justify-center shrink-0">
+              <Headphones size={14} className="text-accent" />
+            </span>
+            <p className="text-[12px] font-medium text-text-secondary leading-snug flex-1">
+              Use <span className="text-text font-semibold">headphones</span> and read the blogs for the best experience.
+            </p>
+            <button
+              onClick={() => setShowTip(false)}
+              className="w-6 h-6 rounded-lg flex items-center justify-center text-text-quaternary hover:text-text hover:bg-bg transition-all cursor-pointer shrink-0"
+              aria-label="Dismiss notification"
+            >
+              <X size={12} />
+            </button>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
