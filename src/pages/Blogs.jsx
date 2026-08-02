@@ -3,13 +3,26 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { PenLine, ArrowRight, X, Clock, Play, Heart, Headphones } from 'lucide-react'
 import profileImg from '../services/profileImg'
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia('(max-width: 640px)').matches : false
+  )
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)')
+    const onChange = () => setIsMobile(mq.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+  return isMobile
+}
+
 const POSTS = [
   {
     id: 1,
     title: 'Beyond the Miles',
     excerpt: 'The Road Is My Therapy',
     tag: 'Experiance',
-    date: 'August 2026',
+    date: 'Aug 2026',
     read: '5 min',
     audio: {
       title: 'SoundHelix Song 8',
@@ -28,7 +41,7 @@ const POSTS = [
     title: 'That Broken Love',
     excerpt: 'Twice I Loved, Twice I Let Go',
     tag: 'Experiance',
-    date: 'August 2026',
+    date: 'Aug 2026',
     read: '3 min',
     audio: {
       title: 'En Kanne Kalaimaane',
@@ -64,7 +77,7 @@ const POSTS = [
     excerpt: 'This is What i need the most',
     tag: 'life',
     date: 'July 2026',
-    read: '6 min',
+    read: '3 min',
     audio: {
       title: 'SoundHelix Song 6',
       src: '/audio/Naan-Pizhai',
@@ -103,6 +116,7 @@ const TAG_COLORS = {
 const FILTERS = ['all', 'Experiance', 'life', 'update']
 
 export default function Writing() {
+  const isMobile = useIsMobile()
   const [filter, setFilter] = useState('all')
   const [openPost, setOpenPost] = useState(null)
   const [playing, setPlaying] = useState(false)
@@ -529,11 +543,27 @@ export default function Writing() {
         {showTip && (
           <motion.div
             key="headphone-tip"
-            initial={{ opacity: 0, scale: 0.96, y: 16, filter: 'blur(6px)' }}
-            animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, scale: 0.96, y: 16, filter: 'blur(6px)' }}
+            initial={
+              isMobile
+                ? { opacity: 0, y: 80 }
+                : { opacity: 0, scale: 0.96, y: 16, filter: 'blur(6px)' }
+            }
+            animate={
+              isMobile
+                ? { opacity: 1, y: 0 }
+                : { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }
+            }
+            exit={
+              isMobile
+                ? { opacity: 0, y: 80 }
+                : { opacity: 0, scale: 0.96, y: 16, filter: 'blur(6px)' }
+            }
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed top-1/2 -translate-y-1/2 right-4 z-[90] flex items-center gap-3 w-[320px] max-w-[calc(100vw-2rem)] pl-3 pr-2 py-2.5 rounded-2xl bg-surface/95 backdrop-blur-md border border-border shadow-2xl shadow-black/50"
+            className={
+              isMobile
+                ? 'fixed bottom-4 left-4 right-4 z-[90] flex items-center gap-3 pl-3 pr-2 py-3 rounded-2xl bg-surface/95 backdrop-blur-md border border-border shadow-2xl shadow-black/50'
+                : 'fixed top-1/2 -translate-y-1/2 right-4 z-[90] flex items-center gap-3 w-[320px] max-w-[calc(100vw-2rem)] pl-3 pr-2 py-2.5 rounded-2xl bg-surface/95 backdrop-blur-md border border-border shadow-2xl shadow-black/50'
+            }
             role="status"
           >
             <span className="w-8 h-8 rounded-xl bg-accent-soft border border-accent/20 flex items-center justify-center shrink-0">
