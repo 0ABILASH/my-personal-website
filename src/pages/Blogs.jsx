@@ -29,10 +29,10 @@ const POSTS = [
     excerpt: 'Twice I Loved, Twice I Let Go',
     tag: 'Experiance',
     date: 'August 2026',
-    read: '4 min',
+    read: '3 min',
     audio: {
       title: '',
-      src: '/audio/Venmagam_clip.mp3',
+      src: '/audio/Kanne-kalaimaane-Flute-Instrumental.mp3',
     },
     content: [
       'Yes, I loved with all my heart, and I lost with a heart that was left empty.',
@@ -67,7 +67,7 @@ const POSTS = [
     read: '6 min',
     audio: {
       title: 'SoundHelix Song 6',
-      src: '/audio/my-kind-of-peace.mp3',
+      src: '/audio/Naan-Pizhai',
     },
     content: [
       'The way I see life is completely different from how most people do. Maybe that\u2019s why I often feel like I don\u2019t fit into society.',
@@ -533,7 +533,7 @@ export default function Writing() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '110%', opacity: 0 }}
             transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-            className="fixed inset-0 z-[90] flex items-center justify-center p-4 pointer-events-none"
+            className="fixed top-20 left-0 right-0 z-[90] flex justify-center px-4 pointer-events-none"
             role="status"
           >
             <div className="pointer-events-auto flex items-center gap-3 max-w-[320px] w-full pl-3 pr-2 py-2.5 rounded-2xl bg-surface/95 backdrop-blur-xl border border-border shadow-2xl shadow-black/50">
