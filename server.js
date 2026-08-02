@@ -7,7 +7,7 @@ const __dirname = dirname(__filename)
 
 const app = express()
 const PORT = process.env.PORT || 3000
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwhnLnBeAyWammouZHO-z41b5fGDG-MNEZtMOPoPYKAs218QokxLzkOVzrW5fiUN3gW5g/exec'
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwNWcKkPVbIqcjxK9eJAFTKJLP7SpQuSFDf9Q-a5jH6rqcZ1I4N5VT0DGjBCI5bKz8Ipg/exec'
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
