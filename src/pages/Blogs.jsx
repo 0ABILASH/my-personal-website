@@ -119,7 +119,7 @@ export default function Writing() {
   const blogRef = useRef(null)
   const cursorRef = useRef(null)
   const audioRef = useRef(null)
-  const idleTimerRef = useRef(null)
+  const lastActivityRef = useRef(Date.now())
 
   useEffect(() => {
     fetch('/api/likes')
@@ -207,28 +207,23 @@ export default function Writing() {
   useEffect(() => {
     const a = audioRef.current
     if (!a) return
-    const clearIdle = () => {
-      if (idleTimerRef.current) {
-        clearTimeout(idleTimerRef.current)
-        idleTimerRef.current = null
+    const activityEvents = ['pointerdown', 'pointermove', 'keydown', 'touchstart', 'wheel', 'scroll']
+    const onActivity = () => {
+      lastActivityRef.current = Date.now()
+    }
+    activityEvents.forEach((ev) => window.addEventListener(ev, onActivity, { passive: true }))
+    const check = () => {
+      if (a.paused) return
+      if (document.hidden || Date.now() - lastActivityRef.current > 60 * 1000) {
+        a.pause()
       }
     }
-    if (!playing) {
-      clearIdle()
-      return
-    }
-    const startIdle = () => {
-      clearIdle()
-      idleTimerRef.current = setTimeout(() => a.pause(), 5 * 60 * 1000)
-    }
-    const events = ['pointerdown', 'pointermove', 'keydown', 'touchstart', 'wheel', 'scroll']
-    events.forEach((ev) => window.addEventListener(ev, startIdle, { passive: true }))
-    startIdle()
+    const id = setInterval(check, 2000)
     return () => {
-      clearIdle()
-      events.forEach((ev) => window.removeEventListener(ev, startIdle))
+      activityEvents.forEach((ev) => window.removeEventListener(ev, onActivity))
+      clearInterval(id)
     }
-  }, [playing])
+  }, [])
 
   const openPostWith = (post) => {
     setOpenPost(post)
