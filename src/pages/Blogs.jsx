@@ -533,7 +533,7 @@ export default function Writing() {
             animate={{ x: 0,  opacity: 1 }}
             exit={{ x: '100%', opacity: 0 }}
             transition={{ duration: 1.20, ease: [0.16, 1, 0.1, 1] }}
-            className="fixed top-0 bottom-5 left-0 right-0 z-[60] flex justify-center px-4 pointer-events-none"
+            className="fixed top-14 left-0 right-0 z-[60] flex justify-center px-4 h-fit pointer-events-none"
             role="status"
           >
             <div className="pointer-events-auto flex items-center gap-3 w-[320px] max-w-[calc(100vw-2rem)] pl-3 pr-2 py-2.5 rounded-2xl bg-surface/95 backdrop-blur-md border border-border shadow-2xl shadow-black/50">
