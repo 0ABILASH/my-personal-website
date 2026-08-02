@@ -5,7 +5,6 @@ export const FALLBACK_PLACES = [
 ]
 
 // ─── Route style ─────────────────────────────────────────────────────
-export const ROUTE_COLOR = '#edde16'
 const ROUTE_STYLE = {
   color: '#f7e309c2', weight: 2, opacity: 0.7,
   lineCap: 'round', lineJoin: 'round',
@@ -95,10 +94,6 @@ export async function fetchAllRoutes(places, onProgress) {
   }
   if (onProgress) onProgress(total, total)
   return routes
-}
-
-export function clearRouteCache() {
-  try { localStorage.removeItem(CACHE_KEY) } catch {}
 }
 
 // ─── Classify marker type ─────────────────────────────────────────────
@@ -231,7 +226,4 @@ export function addLegend(map) {
     return div
   }
   legendControl.addTo(map)
-}
-export function removeLegend() {
-  if (legendControl) { legendControl.remove(); legendControl = null }
 }

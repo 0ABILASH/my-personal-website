@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowUpRight, Download, X } from 'lucide-react'
-import profileImg from '../services/profileImg'
+import headerImg from '../services/headerImg'
 
 const NAV = [
   { to: '/', label: 'Home' },
@@ -30,12 +30,12 @@ export default function Shell({ children, onCvOpen }) {
       <header className="fixed top-0 left-0 right-0 z-[2000] bg-bg/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-5xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {profileImg ? (
+            {headerImg ? (
               <button
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); setImgOpen(true); }}
                 className="cursor-pointer"
               >
-                <img src={profileImg} alt="Abilash" className="w-5 h-5 rounded-full object-cover shadow-[0_0_16px_rgba(59,130,246,0.25)]" />
+                <img src={headerImg} alt="Abilash" className="w-5 h-5 rounded-full object-cover shadow-[0_0_16px_rgba(59,130,246,0.25)]" />
               </button>
             ) : (
               <button
@@ -200,7 +200,7 @@ export default function Shell({ children, onCvOpen }) {
 
       {/* Profile image lightbox */}
       <AnimatePresence>
-        {imgOpen && profileImg && (
+        {imgOpen && headerImg && (
           <motion.div
             className="fixed inset-0 z-[3000] flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
@@ -223,7 +223,7 @@ export default function Shell({ children, onCvOpen }) {
                 <X size={13} />
               </button>
               <img
-                src={profileImg}
+                src={headerImg}
                 alt="Abilash"
                 className="w-72 h-72 sm:w-80 sm:h-80 rounded-3xl object-cover shadow-[0_0_80px_rgba(59,130,246,0.25)] border border-border"
               />

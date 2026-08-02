@@ -101,7 +101,6 @@ export default function Profile() {
               </p>
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
                 <div className="flex items-center gap-1.5 text-[11px] text-accent">
-                  {/* <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" /> */}
                   Currently somewhere, collecting another life experience.
                 </div>
               </div>
