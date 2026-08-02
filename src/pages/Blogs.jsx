@@ -168,6 +168,7 @@ export default function Writing() {
   useEffect(() => {
     const a = new Audio()
     a.preload = 'metadata'
+    a.volume = 0.3
     const onPlay = () => setPlaying(true)
     const onPause = () => setPlaying(false)
     const onEnded = () => setPlaying(false)
