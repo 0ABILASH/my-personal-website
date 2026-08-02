@@ -529,28 +529,26 @@ export default function Writing() {
         {showTip && (
           <motion.div
             key="headphone-tip"
-            initial={{ x: '100%', opacity: 0 }}
-            animate={{ x: 0,  opacity: 1 }}
-            exit={{ x: '100%', opacity: 0 }}
-            transition={{ duration: 1.20, ease: [0.16, 1, 0.1, 1] }}
-            className="fixed top-14 left-0 right-0 z-[60] flex justify-center px-4 h-fit pointer-events-none"
+            initial={{ opacity: 0, scale: 0.96, y: 16, filter: 'blur(6px)' }}
+            animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, scale: 0.96, y: 16, filter: 'blur(6px)' }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed top-1/2 -translate-y-1/2 right-4 z-[90] flex items-center gap-3 w-[320px] max-w-[calc(100vw-2rem)] pl-3 pr-2 py-2.5 rounded-2xl bg-surface/95 backdrop-blur-md border border-border shadow-2xl shadow-black/50"
             role="status"
           >
-            <div className="pointer-events-auto flex items-center gap-3 w-[320px] max-w-[calc(100vw-2rem)] pl-3 pr-2 py-2.5 rounded-2xl bg-surface/95 backdrop-blur-md border border-border shadow-2xl shadow-black/50">
-              <span className="w-8 h-8 rounded-xl bg-accent-soft border border-accent/20 flex items-center justify-center shrink-0">
-                <Headphones size={14} className="text-accent" />
-              </span>
-              <p className="text-[12px] font-medium text-text-secondary leading-snug flex-1">
-                Use <span className="text-text font-semibold">headphones</span> and read the blogs for the best experience.
-              </p>
-              <button
-                onClick={() => setShowTip(false)}
-                className="w-6 h-6 rounded-lg flex items-center justify-center text-text-quaternary hover:text-text hover:bg-bg transition-all cursor-pointer shrink-0"
-                aria-label="Dismiss notification"
-              >
-                <X size={12} />
-              </button>
-            </div>
+            <span className="w-8 h-8 rounded-xl bg-accent-soft border border-accent/20 flex items-center justify-center shrink-0">
+              <Headphones size={14} className="text-accent" />
+            </span>
+            <p className="text-[12px] font-medium text-text-secondary leading-snug flex-1">
+              Use <span className="text-text font-semibold">headphones</span> and read the blogs for the best experience.
+            </p>
+            <button
+              onClick={() => setShowTip(false)}
+              className="w-6 h-6 rounded-lg flex items-center justify-center text-text-quaternary hover:text-text hover:bg-bg transition-all cursor-pointer shrink-0"
+              aria-label="Dismiss notification"
+            >
+              <X size={12} />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
