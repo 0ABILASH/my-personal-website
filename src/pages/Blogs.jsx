@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PenLine, ArrowRight, X, Clock } from 'lucide-react'
+import { PenLine, ArrowRight, X, Clock, Play, Pause, Music2 } from 'lucide-react'
 import profileImg from '../services/profileImg'
 
 const POSTS = [
@@ -11,6 +11,10 @@ const POSTS = [
     tag: 'Experiance',
     date: 'August 2026',
     read: '5 min',
+    audio: {
+      title: 'SoundHelix Song 8',
+      src: '/audio/beyond-the-miles.mp3',
+    },
     content: [
       'I have ridden More than- 5,000 km alone, and those journeys make me feel truly alive. The feeling of being on the open road, with nothing but my thoughts and the endless horizon ahead, is one of the greatest joys of my life. It is a feeling I want to carry with me until my last day.',
 'What makes these rides even more special are the people I meet along the way. Strangers have shown me kindness, cared for me, and offered me company when I was alone. Their warmth and generosity have taught me that beautiful connections can be found anywhere.',
@@ -26,6 +30,10 @@ const POSTS = [
     tag: 'Experiance',
     date: 'August 2026',
     read: '4 min',
+    audio: {
+      title: 'SoundHelix Song 9',
+      src: '/audio/that-broken-love.mp3',
+    },
     content: [
       'Yes, I loved with all my heart, and I lost with a heart that was left empty.',
 'Yes, I fell in love twice, and I lost both times.',
@@ -42,6 +50,10 @@ const POSTS = [
     tag: 'update',
     date: 'July 2026',
     read: '0 min',
+    audio: {
+      title: 'SoundHelix Song 3',
+      src: '/audio/web-update.mp3',
+    },
     content: [
       'Im making a few improvements behind the scenes. Some pages are still under construction while I add new content and polish the overall experience. Check back soon—theres more on the way!',
     ],
@@ -53,6 +65,10 @@ const POSTS = [
     tag: 'life',
     date: 'July 2026',
     read: '6 min',
+    audio: {
+      title: 'SoundHelix Song 6',
+      src: '/audio/my-kind-of-peace.mp3',
+    },
     content: [
       'The way I see life is completely different from how most people do. Maybe that\u2019s why I often feel like I don\u2019t fit into society.',
       'For me, happiness has always been simple. It\u2019s sitting quietly, watching the things I love, and finding peace in those moments. There is a quiet beauty in slowing down and simply being present.',
@@ -68,6 +84,10 @@ const POSTS = [
     tag: 'life',
     date: 'July 2026',
     read: '0 min',
+    audio: {
+      title: 'SoundHelix Song 16',
+      src: '/audio/coming-soon.mp3',
+    },
     content: [
       'Coming soon. This blog is under construction.',
     ],
@@ -85,8 +105,17 @@ const FILTERS = ['all', 'Experiance', 'life', 'update']
 export default function Writing() {
   const [filter, setFilter] = useState('all')
   const [openPost, setOpenPost] = useState(null)
+  const [playing, setPlaying] = useState(false)
   const blogRef = useRef(null)
   const cursorRef = useRef(null)
+  const audioRef = useRef(null)
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.pause()
+      setPlaying(false)
+    }
+  }, [openPost])
 
   useEffect(() => {
     if (!openPost) return
@@ -219,6 +248,36 @@ export default function Writing() {
                 <p className="text-[13px] text-text-secondary leading-relaxed mb-5">{openPost.excerpt}</p>
 
                 <div className="h-px bg-border mb-5" />
+
+                {openPost.audio && (
+                  <div className="flex items-center gap-3 p-3 rounded-xl bg-bg-subtle border border-border mb-5">
+                    <button
+                      onClick={() => {
+                        const a = audioRef.current
+                        if (!a) return
+                        if (a.paused) {
+                          a.play()
+                          setPlaying(true)
+                        } else {
+                          a.pause()
+                          setPlaying(false)
+                        }
+                      }}
+                      className="w-9 h-9 rounded-full bg-accent hover:bg-accent-hover text-white flex items-center justify-center cursor-pointer shrink-0 transition-all"
+                      aria-label={playing ? 'Pause song' : 'Play song'}
+                    >
+                      {playing ? <Pause size={14} /> : <Play size={14} className="ml-0.5" />}
+                    </button>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 text-[11px] font-semibold text-text-secondary truncate">
+                        <Music2 size={11} className="text-accent shrink-0" />
+                        <span className="truncate">{openPost.audio.title}</span>
+                      </div>
+                      <span className="text-[10px] font-mono text-text-quaternary">Now playing for this blog</span>
+                    </div>
+                    <audio ref={audioRef} src={openPost.audio.src} preload="none" onEnded={() => setPlaying(false)} />
+                  </div>
+                )}
 
                 <div ref={blogRef} className="space-y-3 text-[13px] sm:text-[14px] text-text-secondary leading-relaxed blog-content">
                   {openPost.content.map((para, i) => (
