@@ -32,7 +32,7 @@ const POSTS = [
     read: '3 min',
     audio: {
       title: '',
-      src: '/audio/Kanne-kalaimaane-Flute-Instrumental.mp3',
+      src: '/audio/Kanne-Kalaimaane-Flute-Instrumental.mp3',
     },
     content: [
       'Yes, I loved with all my heart, and I lost with a heart that was left empty.',
@@ -529,14 +529,14 @@ export default function Writing() {
         {showTip && (
           <motion.div
             key="headphone-tip"
-            initial={{ x: '110%', opacity: 0 }}
+            initial={{ x: '120%', opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: '110%', opacity: 0 }}
+            exit={{ x: '120%', opacity: 0 }}
             transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-            className="fixed top-20 left-0 right-0 z-[90] flex justify-center px-4 pointer-events-none"
+            className="fixed top-20 left-0 right-0 mx-auto w-fit max-w-[calc(100vw-2rem)] pointer-events-none"
             role="status"
           >
-            <div className="pointer-events-auto flex items-center gap-3 max-w-[320px] w-full pl-3 pr-2 py-2.5 rounded-2xl bg-surface/95 backdrop-blur-xl border border-border shadow-2xl shadow-black/50">
+            <div className="pointer-events-auto flex items-center gap-3 w-[320px] max-w-[calc(100vw-2rem)] pl-3 pr-2 py-2.5 rounded-2xl bg-surface/95 backdrop-blur-xl border border-border shadow-2xl shadow-black/50">
               <span className="w-8 h-8 rounded-xl bg-accent-soft border border-accent/20 flex items-center justify-center shrink-0">
                 <Headphones size={14} className="text-accent" />
               </span>
