@@ -108,7 +108,7 @@ export default function Writing() {
   const [playing, setPlaying] = useState(false)
   const [audioError, setAudioError] = useState(false)
   const [likes, setLikes] = useState({})
-  const [liking, setLiking] = useState(false)
+  const pendingLikeRef = useRef({})
   const [likedPosts, setLikedPosts] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem('blogLikes') || '{}')
@@ -129,28 +129,39 @@ export default function Writing() {
       .catch(() => {})
   }, [])
 
-  const toggleLike = async () => {
-    if (!openPost || liking) return
+  const toggleLike = () => {
+    if (!openPost) return
     const id = String(openPost.id)
+    if (pendingLikeRef.current[id]) return
+    pendingLikeRef.current[id] = true
     const already = !!likedPosts[id]
-    setLiking(true)
-    try {
-      const r = await fetch('/api/like', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ postId: id, liked: !already }),
+    const nextLiked = !already
+    setLikes((prev) => ({ ...prev, [id]: Math.max(0, (Number(prev[id]) || 0) + (nextLiked ? 1 : -1)) }))
+    setLikedPosts((prev) => {
+      const next = { ...prev, [id]: nextLiked }
+      localStorage.setItem('blogLikes', JSON.stringify(next))
+      return next
+    })
+    fetch('/api/like', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ postId: id, liked: nextLiked }),
+    })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d && typeof d.count === 'number') setLikes((prev) => ({ ...prev, [id]: d.count }))
       })
-      const d = await r.json()
-      if (d && typeof d.count === 'number') {
-        setLikes((prev) => ({ ...prev, [id]: d.count }))
-        const next = { ...likedPosts, [id]: !already }
-        setLikedPosts(next)
-        localStorage.setItem('blogLikes', JSON.stringify(next))
-      }
-    } catch {
-      /* keep current state on failure */
-    }
-    setLiking(false)
+      .catch(() => {
+        setLikes((prev) => ({ ...prev, [id]: Math.max(0, (Number(prev[id]) || 0) - (nextLiked ? 1 : -1)) }))
+        setLikedPosts((prev) => {
+          const next = { ...prev, [id]: already }
+          localStorage.setItem('blogLikes', JSON.stringify(next))
+          return next
+        })
+      })
+      .finally(() => {
+        delete pendingLikeRef.current[id]
+      })
   }
 
   useEffect(() => {
@@ -306,7 +317,7 @@ export default function Writing() {
           >
             <div className="absolute inset-0 bg-black/80 backdrop-blur-xl" onClick={closePost} />
             <motion.div
-              className="relative bg-surface border border-border rounded-2xl w-full max-w-xl max-h-[85vh] overflow-hidden shadow-2xl flex flex-col"
+              className="relative bg-surface border border-border rounded-2xl w-full max-w-xl max-h-[85vh] supports-[height:100dvh]:max-h-[85dvh] overflow-hidden shadow-2xl flex flex-col"
               initial={{ opacity: 0, scale: 0.96, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 6 }}
@@ -385,19 +396,20 @@ export default function Writing() {
                 <div className="flex justify-center pt-7">
                   <button
                     onClick={toggleLike}
-                    disabled={liking}
-                    className="flex flex-col items-center gap-1.5 group cursor-pointer disabled:opacity-60"
+                    className="flex flex-col items-center gap-1.5 group cursor-pointer"
                     aria-label={likedPosts[openPost.id] ? 'Unlike this blog' : 'Like this blog'}
                   >
-                    <span
-                      className={`w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-200 ${
+                    <motion.span
+                      className={`w-11 h-11 rounded-full border flex items-center justify-center transition-colors duration-200 ${
                         likedPosts[openPost.id]
-                          ? 'bg-red-500/15 border-red-500/30 text-red-400 scale-110'
+                          ? 'bg-red-500/15 border-red-500/30 text-red-400'
                           : 'bg-bg-subtle border-border text-text-tertiary group-hover:text-red-400 group-hover:border-red-500/30'
                       }`}
+                      animate={likedPosts[openPost.id] ? { scale: [0.8, 1.2, 1] } : { scale: 1 }}
+                      transition={{ duration: 0.3, ease: 'easeOut' }}
                     >
                       <Heart size={18} className={likedPosts[openPost.id] ? 'fill-current' : ''} />
-                    </span>
+                    </motion.span>
                     <span className="text-[11px] font-semibold text-text-secondary">
                       {likes[openPost.id] || 0} {likes[openPost.id] === 1 ? 'like' : 'likes'}
                     </span>
