@@ -202,16 +202,16 @@ export default function Writing() {
     if (audioCtxRef.current) return
     try {
       const Ctx = window.AudioContext || window.webkitAudioContext
-      if (!Ctx) { a.volume = 0.1; return }
+      if (!Ctx) { a.volume = 0.05; return }
       const ctx = new Ctx()
       const source = ctx.createMediaElementSource(a)
       const gain = ctx.createGain()
-      gain.gain.value = 0.1
+      gain.gain.value = 0.05
       source.connect(gain)
       gain.connect(ctx.destination)
       audioCtxRef.current = ctx
     } catch {
-      a.volume = 0.1
+      a.volume = 0.05
     }
   }
 
@@ -428,11 +428,11 @@ export default function Writing() {
                         <Play size={13} className="ml-0.5" />
                       )}
                     </span>
-                    <span className="hidden sm:flex flex-col items-start leading-tight">
-                      <span className="text-[9px] font-mono text-text-quaternary">
+                    <span className="flex flex-col items-start leading-tight min-w-0">
+                      <span className="text-[9px] font-mono text-text-quaternary whitespace-nowrap">
                         {playing ? 'Now playing' : audioError ? 'Audio unavailable' : 'Play blog song'}
                       </span>
-                      <span className="text-[11px] font-semibold text-text-secondary truncate max-w-[180px]">
+                      <span className="text-[11px] font-semibold text-text-secondary truncate max-w-[110px] sm:max-w-[180px]">
                         {openPost.audio.title}
                       </span>
                     </span>
@@ -532,8 +532,8 @@ export default function Writing() {
             initial={{ x: '110%', opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '110%', opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-            className="fixed top-20 right-4 z-[90] flex items-center gap-3 max-w-[320px] pl-3 pr-2 py-2.5 rounded-2xl bg-surface/90 backdrop-blur-xl border border-border shadow-2xl shadow-black/50"
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed top-20 right-4 z-[90] flex items-center gap-3 max-w-[320px] pl-3 pr-2 py-2.5 rounded-2xl bg-surface/95 backdrop-blur-md border border-border shadow-2xl shadow-black/50"
             role="status"
           >
             <span className="w-8 h-8 rounded-xl bg-accent-soft border border-accent/20 flex items-center justify-center shrink-0">
