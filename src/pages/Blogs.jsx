@@ -196,16 +196,16 @@ export default function Writing() {
     if (audioCtxRef.current) return
     try {
       const Ctx = window.AudioContext || window.webkitAudioContext
-      if (!Ctx) { a.volume = 0.3; return }
+      if (!Ctx) { a.volume = 0.1; return }
       const ctx = new Ctx()
       const source = ctx.createMediaElementSource(a)
       const gain = ctx.createGain()
-      gain.gain.value = 0.3
+      gain.gain.value = 0.1
       source.connect(gain)
       gain.connect(ctx.destination)
       audioCtxRef.current = ctx
     } catch {
-      a.volume = 0.3
+      a.volume = 0.1
     }
   }
 
