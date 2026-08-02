@@ -12,11 +12,11 @@ const POSTS = [
     date: 'August 2026',
     read: '5 min',
     content: [
-      'The way I see life is completely different from how most people do. Maybe that\u2019s why I often feel like I don\u2019t fit into society.',
-      'For me, happiness has always been simple. It\u2019s sitting quietly, watching the things I love, and finding peace in those moments. There is a quiet beauty in slowing down and simply being present.',
-      'More than anything, I want my life to be peaceful. And if protecting my peace means stepping away from the noise of society, then I\u2019m willing to do that. If necessary, I\u2019ll disappear from the crowd and choose solitude over chaos.',
-      'I love traveling alone and exploring the world at my own pace. Every journey teaches me something new, and every road brings me a sense of freedom that I can\u2019t find anywhere else. Being alone has never made me feel lonely\u2014it has made me feel alive.',
-      'That is the life I want to live: a life filled with peace, freedom, meaningful experiences, and the quiet joy of discovering both the world and myself.',
+      'I have ridden More than &#x2014; 5,000 km alone, and those journeys make me feel truly alive. The feeling of being on the open road, with nothing but my thoughts and the endless horizon ahead, is one of the greatest joys of my life. It is a feeling I want to carry with me until my last day.',
+'What makes these rides even more special are the people I meet along the way. Strangers have shown me kindness, cared for me, and offered me company when I was alone. Their warmth and generosity have taught me that beautiful connections can be found anywhere.',
+'The places I have visited have been breathtaking, each with its own beauty and memories. Every road, every sunrise, every small moment becomes a part of my story.',
+'That is why I want to keep riding, exploring new places, meeting new people, and experiencing the freedom and peace that these journeys bring, again and again.',
+
     ],
   },
   {
@@ -32,7 +32,7 @@ const POSTS = [
 'The love I had for those who once meant the world to me was genuine. I gave my heart honestly, without pretending or holding back. Even today, I don\u2019t know where I failed or what I could have done differently to hold on to those relationships.',
 'Maybe that was simply my fate. Not every love story is meant to last forever, no matter how real it feels.',
 'Even so, I carry no resentment. I sincerely hope they find happiness, peace, and a beautiful life ahead. My love for them was never about possession—it was about wanting the best for them, even if that future didn\u2019t include me.',
-'Some people remain in our hearts, not because they stayed, but because they taught us how deeply we are capable of loving.'
+'Some people remain in our hearts, not because they stayed, but because they taught us how deeply we are capable of loving.  Thanks Loving !!'
     ],
   },
   {
@@ -48,13 +48,17 @@ const POSTS = [
   },
   {
     id: 4,
-    title: 'Coming Soon',
-    excerpt: 'This blog is under construction. Stay tuned.',
+    title: 'My Kind of Peace',
+    excerpt: 'This is What i need the most',
     tag: 'life',
     date: 'July 2026',
     read: '6 min',
     content: [
-      'Coming soon. This blog is under construction.',
+      'The way I see life is completely different from how most people do. Maybe that\u2019s why I often feel like I don\u2019t fit into society.',
+      'For me, happiness has always been simple. It\u2019s sitting quietly, watching the things I love, and finding peace in those moments. There is a quiet beauty in slowing down and simply being present.',
+      'More than anything, I want my life to be peaceful. And if protecting my peace means stepping away from the noise of society, then I\u2019m willing to do that. If necessary, I\u2019ll disappear from the crowd and choose solitude over chaos.',
+      'I love traveling alone and exploring the world at my own pace. Every journey teaches me something new, and every road brings me a sense of freedom that I can\u2019t find anywhere else. Being alone has never made me feel lonely\u2014it has made me feel alive.',
+      'That is the life I want to live: a life filled with peace, freedom, meaningful experiences, and the quiet joy of discovering both the world and myself.',
     ],
   },
   {
