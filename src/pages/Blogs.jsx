@@ -119,6 +119,7 @@ export default function Writing() {
   const blogRef = useRef(null)
   const cursorRef = useRef(null)
   const audioRef = useRef(null)
+  const audioCtxRef = useRef(null)
   const lastActivityRef = useRef(Date.now())
 
   useEffect(() => {
@@ -168,7 +169,6 @@ export default function Writing() {
   useEffect(() => {
     const a = new Audio()
     a.preload = 'metadata'
-    a.volume = 0.3
     const onPlay = () => setPlaying(true)
     const onPause = () => setPlaying(false)
     const onEnded = () => setPlaying(false)
@@ -185,8 +185,29 @@ export default function Writing() {
       a.removeEventListener('pause', onPause)
       a.removeEventListener('ended', onEnded)
       a.removeEventListener('error', onError)
+      if (audioCtxRef.current) {
+        audioCtxRef.current.close().catch(() => {})
+        audioCtxRef.current = null
+      }
     }
   }, [])
+
+  const ensureAudioGraph = (a) => {
+    if (audioCtxRef.current) return
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext
+      if (!Ctx) { a.volume = 0.3; return }
+      const ctx = new Ctx()
+      const source = ctx.createMediaElementSource(a)
+      const gain = ctx.createGain()
+      gain.gain.value = 0.3
+      source.connect(gain)
+      gain.connect(ctx.destination)
+      audioCtxRef.current = ctx
+    } catch {
+      a.volume = 0.3
+    }
+  }
 
   useEffect(() => {
     const a = audioRef.current
@@ -231,6 +252,10 @@ export default function Writing() {
     setAudioError(false)
     const a = audioRef.current
     if (!a || !post.audio) return
+    ensureAudioGraph(a)
+    if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+      audioCtxRef.current.resume().catch(() => {})
+    }
     a.src = post.audio.src
     a.play().catch(() => {})
   }
@@ -244,8 +269,15 @@ export default function Writing() {
   const togglePlay = () => {
     const a = audioRef.current
     if (!a) return
-    if (a.paused) a.play().catch(() => {})
-    else a.pause()
+    if (a.paused) {
+      ensureAudioGraph(a)
+      if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume().catch(() => {})
+      }
+      a.play().catch(() => {})
+    } else {
+      a.pause()
+    }
   }
 
   useEffect(() => {
