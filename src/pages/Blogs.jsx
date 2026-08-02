@@ -7,12 +7,16 @@ const POSTS = [
   {
     id: 1,
     title: 'Coming Soon',
-    excerpt: 'This blog is under construction. Stay tuned.',
+    excerpt: 'My Kind of Peace',
     tag: 'Experiance',
     date: 'July 2026',
     read: '5 min',
     content: [
-      'Coming soon. This blog is under construction.',
+      'The way I see life is completely different from how most people do. Maybe that\u2019s why I often feel like I don\u2019t fit into society.',
+      'For me, happiness has always been simple. It\u2019s sitting quietly, watching the things I love, and finding peace in those moments. There is a quiet beauty in slowing down and simply being present.',
+      'More than anything, I want my life to be peaceful. And if protecting my peace means stepping away from the noise of society, then I\u2019m willing to do that. If necessary, I\u2019ll disappear from the crowd and choose solitude over chaos.',
+      'I love traveling alone and exploring the world at my own pace. Every journey teaches me something new, and every road brings me a sense of freedom that I can\u2019t find anywhere else. Being alone has never made me feel lonely\u2014it has made me feel alive.',
+      'That is the life I want to live: a life filled with peace, freedom, meaningful experiences, and the quiet joy of discovering both the world and myself.',
     ],
   },
   {
