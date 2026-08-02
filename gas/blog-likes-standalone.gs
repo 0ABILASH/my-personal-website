@@ -20,7 +20,7 @@
 //  then look at its URL: https://docs.google.com/spreadsheets/d/PASTE-THIS-PART/edit
 // =============================================================
 
-var LIKES_SPREADSHEET_ID = 'PASTE-YOUR-SPREADSHEET-ID-HERE';
+var var LIKES_SPREADSHEET_ID = '1AbCdEfGhIjKlMnOpQrStUvWxYz123456';
 
 function doGet(e) {
   var action = (e && e.parameter && e.parameter.action) || '';
