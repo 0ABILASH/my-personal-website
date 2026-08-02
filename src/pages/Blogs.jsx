@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PenLine, ArrowRight, X, Clock, Play, Pause, Music2 } from 'lucide-react'
+import { PenLine, ArrowRight, X, Clock, Play } from 'lucide-react'
 import profileImg from '../services/profileImg'
 
 const POSTS = [
@@ -106,16 +106,54 @@ export default function Writing() {
   const [filter, setFilter] = useState('all')
   const [openPost, setOpenPost] = useState(null)
   const [playing, setPlaying] = useState(false)
+  const [audioError, setAudioError] = useState(false)
   const blogRef = useRef(null)
   const cursorRef = useRef(null)
   const audioRef = useRef(null)
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.pause()
-      setPlaying(false)
+    const a = new Audio()
+    a.preload = 'metadata'
+    const onPlay = () => setPlaying(true)
+    const onPause = () => setPlaying(false)
+    const onEnded = () => setPlaying(false)
+    const onError = () => setAudioError(true)
+    a.addEventListener('play', onPlay)
+    a.addEventListener('pause', onPause)
+    a.addEventListener('ended', onEnded)
+    a.addEventListener('error', onError)
+    audioRef.current = a
+    return () => {
+      a.pause()
+      a.src = ''
+      a.removeEventListener('play', onPlay)
+      a.removeEventListener('pause', onPause)
+      a.removeEventListener('ended', onEnded)
+      a.removeEventListener('error', onError)
     }
-  }, [openPost])
+  }, [])
+
+  const openPostWith = (post) => {
+    setOpenPost(post)
+    setAudioError(false)
+    const a = audioRef.current
+    if (!a || !post.audio) return
+    a.src = post.audio.src
+    a.play().catch(() => {})
+  }
+
+  const closePost = () => {
+    setOpenPost(null)
+    const a = audioRef.current
+    if (a) a.pause()
+  }
+
+  const togglePlay = () => {
+    const a = audioRef.current
+    if (!a) return
+    if (a.paused) a.play().catch(() => {})
+    else a.pause()
+  }
 
   useEffect(() => {
     if (!openPost) return
@@ -186,7 +224,7 @@ export default function Writing() {
                 initial={{ opacity: 0, y: 4 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.025, duration: 0.2 }}
-                onClick={() => setOpenPost(post)}
+                onClick={() => openPostWith(post)}
                 className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-surface border border-border hover:border-border-hover hover:bg-surface-hover transition-all duration-200 text-left cursor-pointer group"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -217,22 +255,62 @@ export default function Writing() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-xl" onClick={() => setOpenPost(null)} />
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-xl" onClick={closePost} />
             <motion.div
-              className="relative bg-surface border border-border rounded-2xl w-full max-w-xl max-h-[85vh] overflow-y-auto shadow-2xl"
+              className="relative bg-surface border border-border rounded-2xl w-full max-w-xl max-h-[85vh] overflow-hidden shadow-2xl flex flex-col"
               initial={{ opacity: 0, scale: 0.96, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 6 }}
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
             >
-              <div className="p-6 sm:p-8">
+              <div className="flex items-center justify-between gap-2 px-5 sm:px-7 pt-4 sm:pt-5 shrink-0">
+                {openPost.audio ? (
+                  <button
+                    onClick={togglePlay}
+                    title={openPost.audio.title}
+                    className="flex items-center gap-2.5 group cursor-pointer"
+                  >
+                    <span
+                      className={`relative w-8 h-8 rounded-xl border flex items-center justify-center transition-all ${
+                        playing
+                          ? 'bg-accent text-white border-accent'
+                          : 'bg-bg-subtle border-border text-text-tertiary group-hover:text-text group-hover:border-border-hover'
+                      }`}
+                    >
+                      {playing ? (
+                        <>
+                          <span className="flex items-end gap-[2px] h-3">
+                            <span className="eq-bar w-[2px] h-full bg-current" style={{ animationDelay: '0ms' }} />
+                            <span className="eq-bar w-[2px] h-full bg-current" style={{ animationDelay: '180ms' }} />
+                            <span className="eq-bar w-[2px] h-full bg-current" style={{ animationDelay: '360ms' }} />
+                          </span>
+                          {audioError && <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-red-400" />}
+                        </>
+                      ) : (
+                        <Play size={13} className="ml-0.5" />
+                      )}
+                    </span>
+                    <span className="hidden sm:flex flex-col items-start leading-tight">
+                      <span className="text-[9px] font-mono text-text-quaternary">
+                        {playing ? 'Now playing' : audioError ? 'Audio unavailable' : 'Play blog song'}
+                      </span>
+                      <span className="text-[11px] font-semibold text-text-secondary truncate max-w-[180px]">
+                        {openPost.audio.title}
+                      </span>
+                    </span>
+                  </button>
+                ) : (
+                  <span />
+                )}
                 <button
-                  onClick={() => setOpenPost(null)}
-                  className="absolute top-3 right-3 w-7 h-7 rounded-lg bg-bg-subtle border border-border flex items-center justify-center text-text-tertiary hover:text-text hover:border-border-hover transition-all cursor-pointer"
+                  onClick={closePost}
+                  className="w-8 h-8 rounded-xl bg-bg-subtle border border-border flex items-center justify-center text-text-tertiary hover:text-text hover:border-border-hover transition-all cursor-pointer shrink-0"
                 >
                   <X size={13} />
                 </button>
+              </div>
 
+              <div className="overflow-y-auto p-5 sm:p-7 pt-3">
                 <div className="flex items-center gap-2.5 mb-4">
                   <span className={`inline-flex px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${TAG_COLORS[openPost.tag]?.text} ${TAG_COLORS[openPost.tag]?.bg}`}>
                     {openPost.tag}
@@ -248,36 +326,6 @@ export default function Writing() {
                 <p className="text-[13px] text-text-secondary leading-relaxed mb-5">{openPost.excerpt}</p>
 
                 <div className="h-px bg-border mb-5" />
-
-                {openPost.audio && (
-                  <div className="flex items-center gap-3 p-3 rounded-xl bg-bg-subtle border border-border mb-5">
-                    <button
-                      onClick={() => {
-                        const a = audioRef.current
-                        if (!a) return
-                        if (a.paused) {
-                          a.play()
-                          setPlaying(true)
-                        } else {
-                          a.pause()
-                          setPlaying(false)
-                        }
-                      }}
-                      className="w-9 h-9 rounded-full bg-accent hover:bg-accent-hover text-white flex items-center justify-center cursor-pointer shrink-0 transition-all"
-                      aria-label={playing ? 'Pause song' : 'Play song'}
-                    >
-                      {playing ? <Pause size={14} /> : <Play size={14} className="ml-0.5" />}
-                    </button>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5 text-[11px] font-semibold text-text-secondary truncate">
-                        <Music2 size={11} className="text-accent shrink-0" />
-                        <span className="truncate">{openPost.audio.title}</span>
-                      </div>
-                      <span className="text-[10px] font-mono text-text-quaternary">Now playing for this blog</span>
-                    </div>
-                    <audio ref={audioRef} src={openPost.audio.src} preload="none" onEnded={() => setPlaying(false)} />
-                  </div>
-                )}
 
                 <div ref={blogRef} className="space-y-3 text-[13px] sm:text-[14px] text-text-secondary leading-relaxed blog-content">
                   {openPost.content.map((para, i) => (
@@ -300,7 +348,7 @@ export default function Writing() {
                     </div>
                   </div>
                   <button
-                    onClick={() => setOpenPost(null)}
+                    onClick={closePost}
                     className="px-4 py-2 rounded-xl bg-accent hover:bg-accent-hover text-white text-[12px] font-semibold transition-all cursor-pointer"
                   >
                     Done reading
