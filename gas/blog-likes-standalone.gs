@@ -45,12 +45,12 @@ function jsonOutput(obj) {
 }
 
 function blogLikesSheet_() {
-  var ss = null;
-  try { ss = SpreadsheetApp.getActiveSpreadsheet(); } catch (e) {}
-  if (!ss && LIKES_SPREADSHEET_ID && LIKES_SPREADSHEET_ID.indexOf('PASTE-') === -1) {
-    ss = SpreadsheetApp.openById(LIKES_SPREADSHEET_ID);
+  if (!LIKES_SPREADSHEET_ID || LIKES_SPREADSHEET_ID.indexOf('PASTE-') !== -1) {
+    throw new Error('BlogLikes: set LIKES_SPREADSHEET_ID in Code.gs first.');
   }
-  if (!ss) throw new Error('BlogLikes: no spreadsheet available. Set LIKES_SPREADSHEET_ID or bind this script to a spreadsheet.');
+  // Uses ONLY the spreadsheet whose ID is in LIKES_SPREADSHEET_ID.
+  // This script never touches any other spreadsheet.
+  var ss = SpreadsheetApp.openById(LIKES_SPREADSHEET_ID);
   var sheet = ss.getSheetByName('BlogLikes');
   if (!sheet) {
     sheet = ss.insertSheet('BlogLikes');

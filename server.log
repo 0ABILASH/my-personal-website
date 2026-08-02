@@ -1,0 +1,3 @@
+[track] received: {"page":"/blogs","type":"pageview"}
+[track] sending to GAS: page=%2Fblogs&type=pageview&_=1785660066738
+[track] GAS success
