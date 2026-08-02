@@ -119,6 +119,7 @@ export default function Writing() {
   const blogRef = useRef(null)
   const cursorRef = useRef(null)
   const audioRef = useRef(null)
+  const idleTimerRef = useRef(null)
 
   useEffect(() => {
     fetch('/api/likes')
@@ -185,6 +186,49 @@ export default function Writing() {
       a.removeEventListener('error', onError)
     }
   }, [])
+
+  useEffect(() => {
+    const a = audioRef.current
+    if (!a) return
+    const pause = () => a.pause()
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') pause()
+    }
+    document.addEventListener('visibilitychange', onVisibility)
+    window.addEventListener('pagehide', pause)
+    window.addEventListener('blur', pause)
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility)
+      window.removeEventListener('pagehide', pause)
+      window.removeEventListener('blur', pause)
+    }
+  }, [])
+
+  useEffect(() => {
+    const a = audioRef.current
+    if (!a) return
+    const clearIdle = () => {
+      if (idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current)
+        idleTimerRef.current = null
+      }
+    }
+    if (!playing) {
+      clearIdle()
+      return
+    }
+    const startIdle = () => {
+      clearIdle()
+      idleTimerRef.current = setTimeout(() => a.pause(), 5 * 60 * 1000)
+    }
+    const events = ['pointerdown', 'pointermove', 'keydown', 'touchstart', 'wheel', 'scroll']
+    events.forEach((ev) => window.addEventListener(ev, startIdle, { passive: true }))
+    startIdle()
+    return () => {
+      clearIdle()
+      events.forEach((ev) => window.removeEventListener(ev, startIdle))
+    }
+  }, [playing])
 
   const openPostWith = (post) => {
     setOpenPost(post)
