@@ -6,7 +6,7 @@ import { Globe, RefreshCw, ArrowUpRight, MapPin } from "lucide-react";
 import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS, addLegend, markerType } from "../services/map";
 
 var TYPE_META = {
-  current: { label: "Home", color: "#3bf66a", soft: "rgba(59,246,106,0.10)" },
+  current: { label: "Current Location", color: "#3bf66a", soft: "rgba(59,246,106,0.10)" },
   visited: { label: "Visited", color: "#3b82f6", soft: "rgba(59,130,246,0.10)" },
   small: { label: "Stop", color: "#ff0505f5", soft: "rgba(255,5,5,0.10)" },
 };
@@ -175,7 +175,7 @@ export default function Space() {
           </span>
           <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[9px] font-mono font-semibold text-emerald-300">
             <span className="w-1 h-1 rounded-full bg-emerald-400 shadow-[0_0_4px_rgba(59,246,106,0.8)]" />
-            Home
+            Current Location
           </span>
         </div>
         <div className="cards-scroll flex-1 overflow-y-auto p-2.5 flex flex-col gap-2 min-h-0">
@@ -191,7 +191,7 @@ export default function Space() {
                 transition={{ delay: 0.2 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                 onClick={function () { flyTo(p) }}
                 className={
-                  "group relative flex items-center gap-3 px-3 py-2.5 rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
+                  "group relative flex items-center gap-3 px-3 h-[54px] rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
                   (active
                     ? "border-accent/40 bg-accent-soft"
                     : "border-border hover:border-border-hover hover:bg-surface")
@@ -303,20 +303,20 @@ export default function Space() {
 
           {/* Toggle pills — top center */}
           {!loading && !error && (
-            <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-0.5 p-1 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/50">
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-1 p-1 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/50">
               <button
                 onClick={function () { setShowVisited(function (v) { return !v }) }}
                 className={
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold transition-all duration-300 cursor-pointer " +
+                  "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-wide transition-all duration-300 cursor-pointer " +
                   (showVisited
-                    ? "bg-blue-500/20 text-blue-300 border border-blue-400/40"
-                    : "text-text-tertiary hover:text-text-secondary border border-transparent")
+                    ? "bg-blue-500/25 text-blue-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_12px_rgba(59,130,246,0.35)]"
+                    : "text-text-tertiary hover:text-text-secondary hover:bg-white/5")
                 }
               >
                 <span
                   className={
                     "w-1.5 h-1.5 rounded-full transition-all duration-300 " +
-                    (showVisited ? "bg-blue-400 shadow-[0_0_6px_rgba(59,130,246,0.8)]" : "bg-text-quaternary")
+                    (showVisited ? "bg-blue-400 shadow-[0_0_8px_rgba(59,130,246,1)]" : "bg-text-quaternary")
                   }
                 />
                 Visited
@@ -324,16 +324,16 @@ export default function Space() {
               <button
                 onClick={function () { setShowSmall(function (v) { return !v }) }}
                 className={
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold transition-all duration-300 cursor-pointer " +
+                  "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-wide transition-all duration-300 cursor-pointer " +
                   (showSmall
-                    ? "bg-purple-500/20 text-purple-300 border border-purple-400/40"
-                    : "text-text-tertiary hover:text-text-secondary border border-transparent")
+                    ? "bg-purple-500/25 text-purple-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_12px_rgba(139,92,246,0.35)]"
+                    : "text-text-tertiary hover:text-text-secondary hover:bg-white/5")
                 }
               >
                 <span
                   className={
                     "w-1.5 h-1.5 rounded-full transition-all duration-300 " +
-                    (showSmall ? "bg-purple-400 shadow-[0_0_6px_rgba(139,92,246,0.8)]" : "bg-text-quaternary")
+                    (showSmall ? "bg-purple-400 shadow-[0_0_8px_rgba(139,92,246,1)]" : "bg-text-quaternary")
                   }
                 />
                 Stops
@@ -368,7 +368,7 @@ export default function Space() {
           )}
 
           {/* Floating glass destination panel — desktop */}
-          <div className="absolute top-[15%] bottom-[15%] right-3 w-[314px] xl:w-[333px] hidden lg:flex flex-col rounded-2xl bg-surface/10 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50 overflow-hidden">
+          <div className="absolute top-3 right-3 w-[314px] xl:w-[333px] hidden lg:flex flex-col rounded-2xl bg-surface/10 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50 overflow-hidden max-h-[calc(100%-1.5rem)]">
             {renderPanel()}
           </div>
         </motion.div>
