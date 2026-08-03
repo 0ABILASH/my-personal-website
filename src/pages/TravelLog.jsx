@@ -2,8 +2,14 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Globe, RefreshCw } from "lucide-react";
+import { Globe, RefreshCw, ArrowUpRight, MapPin } from "lucide-react";
 import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS, addLegend, markerType } from "../services/map";
+
+var TYPE_META = {
+  current: { label: "Home", color: "#3bf66a", soft: "rgba(59,246,106,0.10)" },
+  visited: { label: "Visited", color: "#3b82f6", soft: "rgba(59,130,246,0.10)" },
+  small: { label: "Stop", color: "#ff0505f5", soft: "rgba(255,5,5,0.10)" },
+};
 
 export default function Space() {
   const [places, setPlaces] = useState(FALLBACK_PLACES);
@@ -259,40 +265,81 @@ export default function Space() {
           )}
         </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-          {places.filter(function (p, i) {
-            var t = markerType(p, i);
-            if (!t) return false;
-            if (t === 'visited' && !showVisited) return false;
-            if (t === 'small' && !showSmall) return false;
-            return true;
-          }).map(function (p, i) {
-            return (
-              <motion.button
-                key={i}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.18 + i * 0.02, duration: 0.2 }}
-                onClick={function () { flyTo(p) }}
-                className={
-                  "flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl bg-surface border transition-all duration-200 text-left cursor-pointer " +
-                  (activePlace === p
-                    ? "border-accent/40 bg-accent-soft shadow-[0_0_10px_rgba(124,106,255,0.08)]"
-                    : "border-border hover:border-border-hover")
-                }
-              >
-                <span className="text-base flex-shrink-0">{p.emoji}</span>
-                <div className="min-w-0">
-                  <div className="text-[12px] font-semibold truncate leading-tight">
-                    {p.city}
+        <div className="mt-6">
+          <div className="flex items-center gap-2.5 mb-3">
+            <MapPin size={14} className="text-accent" />
+            <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">
+              Destinations
+            </span>
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-[10px] font-mono text-text-quaternary">
+              Tap a card to fly to it
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5">
+            {places.filter(function (p, i) {
+              var t = markerType(p, i);
+              if (!t) return false;
+              if (t === 'visited' && !showVisited) return false;
+              if (t === 'small' && !showSmall) return false;
+              return true;
+            }).map(function (p, i) {
+              var t = markerType(p, i);
+              var meta = TYPE_META[t] || TYPE_META.visited;
+              var active = activePlace === p;
+              return (
+                <motion.button
+                  key={i}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 + i * 0.03, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  onClick={function () { flyTo(p) }}
+                  className={
+                    "group relative flex items-center gap-3 px-3.5 py-3 rounded-xl bg-surface border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
+                    (active
+                      ? "border-accent/40 bg-accent-soft shadow-[0_0_16px_rgba(124,106,255,0.12)]"
+                      : "border-border hover:border-border-hover hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20")
+                  }
+                  style={active ? { boxShadow: '0 0 0 1px ' + meta.color + '66, 0 8px 24px -12px ' + meta.color } : {}}
+                >
+                  <span
+                    className="absolute left-0 top-0 bottom-0 w-[2px] rounded-full transition-opacity duration-300"
+                    style={{ background: meta.color, opacity: active ? 1 : 0.35 }}
+                  />
+                  <span
+                    className="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0 border transition-all duration-300"
+                    style={{
+                      background: meta.soft,
+                      borderColor: meta.color + '33',
+                      boxShadow: active ? '0 0 12px ' + meta.color + '44' : 'none',
+                    }}
+                  >
+                    {p.emoji || <MapPin size={15} style={{ color: meta.color }} />}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[13px] font-semibold truncate leading-tight">
+                      {p.city}
+                    </div>
+                    <div className="text-[10px] text-text-tertiary truncate leading-tight mt-0.5">
+                      {p.country}
+                    </div>
+                    <span className="inline-flex items-center gap-1.5 mt-1.5 text-[9px] font-mono font-semibold uppercase tracking-wider">
+                      <span className="w-1.5 h-1.5 rounded-full" style={{ background: meta.color, boxShadow: '0 0 6px ' + meta.color + '88' }} />
+                      {meta.label}
+                      {p.date && <span className="text-text-quaternary normal-case">· {p.date}</span>}
+                    </span>
                   </div>
-                  <div className="text-[10px] text-text-tertiary truncate leading-tight">
-                    {p.country} &middot; {p.date}
-                  </div>
-                </div>
-              </motion.button>
-            );
-          })}
+                  <span
+                    className="w-5 h-5 rounded-md border flex items-center justify-center shrink-0 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-300"
+                    style={{ borderColor: meta.color + '44', color: meta.color, background: meta.soft }}
+                  >
+                    <ArrowUpRight size={11} />
+                  </span>
+                </motion.button>
+              );
+            })}
+          </div>
         </div>
       </motion.div>
     </div>
