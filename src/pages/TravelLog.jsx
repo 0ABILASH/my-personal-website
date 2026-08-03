@@ -245,14 +245,14 @@ export default function Space() {
                   className={
                     "group relative flex items-center gap-3 px-3 h-[54px] rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 w-full " +
                     (active
-                      ? "border-accent/40 bg-accent-soft"
+                      ? "border-accent/30 bg-accent-soft/60"
                       : "border-border hover:border-border-hover hover:bg-surface")
                   }
-                  style={active ? { boxShadow: '0 0 0 1px ' + meta.color + '55, 0 4px 16px -8px ' + meta.color } : {}}
+                  style={active ? { boxShadow: '0 4px 14px -10px rgba(0,0,0,0.6)' } : {}}
                 >
                   <span
                     className="absolute left-0 top-0 bottom-0 w-[2px] rounded-full transition-all duration-300"
-                    style={{ background: meta.color, opacity: active ? 1 : 0.35, boxShadow: active ? '0 0 8px ' + meta.color : 'none' }}
+                    style={{ background: meta.color, opacity: active ? 0.7 : 0.3, boxShadow: 'none' }}
                   />
                   <span className="flex-shrink-0 text-[9px] font-mono text-text-quaternary w-3.5 text-right">
                     {String(i + 1).padStart(2, '0')}
@@ -260,17 +260,17 @@ export default function Space() {
                   <span
                     className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0 border transition-all duration-300"
                     style={{
-                      background: meta.soft,
-                      borderColor: meta.color + '33',
-                      boxShadow: active ? '0 0 10px ' + meta.color + '44' : 'none',
-                    }}
-                  >
-                    {p.emoji || <MapPin size={13} style={{ color: meta.color }} />}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[13px] font-semibold truncate leading-tight">
-                      {p.city}
-                    </div>
+                    background: meta.soft,
+                    borderColor: meta.color + '33',
+                    boxShadow: 'none',
+                  }}
+                >
+                  {p.emoji || <MapPin size={13} style={{ color: meta.color }} />}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="text-[13px] font-semibold truncate leading-tight">
+                    {p.city}
+                  </div>
                     <div className="flex items-center gap-1.5 mt-1 min-w-0">
                       <span
                         className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold uppercase tracking-wider shrink-0 whitespace-nowrap"
@@ -355,20 +355,20 @@ export default function Space() {
 
           {/* Toggle pills — top center */}
           {!loading && !error && (
-            <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-1 p-1 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/50">
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-1 p-1 rounded-full bg-surface/70 backdrop-blur-xl border border-border shadow-lg shadow-black/40">
               <button
                 onClick={function () { setShowVisited(function (v) { return !v }) }}
                 className={
                   "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-wide transition-all duration-300 cursor-pointer " +
                   (showVisited
-                    ? "bg-blue-500/25 text-blue-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_12px_rgba(59,130,246,0.35)]"
+                    ? "bg-blue-500/20 text-blue-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
                     : "text-text-tertiary hover:text-text-secondary hover:bg-white/5")
                 }
               >
                 <span
                   className={
                     "w-1.5 h-1.5 rounded-full transition-all duration-300 " +
-                    (showVisited ? "bg-blue-400 shadow-[0_0_8px_rgba(59,130,246,1)]" : "bg-text-quaternary")
+                    (showVisited ? "bg-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.9)]" : "bg-text-quaternary")
                   }
                 />
                 Visited
@@ -378,14 +378,14 @@ export default function Space() {
                 className={
                   "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-wide transition-all duration-300 cursor-pointer " +
                   (showSmall
-                    ? "bg-purple-500/25 text-purple-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_0_12px_rgba(139,92,246,0.35)]"
+                    ? "bg-red-500/20 text-red-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
                     : "text-text-tertiary hover:text-text-secondary hover:bg-white/5")
                 }
               >
                 <span
                   className={
                     "w-1.5 h-1.5 rounded-full transition-all duration-300 " +
-                    (showSmall ? "bg-purple-400 shadow-[0_0_8px_rgba(139,92,246,1)]" : "bg-text-quaternary")
+                    (showSmall ? "bg-red-400 shadow-[0_0_8px_rgba(255,5,5,0.9)]" : "bg-text-quaternary")
                   }
                 />
                 Stops
@@ -507,14 +507,14 @@ export default function Space() {
                       className={
                         "group relative flex items-center gap-2.5 px-3 h-[58px] rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.98] w-full " +
                         (active
-                          ? "border-accent/40 bg-accent-soft"
+                          ? "border-accent/30 bg-accent-soft/60"
                           : "border-border hover:border-border-hover")
                       }
-                      style={active ? { boxShadow: '0 0 0 1px ' + meta.color + '55, 0 6px 20px -10px ' + meta.color } : {}}
+                      style={active ? { boxShadow: '0 6px 18px -12px rgba(0,0,0,0.6)' } : {}}
                     >
                       <span
                         className="absolute left-0 top-0 bottom-0 w-[3px] rounded-full"
-                        style={{ background: meta.color, opacity: active ? 1 : 0.35, boxShadow: active ? '0 0 8px ' + meta.color : 'none' }}
+                        style={{ background: meta.color, opacity: active ? 0.7 : 0.3, boxShadow: 'none' }}
                       />
                       <span className="text-[9px] font-mono text-text-quaternary shrink-0">
                         {String(i + 1).padStart(2, '0')}
@@ -524,7 +524,7 @@ export default function Space() {
                         style={{
                           background: meta.soft,
                           borderColor: meta.color + '33',
-                          boxShadow: active ? '0 0 12px ' + meta.color + '44' : 'none',
+                          boxShadow: 'none',
                         }}
                       >
                         {p.emoji || <MapPin size={14} style={{ color: meta.color }} />}
