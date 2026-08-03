@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Globe, RefreshCw, ArrowUpRight, MapPin } from "lucide-react";
+import { Globe, RefreshCw, ChevronDown, MapPin } from "lucide-react";
 import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS, addLegend, markerType } from "../services/map";
 
 var TYPE_META = {
@@ -114,6 +114,58 @@ export default function Space() {
     mapInstance.current.flyTo([place.lat, place.lng], 8, { duration: 1.5 });
   };
 
+  var togglePlace = function (place) {
+    if (activePlace === place) {
+      setActivePlace(null);
+      return;
+    }
+    flyTo(place);
+  };
+
+  var renderDetail = function (p, meta) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: 1, height: "auto" }}
+        exit={{ opacity: 0, height: 0 }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        className="overflow-hidden"
+      >
+        <div className="mt-2 rounded-xl border border-border bg-surface/60 overflow-hidden">
+          <div className="relative h-28 sm:h-32 overflow-hidden">
+            {p.image ? (
+              <img src={p.image} alt={p.city} className="w-full h-full object-cover" loading="lazy" />
+            ) : (
+              <div
+                className="w-full h-full flex items-center justify-center text-5xl"
+                style={{ background: "linear-gradient(135deg, " + meta.soft + ", rgba(0,0,0,0.35))" }}
+              >
+                <span style={{ filter: "drop-shadow(0 2px 10px rgba(0,0,0,0.5))" }}>
+                  {p.emoji || "\u{1F4CD}"}
+                </span>
+              </div>
+            )}
+            <span
+              className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[8px] font-mono font-bold uppercase tracking-wider"
+              style={{ background: meta.color, color: "#000", boxShadow: "0 0 10px " + meta.color }}
+            >
+              {meta.label}
+            </span>
+          </div>
+          <div className="p-3">
+            <div className="flex items-baseline justify-between gap-2">
+              <span className="text-[13px] font-bold text-text truncate">{p.city}</span>
+              {p.date && <span className="text-[9px] font-mono text-text-quaternary shrink-0">{p.date}</span>}
+            </div>
+            <p className="text-[11px] text-text-secondary leading-relaxed mt-1.5">
+              {p.description || p.city + " — one of the stops on this journey in " + p.country + "."}
+            </p>
+          </div>
+        </div>
+      </motion.div>
+    );
+  };
+
   var progressPct = progress.total > 0 ? Math.round((progress.done / progress.total) * 100) : 0;
 
   var visible = places.filter(function (p, i) {
@@ -184,61 +236,66 @@ export default function Space() {
             var meta = TYPE_META[t] || TYPE_META.visited;
             var active = activePlace === p;
             return (
-              <motion.button
-                key={i}
-                initial={{ opacity: 0, x: 12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                onClick={function () { flyTo(p) }}
-                className={
-                  "group relative flex items-center gap-3 px-3 h-[54px] shrink-0 rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
-                  (active
-                    ? "border-accent/40 bg-accent-soft"
-                    : "border-border hover:border-border-hover hover:bg-surface")
-                }
-                style={active ? { boxShadow: '0 0 0 1px ' + meta.color + '55, 0 4px 16px -8px ' + meta.color } : {}}
-              >
-                <span
-                  className="absolute left-0 top-0 bottom-0 w-[2px] rounded-full transition-all duration-300"
-                  style={{ background: meta.color, opacity: active ? 1 : 0.35, boxShadow: active ? '0 0 8px ' + meta.color : 'none' }}
-                />
-                <span className="flex-shrink-0 text-[9px] font-mono text-text-quaternary w-3.5 text-right">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <span
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0 border transition-all duration-300"
-                  style={{
-                    background: meta.soft,
-                    borderColor: meta.color + '33',
-                    boxShadow: active ? '0 0 10px ' + meta.color + '44' : 'none',
-                  }}
+              <div key={i} className="shrink-0">
+                <motion.button
+                  initial={{ opacity: 0, x: 12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  onClick={function () { togglePlace(p) }}
+                  className={
+                    "group relative flex items-center gap-3 px-3 h-[54px] rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 w-full " +
+                    (active
+                      ? "border-accent/40 bg-accent-soft"
+                      : "border-border hover:border-border-hover hover:bg-surface")
+                  }
+                  style={active ? { boxShadow: '0 0 0 1px ' + meta.color + '55, 0 4px 16px -8px ' + meta.color } : {}}
                 >
-                  {p.emoji || <MapPin size={13} style={{ color: meta.color }} />}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <div className="text-[13px] font-semibold truncate leading-tight">
-                    {p.city}
+                  <span
+                    className="absolute left-0 top-0 bottom-0 w-[2px] rounded-full transition-all duration-300"
+                    style={{ background: meta.color, opacity: active ? 1 : 0.35, boxShadow: active ? '0 0 8px ' + meta.color : 'none' }}
+                  />
+                  <span className="flex-shrink-0 text-[9px] font-mono text-text-quaternary w-3.5 text-right">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0 border transition-all duration-300"
+                    style={{
+                      background: meta.soft,
+                      borderColor: meta.color + '33',
+                      boxShadow: active ? '0 0 10px ' + meta.color + '44' : 'none',
+                    }}
+                  >
+                    {p.emoji || <MapPin size={13} style={{ color: meta.color }} />}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[13px] font-semibold truncate leading-tight">
+                      {p.city}
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-1 min-w-0">
+                      <span
+                        className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold uppercase tracking-wider shrink-0 whitespace-nowrap"
+                        style={{ color: meta.color }}
+                      >
+                        <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 4px ' + meta.color + 'aa' }} />
+                        {meta.label}
+                      </span>
+                      <span className="text-[9px] text-text-quaternary truncate font-mono min-w-0">
+                        {p.country}{p.date ? ' · ' + p.date : ''}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1.5 mt-1 min-w-0">
-                    <span
-                      className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold uppercase tracking-wider shrink-0 whitespace-nowrap"
-                      style={{ color: meta.color }}
-                    >
-                      <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 4px ' + meta.color + 'aa' }} />
-                      {meta.label}
-                    </span>
-                    <span className="text-[9px] text-text-quaternary truncate font-mono min-w-0">
-                      {p.country}{p.date ? ' · ' + p.date : ''}
-                    </span>
-                  </div>
-                </div>
-                <span
-                  className="w-4 h-4 rounded-md border items-center justify-center shrink-0 hidden group-hover:flex -translate-x-1 group-hover:translate-x-0 transition-all duration-300"
-                  style={{ borderColor: meta.color + '44', color: meta.color, background: meta.soft }}
-                >
-                  <ArrowUpRight size={9} />
-                </span>
-              </motion.button>
+                  <span
+                    className={
+                      "w-4 h-4 rounded-md border items-center justify-center shrink-0 -translate-x-1 group-hover:translate-x-0 transition-all duration-300 " +
+                      (active ? "flex" : "hidden group-hover:flex")
+                    }
+                    style={{ borderColor: meta.color + '44', color: meta.color, background: meta.soft }}
+                  >
+                    <ChevronDown size={9} className={"transition-transform duration-300 " + (active ? "rotate-180" : "")} />
+                  </span>
+                </motion.button>
+                {active && renderDetail(p, meta)}
+              </div>
             );
           })}
           {visible.length === 0 && (
@@ -440,63 +497,65 @@ export default function Space() {
               var meta = TYPE_META[t] || TYPE_META.visited;
               var active = activePlace === p;
               return (
-                <motion.button
-                  key={i}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.15 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                  onClick={function () { flyTo(p) }}
-                  className={
-                    "group relative flex items-center gap-2.5 sm:gap-3 px-3 sm:px-3.5 py-3 sm:py-3.5 rounded-2xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.98] " +
-                    (active
-                      ? "border-accent/40 bg-accent-soft"
-                      : "border-border hover:border-border-hover")
-                  }
-                  style={active ? { boxShadow: '0 0 0 1px ' + meta.color + '55, 0 8px 24px -10px ' + meta.color } : {}}
-                >
-                  <span
-                    className="absolute left-0 top-0 bottom-0 w-[3px] rounded-full"
-                    style={{ background: meta.color, opacity: active ? 1 : 0.35, boxShadow: active ? '0 0 8px ' + meta.color : 'none' }}
-                  />
-                  <span
-                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center text-base sm:text-lg shrink-0 border"
-                    style={{
-                      background: meta.soft,
-                      borderColor: meta.color + '33',
-                      boxShadow: active ? '0 0 12px ' + meta.color + '44' : 'none',
-                    }}
+                <div key={i} className="min-w-0">
+                  <motion.button
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    onClick={function () { togglePlace(p) }}
+                    className={
+                      "group relative flex items-center gap-2.5 sm:gap-3 px-3 sm:px-3.5 py-3 sm:py-3.5 rounded-2xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.98] w-full " +
+                      (active
+                        ? "border-accent/40 bg-accent-soft"
+                        : "border-border hover:border-border-hover")
+                    }
+                    style={active ? { boxShadow: '0 0 0 1px ' + meta.color + '55, 0 8px 24px -10px ' + meta.color } : {}}
                   >
-                    {p.emoji || <MapPin size={15} style={{ color: meta.color }} />}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-baseline gap-1.5 min-w-0">
-                      <span className="text-[9px] font-mono text-text-quaternary shrink-0">
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                      <span className="text-[14px] sm:text-[15px] font-semibold truncate leading-tight">
-                        {p.city}
-                      </span>
+                    <span
+                      className="absolute left-0 top-0 bottom-0 w-[3px] rounded-full"
+                      style={{ background: meta.color, opacity: active ? 1 : 0.35, boxShadow: active ? '0 0 8px ' + meta.color : 'none' }}
+                    />
+                    <span
+                      className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center text-base sm:text-lg shrink-0 border"
+                      style={{
+                        background: meta.soft,
+                        borderColor: meta.color + '33',
+                        boxShadow: active ? '0 0 12px ' + meta.color + '44' : 'none',
+                      }}
+                    >
+                      {p.emoji || <MapPin size={15} style={{ color: meta.color }} />}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-baseline gap-1.5 min-w-0">
+                        <span className="text-[9px] font-mono text-text-quaternary shrink-0">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <span className="text-[14px] sm:text-[15px] font-semibold truncate leading-tight">
+                          {p.city}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-0.5 min-w-0">
+                        <span
+                          className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold uppercase tracking-wider shrink-0 whitespace-nowrap"
+                          style={{ color: meta.color }}
+                        >
+                          <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 4px ' + meta.color + 'aa' }} />
+                          {meta.label}
+                        </span>
+                        <span className="text-[10px] text-text-quaternary truncate font-mono min-w-0">
+                          {p.country}{p.date ? ' · ' + p.date : ''}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1.5 mt-0.5 min-w-0">
-                      <span
-                        className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold uppercase tracking-wider shrink-0 whitespace-nowrap"
-                        style={{ color: meta.color }}
-                      >
-                        <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 4px ' + meta.color + 'aa' }} />
-                        {meta.label}
-                      </span>
-                      <span className="text-[10px] text-text-quaternary truncate font-mono min-w-0">
-                        {p.country}{p.date ? ' · ' + p.date : ''}
-                      </span>
-                    </div>
-                  </div>
-                  <span
-                    className="w-6 h-6 rounded-lg border flex items-center justify-center shrink-0"
-                    style={{ borderColor: meta.color + '44', color: meta.color, background: meta.soft }}
-                  >
-                    <ArrowUpRight size={11} />
-                  </span>
-                </motion.button>
+                    <span
+                      className="w-6 h-6 rounded-lg border flex items-center justify-center shrink-0 transition-transform duration-300"
+                      style={{ borderColor: meta.color + '44', color: meta.color, background: meta.soft }}
+                    >
+                      <ChevronDown size={12} className={"transition-transform duration-300 " + (active ? "rotate-180" : "")} />
+                    </span>
+                  </motion.button>
+                  {active && renderDetail(p, meta)}
+                </div>
               );
             })}
             {visible.length === 0 && (
