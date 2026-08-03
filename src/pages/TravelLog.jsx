@@ -266,11 +266,6 @@ export default function Space() {
               Travel Log
             </span>
             <div className="flex-1 h-px bg-border" />
-            {!loading && places.length > 0 && (
-              <span className="text-[10px] font-mono text-text-quaternary">
-                {places.length} places
-              </span>
-            )}
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight mb-1">
             Travel Log
@@ -411,9 +406,6 @@ export default function Space() {
                         : "none",
               }}
             />
-            <span className="text-[10px] font-mono text-text-quaternary">
-              {visible.length} places
-            </span>
           </div>
 
           <div className="flex flex-wrap gap-2 mb-4">
@@ -444,29 +436,35 @@ export default function Space() {
                   transition={{ delay: 0.15 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                   onClick={function () { flyTo(p) }}
                   className={
-                    "group relative flex items-center gap-3 px-3.5 py-3.5 rounded-2xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
+                    "group relative flex items-center gap-3 px-3.5 py-4 rounded-2xl border text-left cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.98] " +
                     (active
-                      ? "border-accent/40 bg-accent-soft"
+                      ? "border-transparent"
                       : "border-border hover:border-border-hover")
                   }
-                  style={active ? { boxShadow: '0 0 0 1px ' + meta.color + '55, 0 6px 20px -10px ' + meta.color } : {}}
+                  style={active ? { boxShadow: '0 0 0 1px ' + meta.color + '66, 0 12px 30px -12px ' + meta.color } : {}}
                 >
                   <span
                     className="absolute left-0 top-0 bottom-0 w-[3px] rounded-full"
-                    style={{ background: meta.color, opacity: active ? 1 : 0.4, boxShadow: '0 0 8px ' + meta.color }}
+                    style={{ background: meta.color, opacity: active ? 1 : 0.35, boxShadow: '0 0 10px ' + meta.color }}
                   />
+                  {active && (
+                    <span
+                      className="absolute inset-0 pointer-events-none"
+                      style={{ background: 'linear-gradient(135deg, ' + meta.soft + ', rgba(255,255,255,0) 60%)' }}
+                    />
+                  )}
                   <span
-                    className="w-10 h-10 rounded-xl flex items-center justify-center text-base shrink-0 border"
+                    className="relative w-11 h-11 rounded-xl flex items-center justify-center text-lg shrink-0 border"
                     style={{
                       background: meta.soft,
                       borderColor: meta.color + '33',
-                      boxShadow: active ? '0 0 12px ' + meta.color + '44' : 'none',
+                      boxShadow: active ? '0 0 14px ' + meta.color + '44' : 'none',
                     }}
                   >
-                    {p.emoji || <MapPin size={15} style={{ color: meta.color }} />}
+                    {p.emoji || <MapPin size={17} style={{ color: meta.color }} />}
                   </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[14px] font-semibold truncate leading-tight">
+                  <div className="relative min-w-0 flex-1">
+                    <div className="text-[15px] font-semibold truncate leading-tight">
                       {p.city}
                     </div>
                     <div className="flex items-center gap-1.5 mt-1 min-w-0">
@@ -483,10 +481,10 @@ export default function Space() {
                     </div>
                   </div>
                   <span
-                    className="w-6 h-6 rounded-lg border flex items-center justify-center shrink-0"
+                    className="relative w-7 h-7 rounded-lg border flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:translate-x-0.5"
                     style={{ borderColor: meta.color + '44', color: meta.color, background: meta.soft }}
                   >
-                    <ArrowUpRight size={11} />
+                    <ArrowUpRight size={12} />
                   </span>
                 </motion.button>
               );
