@@ -374,21 +374,15 @@ export default function Space() {
         </motion.div>
 
         {/* Destination section — mobile & tablet */}
-        <div className="lg:hidden mt-5 flex flex-col gap-4">
-          <div className="flex items-center gap-3">
-            <span className="w-9 h-9 rounded-xl bg-accent-soft border border-accent/20 flex items-center justify-center shrink-0">
-              <MapPin size={15} className="text-accent" />
+        <div className="lg:hidden mt-8">
+          <div className="flex items-center gap-2.5 mb-4">
+            <MapPin size={14} className="text-accent" />
+            <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">
+              Destinations
             </span>
-            <div className="min-w-0">
-              <h2 className="text-[15px] font-bold text-text leading-tight">
-                Destinations
-              </h2>
-              <p className="text-[10px] text-text-tertiary font-mono mt-0.5">
-                {visible.length} shown on the map
-              </p>
-            </div>
+            <div className="flex-1 h-px bg-border" />
             <span
-              className="ml-auto w-2 h-2 rounded-full shrink-0"
+              className="w-2 h-2 rounded-full shrink-0"
               title={
                 fetchStatus === "ok"
                   ? "Travel data loaded successfully"
@@ -417,9 +411,12 @@ export default function Space() {
                         : "none",
               }}
             />
+            <span className="text-[10px] font-mono text-text-quaternary">
+              {visible.length} places
+            </span>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 mb-4">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/25 text-[10px] font-mono font-semibold text-blue-300">
               <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_5px_rgba(59,130,246,0.9)]" />
               Visited
@@ -434,7 +431,7 @@ export default function Space() {
             </span>
           </div>
 
-          <div className="flex flex-col gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {visible.map(function (p, i) {
               var t = markerType(p, i);
               var meta = TYPE_META[t] || TYPE_META.visited;
@@ -495,7 +492,7 @@ export default function Space() {
               );
             })}
             {visible.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-12 gap-2 text-center rounded-2xl border border-border bg-bg">
+              <div className="flex flex-col items-center justify-center py-12 gap-2 text-center rounded-2xl border border-border bg-bg sm:col-span-2">
                 <MapPin size={20} className="text-text-quaternary" />
                 <p className="text-[12px] text-text-tertiary">No destinations match the current filters.</p>
               </div>
