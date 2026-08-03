@@ -191,7 +191,7 @@ export default function Space() {
                 transition={{ delay: 0.2 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                 onClick={function () { flyTo(p) }}
                 className={
-                  "group relative flex items-center gap-3 px-3 h-[54px] rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
+                  "group relative flex items-center gap-3 px-3 h-[54px] shrink-0 rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
                   (active
                     ? "border-accent/40 bg-accent-soft"
                     : "border-border hover:border-border-hover hover:bg-surface")
@@ -221,7 +221,7 @@ export default function Space() {
                   </div>
                   <div className="flex items-center gap-1.5 mt-1 min-w-0">
                     <span
-                      className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold uppercase tracking-wider shrink-0"
+                      className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold uppercase tracking-wider shrink-0 whitespace-nowrap"
                       style={{ color: meta.color }}
                     >
                       <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 4px ' + meta.color + 'aa' }} />
