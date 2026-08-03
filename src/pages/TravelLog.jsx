@@ -170,7 +170,7 @@ export default function Space() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
           {/* Map */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
