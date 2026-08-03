@@ -130,6 +130,107 @@ export default function Space() {
     if (typeCounts[t] !== undefined) typeCounts[t]++;
   });
 
+  var renderPanel = function () {
+    return (
+      <>
+        <div className="flex items-center gap-2.5 px-4 h-11 border-b border-border shrink-0">
+          <MapPin size={13} className="text-accent" />
+          <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">
+            Destinations
+          </span>
+          <div className="flex-1 h-px bg-border" />
+          <span className="text-[10px] font-mono text-text-quaternary">
+            {visible.length} of {places.length}
+          </span>
+        </div>
+        <div className="flex items-center gap-2 px-4 py-2 border-b border-border shrink-0">
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/25 text-[9px] font-mono font-semibold text-blue-300">
+            <span className="w-1 h-1 rounded-full bg-blue-400 shadow-[0_0_4px_rgba(59,130,246,0.9)]" />
+            Visited {typeCounts.visited}
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/25 text-[9px] font-mono font-semibold text-red-300">
+            <span className="w-1 h-1 rounded-full bg-red-400 shadow-[0_0_4px_rgba(255,5,5,0.8)]" />
+            Stops {typeCounts.small}
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[9px] font-mono font-semibold text-emerald-300">
+            <span className="w-1 h-1 rounded-full bg-emerald-400 shadow-[0_0_4px_rgba(59,246,106,0.8)]" />
+            Home {typeCounts.current}
+          </span>
+        </div>
+        <div className="cards-scroll flex-1 overflow-y-auto p-2.5 flex flex-col gap-1.5">
+          {visible.map(function (p, i) {
+            var t = markerType(p, i);
+            var meta = TYPE_META[t] || TYPE_META.visited;
+            var active = activePlace === p;
+            return (
+              <motion.button
+                key={i}
+                initial={{ opacity: 0, x: 12 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                onClick={function () { flyTo(p) }}
+                className={
+                  "group relative flex items-center gap-2.5 px-2.5 py-2 rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
+                  (active
+                    ? "border-accent/40 bg-accent-soft"
+                    : "border-border hover:border-border-hover hover:bg-surface")
+                }
+                style={active ? { boxShadow: '0 0 0 1px ' + meta.color + '55, 0 4px 16px -8px ' + meta.color } : {}}
+              >
+                <span
+                  className="absolute left-0 top-0 bottom-0 w-[2px] rounded-full transition-all duration-300"
+                  style={{ background: meta.color, opacity: active ? 1 : 0.35, boxShadow: active ? '0 0 8px ' + meta.color : 'none' }}
+                />
+                <span className="flex-shrink-0 text-[8px] font-mono text-text-quaternary w-3 text-right">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-xs shrink-0 border transition-all duration-300"
+                  style={{
+                    background: meta.soft,
+                    borderColor: meta.color + '33',
+                    boxShadow: active ? '0 0 10px ' + meta.color + '44' : 'none',
+                  }}
+                >
+                  {p.emoji || <MapPin size={12} style={{ color: meta.color }} />}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="text-[12px] font-semibold truncate leading-tight">
+                    {p.city}
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-0.5 min-w-0">
+                    <span
+                      className="inline-flex items-center gap-1 text-[8px] font-mono font-semibold uppercase tracking-wider shrink-0"
+                      style={{ color: meta.color }}
+                    >
+                      <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 4px ' + meta.color + 'aa' }} />
+                      {meta.label}
+                    </span>
+                    <span className="text-[8px] text-text-quaternary truncate font-mono min-w-0">
+                      {p.country}{p.date ? ' · ' + p.date : ''}
+                    </span>
+                  </div>
+                </div>
+                <span
+                  className="w-4 h-4 rounded-md border items-center justify-center shrink-0 hidden group-hover:flex -translate-x-1 group-hover:translate-x-0 transition-all duration-300"
+                  style={{ borderColor: meta.color + '44', color: meta.color, background: meta.soft }}
+                >
+                  <ArrowUpRight size={9} />
+                </span>
+              </motion.button>
+            );
+          })}
+          {visible.length === 0 && (
+            <div className="flex flex-col items-center justify-center flex-1 py-12 gap-2 text-center">
+              <MapPin size={20} className="text-text-quaternary" />
+              <p className="text-[12px] text-text-tertiary">No destinations match the current filters.</p>
+            </div>
+          )}
+        </div>
+      </>
+    );
+  };
+
   return (
     <div className="max-w-5xl mx-auto px-5 sm:px-6 py-12 sm:py-16">
       <motion.div
@@ -170,225 +271,127 @@ export default function Space() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
-          {/* Map */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.4 }}
-            className="lg:col-span-3 relative rounded-2xl border border-border overflow-hidden shadow-2xl shadow-black/40 ring-1 ring-white/5"
-          >
-            <div ref={mapRef} className="w-full h-[300px] sm:h-[360px] lg:h-[420px] bg-bg" />
-            <div className="absolute inset-0 pointer-events-none rounded-2xl shadow-[inset_0_0_60px_rgba(0,0,0,0.35)]" />
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
+          className="relative rounded-2xl border border-border overflow-hidden shadow-2xl shadow-black/40 ring-1 ring-white/5"
+        >
+          <div ref={mapRef} className="w-full h-[420px] sm:h-[500px] lg:h-[560px] bg-bg" />
+          <div className="absolute inset-0 pointer-events-none rounded-2xl shadow-[inset_0_0_80px_rgba(0,0,0,0.4)]" />
 
-            {/* Status badge — top left */}
-            <div className="absolute top-3 left-3 z-[100] flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/40">
-              <span
-                className="w-2 h-2 rounded-full cursor-help"
-                title={
+          {/* Status badge — top left */}
+          <div className="absolute top-3 left-3 z-[100] flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/40">
+            <span
+              className="w-2 h-2 rounded-full cursor-help"
+              title={
+                fetchStatus === "ok"
+                  ? "Travel data loaded successfully"
+                  : fetchStatus === "fallback"
+                    ? "API empty — showing offline data"
+                    : fetchStatus === "error"
+                      ? "Failed to load travel data"
+                      : "Loading travel data..."
+              }
+              style={{
+                background:
                   fetchStatus === "ok"
-                    ? "Travel data loaded successfully"
+                    ? "#34d399"
                     : fetchStatus === "fallback"
-                      ? "API empty — showing offline data"
+                      ? "#fbbf24"
                       : fetchStatus === "error"
-                        ? "Failed to load travel data"
-                        : "Loading travel data..."
+                        ? "#f87171"
+                        : "#a1a1aa",
+                boxShadow:
+                  fetchStatus === "ok"
+                    ? "0 0 6px rgba(52,211,153,0.6)"
+                    : fetchStatus === "fallback"
+                      ? "0 0 6px rgba(251,191,36,0.5)"
+                      : fetchStatus === "error"
+                        ? "0 0 6px rgba(248,113,113,0.5)"
+                        : "none",
+              }}
+            />
+            <span className="text-[10px] font-mono text-text-secondary">
+              {places.length} places
+            </span>
+          </div>
+
+          {/* Toggle pills — top center */}
+          {!loading && !error && (
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-0.5 p-1 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/50">
+              <button
+                onClick={function () { setShowVisited(function (v) { return !v }) }}
+                className={
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold transition-all duration-300 cursor-pointer " +
+                  (showVisited
+                    ? "bg-blue-500/20 text-blue-300 border border-blue-400/40"
+                    : "text-text-tertiary hover:text-text-secondary border border-transparent")
                 }
-                style={{
-                  background:
-                    fetchStatus === "ok"
-                      ? "#34d399"
-                      : fetchStatus === "fallback"
-                        ? "#fbbf24"
-                        : fetchStatus === "error"
-                          ? "#f87171"
-                          : "#a1a1aa",
-                  boxShadow:
-                    fetchStatus === "ok"
-                      ? "0 0 6px rgba(52,211,153,0.6)"
-                      : fetchStatus === "fallback"
-                        ? "0 0 6px rgba(251,191,36,0.5)"
-                        : fetchStatus === "error"
-                          ? "0 0 6px rgba(248,113,113,0.5)"
-                          : "none",
-                }}
-              />
-              <span className="text-[10px] font-mono text-text-secondary">
-                {places.length} places
-              </span>
-            </div>
-
-            {/* Toggle pills — top right */}
-            {!loading && !error && (
-              <div className="absolute top-3 right-3 z-[100] flex items-center gap-0.5 p-1 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/50">
-                <button
-                  onClick={function () { setShowVisited(function (v) { return !v }) }}
+              >
+                <span
                   className={
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold transition-all duration-300 cursor-pointer " +
-                    (showVisited
-                      ? "bg-blue-500/20 text-blue-300 border border-blue-400/40"
-                      : "text-text-tertiary hover:text-text-secondary border border-transparent")
+                    "w-1.5 h-1.5 rounded-full transition-all duration-300 " +
+                    (showVisited ? "bg-blue-400 shadow-[0_0_6px_rgba(59,130,246,0.8)]" : "bg-text-quaternary")
                   }
-                >
-                  <span
-                    className={
-                      "w-1.5 h-1.5 rounded-full transition-all duration-300 " +
-                      (showVisited ? "bg-blue-400 shadow-[0_0_6px_rgba(59,130,246,0.8)]" : "bg-text-quaternary")
-                    }
-                  />
-                  Visited
-                </button>
-                <button
-                  onClick={function () { setShowSmall(function (v) { return !v }) }}
+                />
+                Visited
+              </button>
+              <button
+                onClick={function () { setShowSmall(function (v) { return !v }) }}
+                className={
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold transition-all duration-300 cursor-pointer " +
+                  (showSmall
+                    ? "bg-purple-500/20 text-purple-300 border border-purple-400/40"
+                    : "text-text-tertiary hover:text-text-secondary border border-transparent")
+                }
+              >
+                <span
                   className={
-                    "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold transition-all duration-300 cursor-pointer " +
-                    (showSmall
-                      ? "bg-purple-500/20 text-purple-300 border border-purple-400/40"
-                      : "text-text-tertiary hover:text-text-secondary border border-transparent")
+                    "w-1.5 h-1.5 rounded-full transition-all duration-300 " +
+                    (showSmall ? "bg-purple-400 shadow-[0_0_6px_rgba(139,92,246,0.8)]" : "bg-text-quaternary")
                   }
-                >
-                  <span
-                    className={
-                      "w-1.5 h-1.5 rounded-full transition-all duration-300 " +
-                      (showSmall ? "bg-purple-400 shadow-[0_0_6px_rgba(139,92,246,0.8)]" : "bg-text-quaternary")
-                    }
-                  />
-                  Stops
-                </button>
-              </div>
-            )}
-
-            {/* Loading — small top bar, map stays interactive */}
-            {loading && (
-              <div className="absolute top-0 left-0 right-0 z-[100]">
-                <div className="h-0.5 bg-border overflow-hidden rounded-t-2xl">
-                  <div
-                    className="h-full bg-accent rounded-full transition-all duration-300"
-                    style={{ width: progressPct + '%' }}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Error overlay */}
-            {error && (
-              <div className="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm gap-3">
-                <p className="text-[12px] text-text-secondary font-medium">Route calculation failed</p>
-                <button
-                  onClick={loadRoutes}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-[11px] font-medium text-text-secondary hover:text-text transition-all cursor-pointer"
-                >
-                  <RefreshCw size={11} />
-                  Retry
-                </button>
-              </div>
-            )}
-          </motion.div>
-
-          {/* Destinations panel */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.4 }}
-            className="lg:col-span-2 lg:h-[420px] rounded-2xl border border-border bg-surface overflow-hidden flex flex-col shadow-2xl shadow-black/40 ring-1 ring-white/5"
-          >
-            <div className="flex items-center gap-2.5 px-4 h-10 border-b border-border shrink-0 bg-surface/95 backdrop-blur-sm">
-              <MapPin size={13} className="text-accent" />
-              <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">
-                Destinations
-              </span>
-              <div className="flex-1 h-px bg-border" />
-              <span className="text-[10px] font-mono text-text-quaternary">
-                {visible.length} of {places.length}
-              </span>
+                />
+                Stops
+              </button>
             </div>
+          )}
 
-            <div className="flex items-center gap-2 px-4 py-2 border-b border-border shrink-0">
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/25 text-[9px] font-mono font-semibold text-blue-300">
-                <span className="w-1 h-1 rounded-full bg-blue-400 shadow-[0_0_4px_rgba(59,130,246,0.9)]" />
-                Visited {typeCounts.visited}
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/25 text-[9px] font-mono font-semibold text-red-300">
-                <span className="w-1 h-1 rounded-full bg-red-400 shadow-[0_0_4px_rgba(255,5,5,0.8)]" />
-                Stops {typeCounts.small}
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[9px] font-mono font-semibold text-emerald-300">
-                <span className="w-1 h-1 rounded-full bg-emerald-400 shadow-[0_0_4px_rgba(59,246,106,0.8)]" />
-                Home {typeCounts.current}
-              </span>
+          {/* Loading — small top bar, map stays interactive */}
+          {loading && (
+            <div className="absolute top-0 left-0 right-0 z-[100]">
+              <div className="h-0.5 bg-border overflow-hidden rounded-t-2xl">
+                <div
+                  className="h-full bg-accent rounded-full transition-all duration-300"
+                  style={{ width: progressPct + '%' }}
+                />
+              </div>
             </div>
+          )}
 
-            <div className="cards-scroll flex-1 overflow-y-auto p-2 flex flex-col gap-1.5">
-              {visible.map(function (p, i) {
-                var t = markerType(p, i);
-                var meta = TYPE_META[t] || TYPE_META.visited;
-                var active = activePlace === p;
-                return (
-                  <motion.button
-                    key={i}
-                    initial={{ opacity: 0, x: 12 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    onClick={function () { flyTo(p) }}
-                    className={
-                      "group relative flex items-center gap-2.5 px-2.5 py-2 rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
-                      (active
-                        ? "border-accent/40 bg-accent-soft"
-                        : "border-border hover:border-border-hover hover:bg-surface")
-                    }
-                    style={active ? { boxShadow: '0 0 0 1px ' + meta.color + '55, 0 4px 16px -8px ' + meta.color } : {}}
-                  >
-                    <span
-                      className="absolute left-0 top-0 bottom-0 w-[2px] rounded-full transition-all duration-300"
-                      style={{ background: meta.color, opacity: active ? 1 : 0.35, boxShadow: active ? '0 0 8px ' + meta.color : 'none' }}
-                    />
-                    <span className="flex-shrink-0 text-[8px] font-mono text-text-quaternary w-3 text-right">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <span
-                      className="w-7 h-7 rounded-lg flex items-center justify-center text-xs shrink-0 border transition-all duration-300"
-                      style={{
-                        background: meta.soft,
-                        borderColor: meta.color + '33',
-                        boxShadow: active ? '0 0 10px ' + meta.color + '44' : 'none',
-                      }}
-                    >
-                      {p.emoji || <MapPin size={12} style={{ color: meta.color }} />}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="text-[12px] font-semibold truncate leading-tight">
-                        {p.city}
-                      </div>
-                      <div className="flex items-center gap-1.5 mt-0.5 min-w-0">
-                        <span
-                          className="inline-flex items-center gap-1 text-[8px] font-mono font-semibold uppercase tracking-wider shrink-0"
-                          style={{ color: meta.color }}
-                        >
-                          <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 4px ' + meta.color + 'aa' }} />
-                          {meta.label}
-                        </span>
-                        <span className="text-[8px] text-text-quaternary truncate font-mono min-w-0">
-                          {p.country}{p.date ? ' · ' + p.date : ''}
-                        </span>
-                      </div>
-                    </div>
-                    <span
-                      className="w-4 h-4 rounded-md border items-center justify-center shrink-0 hidden group-hover:flex -translate-x-1 group-hover:translate-x-0 transition-all duration-300"
-                      style={{ borderColor: meta.color + '44', color: meta.color, background: meta.soft }}
-                    >
-                      <ArrowUpRight size={9} />
-                    </span>
-                  </motion.button>
-                );
-              })}
-              {visible.length === 0 && (
-                <div className="flex flex-col items-center justify-center flex-1 py-12 gap-2 text-center">
-                  <MapPin size={20} className="text-text-quaternary" />
-                  <p className="text-[12px] text-text-tertiary">No destinations match the current filters.</p>
-                </div>
-              )}
+          {/* Error overlay */}
+          {error && (
+            <div className="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-bg/80 backdrop-blur-sm gap-3">
+              <p className="text-[12px] text-text-secondary font-medium">Route calculation failed</p>
+              <button
+                onClick={loadRoutes}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-[11px] font-medium text-text-secondary hover:text-text transition-all cursor-pointer"
+              >
+                <RefreshCw size={11} />
+                Retry
+              </button>
             </div>
-          </motion.div>
+          )}
+
+          {/* Floating glass destination panel — desktop */}
+          <div className="absolute top-4 bottom-4 right-4 w-[300px] hidden lg:flex flex-col rounded-2xl bg-surface/85 backdrop-blur-2xl border border-border shadow-2xl shadow-black/50 overflow-hidden">
+            {renderPanel()}
+          </div>
+        </motion.div>
+
+        {/* Destination panel — mobile (below map) */}
+        <div className="lg:hidden rounded-2xl border border-border bg-surface overflow-hidden flex flex-col shadow-xl shadow-black/30">
+          {renderPanel()}
         </div>
       </motion.div>
     </div>
