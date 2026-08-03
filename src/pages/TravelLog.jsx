@@ -368,6 +368,17 @@ export default function Space() {
           </div>
         </motion.div>
 
+        {/* Description below the map */}
+        <div className="mt-5 flex items-start gap-3">
+          <span className="w-6 h-6 rounded-lg bg-accent-soft border border-accent/20 flex items-center justify-center shrink-0 mt-0.5">
+            <MapPin size={12} className="text-accent" />
+          </span>
+          <p className="text-[12.5px] text-text-secondary leading-relaxed max-w-2xl">
+            Every pin tells a story — the roads I&apos;ve ridden, the cities I&apos;ve explored, and the
+            memories that made each journey unforgettable. Tap a destination to fly across the map.
+          </p>
+        </div>
+
         {/* Destination section — mobile & tablet (fully responsive) */}
         <div className="lg:hidden mt-8">
           <div className="flex items-center gap-2.5 mb-4">
