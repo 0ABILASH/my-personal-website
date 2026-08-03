@@ -194,25 +194,39 @@ export default function Space() {
 
           {/* Toggle pills — positioned over the map, below header */}
           {!loading && !error && (
-            <div className="absolute top-3 right-3 z-[100] flex gap-1.5">
+            <div className="absolute top-3 right-3 z-[100] flex items-center gap-0.5 p-1 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/50">
               <button
                 onClick={function () { setShowVisited(function (v) { return !v }) }}
                 className={
-                  "map-toggle " +
-                  (showVisited ? "map-toggle--blue" : "")
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold transition-all duration-300 cursor-pointer " +
+                  (showVisited
+                    ? "bg-blue-500/20 text-blue-300 border border-blue-400/40"
+                    : "text-text-tertiary hover:text-text-secondary border border-transparent")
                 }
               >
-                <span className="map-toggle-dot" style={{ background: showVisited ? '#3b82f6' : '#52525b' }} />
+                <span
+                  className={
+                    "w-1.5 h-1.5 rounded-full transition-all duration-300 " +
+                    (showVisited ? "bg-blue-400 shadow-[0_0_6px_rgba(59,130,246,0.8)]" : "bg-text-quaternary")
+                  }
+                />
                 Visited
               </button>
               <button
                 onClick={function () { setShowSmall(function (v) { return !v }) }}
                 className={
-                  "map-toggle " +
-                  (showSmall ? "map-toggle--blue" : "")
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold transition-all duration-300 cursor-pointer " +
+                  (showSmall
+                    ? "bg-purple-500/20 text-purple-300 border border-purple-400/40"
+                    : "text-text-tertiary hover:text-text-secondary border border-transparent")
                 }
               >
-                <span className="map-toggle-dot" style={{ background: showSmall ? '#8b5cf6' : '#52525b' }} />
+                <span
+                  className={
+                    "w-1.5 h-1.5 rounded-full transition-all duration-300 " +
+                    (showSmall ? "bg-purple-400 shadow-[0_0_6px_rgba(139,92,246,0.8)]" : "bg-text-quaternary")
+                  }
+                />
                 Stops
               </button>
             </div>
