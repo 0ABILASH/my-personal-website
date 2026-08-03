@@ -373,9 +373,134 @@ export default function Space() {
           </div>
         </motion.div>
 
-        {/* Destination panel — mobile (below map) */}
-        <div className="lg:hidden rounded-2xl border border-border bg-surface/70 backdrop-blur-2xl overflow-hidden flex flex-col shadow-xl shadow-black/30 max-h-[70vh]">
-          {renderPanel()}
+        {/* Destination section — mobile & tablet */}
+        <div className="lg:hidden mt-5 flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <span className="w-9 h-9 rounded-xl bg-accent-soft border border-accent/20 flex items-center justify-center shrink-0">
+              <MapPin size={15} className="text-accent" />
+            </span>
+            <div className="min-w-0">
+              <h2 className="text-[15px] font-bold text-text leading-tight">
+                Destinations
+              </h2>
+              <p className="text-[10px] text-text-tertiary font-mono mt-0.5">
+                {visible.length} shown on the map
+              </p>
+            </div>
+            <span
+              className="ml-auto w-2 h-2 rounded-full shrink-0"
+              title={
+                fetchStatus === "ok"
+                  ? "Travel data loaded successfully"
+                  : fetchStatus === "fallback"
+                    ? "API empty — showing offline data"
+                    : fetchStatus === "error"
+                      ? "Failed to load travel data"
+                      : "Loading travel data..."
+              }
+              style={{
+                background:
+                  fetchStatus === "ok"
+                    ? "#34d399"
+                    : fetchStatus === "fallback"
+                      ? "#fbbf24"
+                      : fetchStatus === "error"
+                        ? "#f87171"
+                        : "#a1a1aa",
+                boxShadow:
+                  fetchStatus === "ok"
+                    ? "0 0 8px rgba(52,211,153,0.7)"
+                    : fetchStatus === "fallback"
+                      ? "0 0 8px rgba(251,191,36,0.6)"
+                      : fetchStatus === "error"
+                        ? "0 0 8px rgba(248,113,113,0.6)"
+                        : "none",
+              }}
+            />
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/25 text-[10px] font-mono font-semibold text-blue-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_5px_rgba(59,130,246,0.9)]" />
+              Visited
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/25 text-[10px] font-mono font-semibold text-red-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-400 shadow-[0_0_5px_rgba(255,5,5,0.8)]" />
+              Stops
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[10px] font-mono font-semibold text-emerald-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_5px_rgba(59,246,106,0.8)]" />
+              Current Location
+            </span>
+          </div>
+
+          <div className="flex flex-col gap-2.5">
+            {visible.map(function (p, i) {
+              var t = markerType(p, i);
+              var meta = TYPE_META[t] || TYPE_META.visited;
+              var active = activePlace === p;
+              return (
+                <motion.button
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  onClick={function () { flyTo(p) }}
+                  className={
+                    "group relative flex items-center gap-3 px-3.5 py-3.5 rounded-2xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
+                    (active
+                      ? "border-accent/40 bg-accent-soft"
+                      : "border-border hover:border-border-hover")
+                  }
+                  style={active ? { boxShadow: '0 0 0 1px ' + meta.color + '55, 0 6px 20px -10px ' + meta.color } : {}}
+                >
+                  <span
+                    className="absolute left-0 top-0 bottom-0 w-[3px] rounded-full"
+                    style={{ background: meta.color, opacity: active ? 1 : 0.4, boxShadow: '0 0 8px ' + meta.color }}
+                  />
+                  <span
+                    className="w-10 h-10 rounded-xl flex items-center justify-center text-base shrink-0 border"
+                    style={{
+                      background: meta.soft,
+                      borderColor: meta.color + '33',
+                      boxShadow: active ? '0 0 12px ' + meta.color + '44' : 'none',
+                    }}
+                  >
+                    {p.emoji || <MapPin size={15} style={{ color: meta.color }} />}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[14px] font-semibold truncate leading-tight">
+                      {p.city}
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-1 min-w-0">
+                      <span
+                        className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold uppercase tracking-wider shrink-0 whitespace-nowrap"
+                        style={{ color: meta.color }}
+                      >
+                        <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 4px ' + meta.color + 'aa' }} />
+                        {meta.label}
+                      </span>
+                      <span className="text-[10px] text-text-quaternary truncate font-mono min-w-0">
+                        {p.country}{p.date ? ' · ' + p.date : ''}
+                      </span>
+                    </div>
+                  </div>
+                  <span
+                    className="w-6 h-6 rounded-lg border flex items-center justify-center shrink-0"
+                    style={{ borderColor: meta.color + '44', color: meta.color, background: meta.soft }}
+                  >
+                    <ArrowUpRight size={11} />
+                  </span>
+                </motion.button>
+              );
+            })}
+            {visible.length === 0 && (
+              <div className="flex flex-col items-center justify-center py-12 gap-2 text-center rounded-2xl border border-border bg-bg">
+                <MapPin size={20} className="text-text-quaternary" />
+                <p className="text-[12px] text-text-tertiary">No destinations match the current filters.</p>
+              </div>
+            )}
+          </div>
         </div>
       </motion.div>
     </div>
