@@ -191,7 +191,7 @@ export default function Space() {
                 transition={{ delay: 0.2 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                 onClick={function () { flyTo(p) }}
                 className={
-                  "group relative flex items-center gap-3 px-3 py-2.5 rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
+                  "group relative flex items-center gap-3 px-3 h-[56px] rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
                   (active
                     ? "border-accent/40 bg-accent-soft"
                     : "border-border hover:border-border-hover hover:bg-surface")
