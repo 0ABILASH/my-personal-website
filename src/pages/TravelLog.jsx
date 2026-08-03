@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Globe, RefreshCw, Check, AlertCircle, CloudOff } from "lucide-react";
+import { Globe, RefreshCw } from "lucide-react";
 import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS, addLegend, markerType } from "../services/map";
 
 export default function Space() {
@@ -129,39 +129,40 @@ export default function Space() {
                 {places.length} places
               </span>
             )}
-            {fetchStatus === "ok" && (
-              <motion.span
-                initial={{ opacity: 0, y: -4, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/25 text-[10px] font-semibold text-emerald-400 font-mono"
-              >
-                <Check size={10} />
-                Data loaded
-              </motion.span>
-            )}
-            {fetchStatus === "fallback" && (
-              <motion.span
-                initial={{ opacity: 0, y: -4, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/25 text-[10px] font-semibold text-amber-400 font-mono"
-              >
-                <CloudOff size={10} />
-                Offline data
-              </motion.span>
-            )}
-            {fetchStatus === "error" && (
-              <motion.span
-                initial={{ opacity: 0, y: -4, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-red-500/10 border border-red-500/25 text-[10px] font-semibold text-red-400 font-mono"
-              >
-                <AlertCircle size={10} />
-                Load failed
-              </motion.span>
-            )}
+            <motion.span
+              key={fetchStatus}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="w-2 h-2 rounded-full cursor-help"
+              title={
+                fetchStatus === "ok"
+                  ? "Travel data loaded successfully"
+                  : fetchStatus === "fallback"
+                    ? "API empty — showing offline data"
+                    : fetchStatus === "error"
+                      ? "Failed to load travel data"
+                      : "Loading travel data..."
+              }
+              style={{
+                background:
+                  fetchStatus === "ok"
+                    ? "#34d399"
+                    : fetchStatus === "fallback"
+                      ? "#fbbf24"
+                      : fetchStatus === "error"
+                        ? "#f87171"
+                        : "#a1a1aa",
+                boxShadow:
+                  fetchStatus === "ok"
+                    ? "0 0 6px rgba(52,211,153,0.6)"
+                    : fetchStatus === "fallback"
+                      ? "0 0 6px rgba(251,191,36,0.5)"
+                      : fetchStatus === "error"
+                        ? "0 0 6px rgba(248,113,113,0.5)"
+                        : "none",
+              }}
+            />
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight mb-1">
             Travel Log

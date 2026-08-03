@@ -1,12 +1,12 @@
 import L from 'leaflet'
 
 export const FALLBACK_PLACES = [
-  { city: 'Coimbatore', country: 'India', lat: 11.0168, lng: 76.9558, emoji: '🏙️', date: 'Home Base' },
+  { city: 'Coimbatore', country: 'India', lat: 11.0168, lng: 76.9558, emoji: '', date: 'Home Base' },
 ]
 
 // ─── Route style ─────────────────────────────────────────────────────
 const ROUTE_STYLE = {
-  color: '#f7e309c2', weight: 2, opacity: 0.7,
+  color: '#f0df2897', weight: 2, opacity: 0.5,
   lineCap: 'round', lineJoin: 'round',
 }
 
@@ -14,7 +14,7 @@ const ROUTE_STYLE = {
 var MARKER_COLORS = {
   current:  { fill: '#3bf66a', stroke: '#ffffff', glow: 'rgba(59,130,246,0.4)' },
   visited:  { fill: '#3b82f6', stroke: '#ffffff', glow: 'rgba(59,130,246,0.3)' },
-  small:    { fill: '#e60303f5', stroke: '#fbfbfc', glow: 'rgba(255,255,255,0.2)' },
+  small:    { fill: '#ff0505f5', stroke: '#fbfbfc', glow: 'rgba(255,255,255,0.2)' },
 }
 
 // ─── API providers ──────────────────────────────────────────────────
