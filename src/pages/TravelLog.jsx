@@ -191,7 +191,7 @@ export default function Space() {
                 transition={{ delay: 0.2 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                 onClick={function () { flyTo(p) }}
                 className={
-                  "group relative flex items-center gap-3 px-3 h-[56px] rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
+                  "group relative flex items-center gap-3 px-3 py-2.5 rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
                   (active
                     ? "border-accent/40 bg-accent-soft"
                     : "border-border hover:border-border-hover hover:bg-surface")
@@ -368,7 +368,7 @@ export default function Space() {
           )}
 
           {/* Floating glass destination panel — desktop */}
-          <div className="absolute top-3 right-3 w-[314px] xl:w-[333px] hidden lg:flex flex-col rounded-2xl bg-surface/60 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50 overflow-hidden max-h-[calc(100%-1.5rem)]">
+          <div className="absolute top-[15%] bottom-[15%] right-3 w-[314px] xl:w-[333px] hidden lg:flex flex-col rounded-2xl bg-surface/10 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50 overflow-hidden">
             {renderPanel()}
           </div>
         </motion.div>
