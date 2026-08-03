@@ -124,12 +124,6 @@ export default function Space() {
     return true;
   });
 
-  var typeCounts = { current: 0, visited: 0, small: 0 };
-  visible.forEach(function (p, i) {
-    var t = markerType(p, i);
-    if (typeCounts[t] !== undefined) typeCounts[t]++;
-  });
-
   var renderPanel = function () {
     return (
       <>
@@ -169,22 +163,19 @@ export default function Space() {
                       : "none",
             }}
           />
-          <span className="text-[10px] font-mono text-text-quaternary">
-            {visible.length} of {places.length}
-          </span>
         </div>
         <div className="flex items-center gap-2 px-4 py-2 border-b border-border shrink-0">
           <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/25 text-[9px] font-mono font-semibold text-blue-300">
             <span className="w-1 h-1 rounded-full bg-blue-400 shadow-[0_0_4px_rgba(59,130,246,0.9)]" />
-            Visited {typeCounts.visited}
+            Visited
           </span>
           <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/25 text-[9px] font-mono font-semibold text-red-300">
             <span className="w-1 h-1 rounded-full bg-red-400 shadow-[0_0_4px_rgba(255,5,5,0.8)]" />
-            Stops {typeCounts.small}
+            Stops
           </span>
           <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[9px] font-mono font-semibold text-emerald-300">
             <span className="w-1 h-1 rounded-full bg-emerald-400 shadow-[0_0_4px_rgba(59,246,106,0.8)]" />
-            Home {typeCounts.current}
+            Home
           </span>
         </div>
         <div className="cards-scroll flex-1 overflow-y-auto p-2.5 flex flex-col gap-2">
@@ -200,7 +191,7 @@ export default function Space() {
                 transition={{ delay: 0.2 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                 onClick={function () { flyTo(p) }}
                 className={
-                  "group relative flex items-center gap-3 px-3 py-2.5 rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
+                  "group relative flex items-center gap-3 px-3 h-[54px] rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
                   (active
                     ? "border-accent/40 bg-accent-soft"
                     : "border-border hover:border-border-hover hover:bg-surface")
@@ -310,14 +301,6 @@ export default function Space() {
           <div ref={mapRef} className="w-full h-[420px] sm:h-[500px] lg:h-[560px] bg-bg" />
           <div className="absolute inset-0 pointer-events-none rounded-2xl shadow-[inset_0_0_80px_rgba(0,0,0,0.4)]" />
 
-          {/* Places badge — top left */}
-          <div className="absolute top-3 left-3 z-[100] flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/40">
-            <MapPin size={10} className="text-text-secondary" />
-            <span className="text-[10px] font-mono text-text-secondary">
-              {places.length} places
-            </span>
-          </div>
-
           {/* Toggle pills — top center */}
           {!loading && !error && (
             <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-0.5 p-1 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/50">
@@ -385,13 +368,13 @@ export default function Space() {
           )}
 
           {/* Floating glass destination panel — desktop */}
-          <div className="absolute top-4 bottom-4 right-4 w-[330px] xl:w-[350px] hidden lg:flex flex-col rounded-2xl bg-surface/85 backdrop-blur-2xl border border-border shadow-2xl shadow-black/50 overflow-hidden">
+          <div className="absolute top-3 bottom-3 right-3 w-[330px] xl:w-[350px] hidden lg:flex flex-col rounded-2xl bg-surface/60 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50 overflow-hidden">
             {renderPanel()}
           </div>
         </motion.div>
 
         {/* Destination panel — mobile (below map) */}
-        <div className="lg:hidden rounded-2xl border border-border bg-surface overflow-hidden flex flex-col shadow-xl shadow-black/30">
+        <div className="lg:hidden rounded-2xl border border-border bg-surface/70 backdrop-blur-2xl overflow-hidden flex flex-col shadow-xl shadow-black/30 max-h-[70vh]">
           {renderPanel()}
         </div>
       </motion.div>
