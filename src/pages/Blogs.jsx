@@ -105,6 +105,21 @@ const POSTS = [
       'Coming soon. This blog is under construction.',
     ],
   },
+  {
+    id: 6,
+    title: 'Amma',
+    excerpt: 'Love Beyond Words.',
+    tag: 'life',
+    date: 'July 2026',
+    read: '0 min',
+    audio: {
+      title: 'SoundHelix Song 16',
+      src: '/audio/coming-soon.mp3',
+    },
+    content: [
+      'Coming soon. This blog is under construction.',
+    ],
+  },
 ]
 
 const TAG_COLORS = {
@@ -216,16 +231,16 @@ export default function Writing() {
     if (audioCtxRef.current) return
     try {
       const Ctx = window.AudioContext || window.webkitAudioContext
-      if (!Ctx) { a.volume = 0.02; return }
+      if (!Ctx) { a.volume = 0.03; return }
       const ctx = new Ctx()
       const source = ctx.createMediaElementSource(a)
       const gain = ctx.createGain()
-      gain.gain.value = 0.02
+      gain.gain.value = 0.03
       source.connect(gain)
       gain.connect(ctx.destination)
       audioCtxRef.current = ctx
     } catch {
-      a.volume = 0.02
+      a.volume = 0.03
     }
   }
 
@@ -249,9 +264,10 @@ export default function Writing() {
   useEffect(() => {
     const a = audioRef.current
     if (!a) return
-    const activityEvents = ['pointerdown', 'pointermove', 'keydown', 'touchstart', 'wheel', 'scroll']
+    const activityEvents = ['pointerdown', 'keydown', 'touchstart', 'wheel', 'scroll']
     const onActivity = () => {
-      lastActivityRef.current = Date.now()
+      const now = Date.now()
+      if (now - lastActivityRef.current > 5000) lastActivityRef.current = now
     }
     activityEvents.forEach((ev) => window.addEventListener(ev, onActivity, { passive: true }))
     const check = () => {
