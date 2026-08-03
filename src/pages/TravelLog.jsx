@@ -285,7 +285,7 @@ export default function Space() {
             transition={{ delay: 0.15, duration: 0.4 }}
             className="lg:col-span-2 lg:h-[540px] rounded-2xl border border-border bg-surface overflow-hidden flex flex-col shadow-xl shadow-black/20"
           >
-            <div className="flex items-center gap-2.5 px-4 h-11 border-b border-border shrink-0">
+            <div className="flex items-center gap-2.5 px-4 h-12 border-b border-border shrink-0 bg-surface/95 backdrop-blur-sm">
               <MapPin size={13} className="text-accent" />
               <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">
                 Destinations
@@ -296,7 +296,7 @@ export default function Space() {
               </span>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-2.5 flex flex-col gap-2">
+            <div className="cards-scroll flex-1 overflow-y-auto p-2.5 flex flex-col gap-2">
               {visible.map(function (p, i) {
                 var t = markerType(p, i);
                 var meta = TYPE_META[t] || TYPE_META.visited;
@@ -309,10 +309,10 @@ export default function Space() {
                     transition={{ delay: 0.2 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                     onClick={function () { flyTo(p) }}
                     className={
-                      "group relative flex items-center gap-3 px-3 py-2.5 rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
+                      "group relative flex items-center gap-3 px-3 py-3 rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 " +
                       (active
                         ? "border-accent/40 bg-accent-soft"
-                        : "border-border hover:border-border-hover")
+                        : "border-border hover:border-border-hover hover:bg-surface")
                     }
                     style={active ? { boxShadow: '0 0 0 1px ' + meta.color + '55, 0 4px 16px -8px ' + meta.color } : {}}
                   >
@@ -320,8 +320,11 @@ export default function Space() {
                       className="absolute left-0 top-0 bottom-0 w-[2px] rounded-full transition-all duration-300"
                       style={{ background: meta.color, opacity: active ? 1 : 0.35, boxShadow: active ? '0 0 8px ' + meta.color : 'none' }}
                     />
+                    <span className="flex-shrink-0 text-[9px] font-mono text-text-quaternary w-4 text-right">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
                     <span
-                      className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0 border transition-all duration-300"
+                      className="w-9 h-9 rounded-xl flex items-center justify-center text-sm shrink-0 border transition-all duration-300"
                       style={{
                         background: meta.soft,
                         borderColor: meta.color + '33',
@@ -339,6 +342,7 @@ export default function Space() {
                           className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold uppercase tracking-wider"
                           style={{ color: meta.color }}
                         >
+                          <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 4px ' + meta.color + 'aa' }} />
                           {meta.label}
                         </span>
                         <span className="text-[9px] text-text-quaternary truncate font-mono">

@@ -237,3 +237,22 @@
   transition: width 0.15s ease, height 0.15s ease, opacity 0.15s ease;
   mix-blend-mode: screen;
 }
+
+/* ─── Destinations panel scrollbar ─────────────────────────────────── */
+.cards-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 106, 255, 0.35) transparent;
+}
+.cards-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.cards-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.cards-scroll::-webkit-scrollbar-thumb {
+  background: rgba(124, 106, 255, 0.35);
+  border-radius: 9999px;
+}
+.cards-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 106, 255, 0.6);
+}
