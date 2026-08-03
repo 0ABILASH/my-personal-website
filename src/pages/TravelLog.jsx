@@ -498,7 +498,7 @@ export default function Space() {
                 var meta = TYPE_META[t] || TYPE_META.visited;
                 var active = activePlace === p;
                 return (
-                  <div key={i} className="min-w-0">
+                  <div key={i} className={"min-w-0 " + (active ? "sm:col-span-2" : "")}>
                     <motion.button
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
