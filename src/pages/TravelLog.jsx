@@ -492,13 +492,13 @@ export default function Space() {
               </span>
             </div>
 
-            <div className="cards-scroll overflow-y-auto max-h-[400px] sm:max-h-[440px] p-2.5 grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="cards-scroll overflow-y-auto max-h-[400px] sm:max-h-[440px] p-2.5 flex flex-col gap-2">
               {visible.map(function (p, i) {
                 var t = markerType(p, i);
                 var meta = TYPE_META[t] || TYPE_META.visited;
                 var active = activePlace === p;
                 return (
-                  <div key={i} className={"min-w-0 " + (active ? "sm:col-span-2" : "")}>
+                  <div key={i} className="min-w-0">
                     <motion.button
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -558,7 +558,7 @@ export default function Space() {
                 );
               })}
               {visible.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-12 gap-2 text-center rounded-2xl border border-border bg-bg sm:col-span-2">
+                <div className="flex flex-col items-center justify-center py-12 gap-2 text-center rounded-2xl border border-border bg-bg">
                   <MapPin size={20} className="text-text-quaternary" />
                   <p className="text-[12px] text-text-tertiary">No destinations match the current filters.</p>
                 </div>
