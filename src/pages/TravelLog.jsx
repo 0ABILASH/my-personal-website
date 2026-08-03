@@ -164,7 +164,7 @@ export default function Space() {
             }}
           />
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 border-b border-border shrink-0">
+        <div className="flex flex-wrap items-center gap-2 px-4 py-2 border-b border-border shrink-0">
           <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/25 text-[9px] font-mono font-semibold text-blue-300">
             <span className="w-1 h-1 rounded-full bg-blue-400 shadow-[0_0_4px_rgba(59,130,246,0.9)]" />
             Visited
@@ -363,7 +363,7 @@ export default function Space() {
           )}
 
           {/* Floating glass destination panel — all viewports (desktop replica) */}
-          <div className="absolute top-14 lg:top-3 right-3 w-[min(314px,calc(100%-1.5rem))] xl:w-[333px] flex flex-col rounded-2xl bg-surface/10 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50 overflow-hidden max-h-[calc(100%-4.25rem)] lg:max-h-[calc(100%-1.5rem)]">
+          <div className="absolute top-14 lg:top-3 right-3 w-[min(250px,calc(100%-2.5rem))] sm:w-[min(290px,calc(100%-2.5rem))] lg:w-[314px] xl:w-[333px] flex flex-col rounded-2xl bg-surface/10 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50 overflow-hidden max-h-[calc(100%-4.25rem)] lg:max-h-[calc(100%-1.5rem)]">
             {renderPanel()}
           </div>
         </motion.div>
