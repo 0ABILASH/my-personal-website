@@ -363,7 +363,7 @@ export default function Space() {
           )}
 
           {/* Floating glass destination panel — all viewports (desktop replica) */}
-          <div className="absolute top-14 lg:top-3 right-3 w-[min(250px,calc(100%-2.5rem))] sm:w-[min(290px,calc(100%-2.5rem))] lg:w-[314px] xl:w-[333px] flex flex-col rounded-2xl bg-surface/10 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50 overflow-hidden max-h-[calc(100%-4.25rem)] lg:max-h-[calc(100%-1.5rem)]">
+          <div className="absolute top-14 lg:top-3 right-3 w-[min(175px,calc(100%-2.5rem))] sm:w-[min(203px,calc(100%-2.5rem))] lg:w-[314px] xl:w-[333px] flex flex-col rounded-2xl bg-surface/10 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50 overflow-hidden max-h-[calc(100%-4.25rem)] lg:max-h-[calc(100%-1.5rem)]">
             {renderPanel()}
           </div>
         </motion.div>
