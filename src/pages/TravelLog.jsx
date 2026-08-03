@@ -128,6 +128,18 @@ export default function Space() {
           <p className="text-[13px] text-text-secondary max-w-lg leading-relaxed">
             Destinations I&apos;ve visited, roads I&apos;ve traveled, and the moments that made each journey unforgettable.
           </p>
+          <div className="flex flex-wrap gap-2 pt-1">
+            {["Love", "Money", "Travel", "Music", "Tea"].map(function (tag, i) {
+              return (
+                <span
+                  key={i}
+                  className="px-2.5 py-1 rounded-lg bg-bg border border-border text-[10px] font-semibold text-text-tertiary font-mono"
+                >
+                  {tag}
+                </span>
+              );
+            })}
+          </div>
         </div>
 
         <motion.div
