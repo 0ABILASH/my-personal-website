@@ -107,8 +107,8 @@ const POSTS = [
   },
   {
     id: 6,
-    title: 'Amma',
-    excerpt: 'Love Beyond Words.',
+    title: 'The Quiet Strength',
+    excerpt: 'Amma - The Love That Raised Me.',
     tag: 'life',
     date: 'July 2026',
     read: '0 min',
@@ -117,7 +117,12 @@ const POSTS = [
       src: '/audio/coming-soon.mp3',
     },
     content: [
-      'Coming soon. This blog is under construction.',
+'Amma',
+'She is the one who taught me what life truly is. Through countless sacrifices, she shaped me into the person I am today. She is one of the greatest souls I have ever known.',
+'Her strength, resilience, and unconditional love have guided me through every stage of my life. Every sacrifice she made became a stepping stone that helped me grow into a better person.',
+'My greatest wish is to make her proud and to take care of her, just as she has always taken care of me. That is what matters most to me.',
+'I may not always express my love and care in obvious ways, and others may not notice it, but deep in my heart, I will always care for her. She is, and always will be, my greatest blessing.',
+
     ],
   },
 ]

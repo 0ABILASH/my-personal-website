@@ -52,8 +52,8 @@ const TRAITS = [
   { img: batmanImg, name: "Im Batman", sub: "Night Person" },
   { img: musicImg, name: "Music Addict", sub: "Yes I'm" },
   { img: petImg, name: "Pet", sub: "Soon" },
-  { img: godImg, name: "God", sub: "Trust" },
-  { img: bikeImg, name: "Motorcyclist", sub: "Two Wheels Freedom" },
+  { img: godImg, name: "God", sub: "God First" },
+  { img: bikeImg, name: "Motorcyclist", sub: "Road Therapy" },
 ];
 
 export default function Home({ onCvOpen }) {

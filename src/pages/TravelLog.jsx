@@ -225,10 +225,6 @@ export default function Space() {
             <span className="w-1 h-1 rounded-full bg-red-400 shadow-[0_0_4px_rgba(255,5,5,0.8)]" />
             Stops
           </span>
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[9px] font-mono font-semibold text-emerald-300">
-            <span className="w-1 h-1 rounded-full bg-emerald-400 shadow-[0_0_4px_rgba(59,246,106,0.8)]" />
-            Current Location
-          </span>
         </div>
         <div className="cards-scroll flex-1 overflow-y-auto p-2.5 flex flex-col gap-2 min-h-0">
           {visible.map(function (p, i) {
@@ -485,10 +481,6 @@ export default function Space() {
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/25 text-[10px] font-mono font-semibold text-red-300">
                 <span className="w-1.5 h-1.5 rounded-full bg-red-400 shadow-[0_0_5px_rgba(255,5,5,0.8)]" />
                 Stops
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[10px] font-mono font-semibold text-emerald-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_5px_rgba(59,246,106,0.8)]" />
-                Current Location
               </span>
             </div>
 
