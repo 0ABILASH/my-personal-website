@@ -124,6 +124,12 @@ export default function Space() {
     return true;
   });
 
+  var typeCounts = { current: 0, visited: 0, small: 0 };
+  visible.forEach(function (p, i) {
+    var t = markerType(p, i);
+    if (typeCounts[t] !== undefined) typeCounts[t]++;
+  });
+
   return (
     <div className="max-w-5xl mx-auto px-5 sm:px-6 py-12 sm:py-16">
       <motion.div
@@ -170,9 +176,10 @@ export default function Space() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.4 }}
-            className="lg:col-span-3 relative rounded-2xl border border-border overflow-hidden shadow-xl shadow-black/20"
+            className="lg:col-span-3 relative rounded-2xl border border-border overflow-hidden shadow-2xl shadow-black/40 ring-1 ring-white/5"
           >
             <div ref={mapRef} className="w-full h-[380px] sm:h-[460px] lg:h-[540px] bg-bg" />
+            <div className="absolute inset-0 pointer-events-none rounded-2xl shadow-[inset_0_0_60px_rgba(0,0,0,0.35)]" />
 
             {/* Status badge — top left */}
             <div className="absolute top-3 left-3 z-[100] flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/40">
@@ -283,7 +290,7 @@ export default function Space() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, duration: 0.4 }}
-            className="lg:col-span-2 lg:h-[540px] rounded-2xl border border-border bg-surface overflow-hidden flex flex-col shadow-xl shadow-black/20"
+            className="lg:col-span-2 lg:h-[540px] rounded-2xl border border-border bg-surface overflow-hidden flex flex-col shadow-2xl shadow-black/40 ring-1 ring-white/5"
           >
             <div className="flex items-center gap-2.5 px-4 h-12 border-b border-border shrink-0 bg-surface/95 backdrop-blur-sm">
               <MapPin size={13} className="text-accent" />
@@ -293,6 +300,21 @@ export default function Space() {
               <div className="flex-1 h-px bg-border" />
               <span className="text-[10px] font-mono text-text-quaternary">
                 {visible.length} of {places.length}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 px-4 py-2 border-b border-border shrink-0">
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/25 text-[9px] font-mono font-semibold text-blue-300">
+                <span className="w-1 h-1 rounded-full bg-blue-400 shadow-[0_0_4px_rgba(59,130,246,0.9)]" />
+                Visited {typeCounts.visited}
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/25 text-[9px] font-mono font-semibold text-red-300">
+                <span className="w-1 h-1 rounded-full bg-red-400 shadow-[0_0_4px_rgba(255,5,5,0.8)]" />
+                Stops {typeCounts.small}
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[9px] font-mono font-semibold text-emerald-300">
+                <span className="w-1 h-1 rounded-full bg-emerald-400 shadow-[0_0_4px_rgba(59,246,106,0.8)]" />
+                Home {typeCounts.current}
               </span>
             </div>
 
