@@ -362,11 +362,140 @@ export default function Space() {
             </div>
           )}
 
-          {/* Floating glass destination panel — all viewports (desktop replica) */}
-          <div className="absolute top-14 lg:top-3 right-3 w-[min(175px,calc(100%-2.5rem))] sm:w-[min(203px,calc(100%-2.5rem))] lg:w-[314px] xl:w-[333px] flex flex-col rounded-2xl bg-surface/10 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50 overflow-hidden max-h-[calc(100%-4.25rem)] lg:max-h-[calc(100%-1.5rem)]">
+          {/* Floating glass destination panel — desktop */}
+          <div className="absolute top-3 right-3 w-[314px] xl:w-[333px] hidden lg:flex flex-col rounded-2xl bg-surface/10 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/50 overflow-hidden max-h-[calc(100%-1.5rem)]">
             {renderPanel()}
           </div>
         </motion.div>
+
+        {/* Destination section — mobile & tablet (fully responsive) */}
+        <div className="lg:hidden mt-8">
+          <div className="flex items-center gap-2.5 mb-4">
+            <MapPin size={14} className="text-accent" />
+            <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">
+              Destinations
+            </span>
+            <div className="flex-1 h-px bg-border" />
+            <span
+              className="w-2 h-2 rounded-full shrink-0"
+              title={
+                fetchStatus === "ok"
+                  ? "Travel data loaded successfully"
+                  : fetchStatus === "fallback"
+                    ? "API empty — showing offline data"
+                    : fetchStatus === "error"
+                      ? "Failed to load travel data"
+                      : "Loading travel data..."
+              }
+              style={{
+                background:
+                  fetchStatus === "ok"
+                    ? "#34d399"
+                    : fetchStatus === "fallback"
+                      ? "#fbbf24"
+                      : fetchStatus === "error"
+                        ? "#f87171"
+                        : "#a1a1aa",
+                boxShadow:
+                  fetchStatus === "ok"
+                    ? "0 0 8px rgba(52,211,153,0.7)"
+                    : fetchStatus === "fallback"
+                      ? "0 0 8px rgba(251,191,36,0.6)"
+                      : fetchStatus === "error"
+                        ? "0 0 8px rgba(248,113,113,0.6)"
+                        : "none",
+              }}
+            />
+          </div>
+
+          <div className="flex flex-wrap gap-2 mb-4">
+            <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/25 text-[10px] font-mono font-semibold text-blue-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_5px_rgba(59,130,246,0.9)]" />
+              Visited
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-red-500/10 border border-red-500/25 text-[10px] font-mono font-semibold text-red-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-400 shadow-[0_0_5px_rgba(255,5,5,0.8)]" />
+              Stops
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[10px] font-mono font-semibold text-emerald-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_5px_rgba(59,246,106,0.8)]" />
+              Current Location
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
+            {visible.map(function (p, i) {
+              var t = markerType(p, i);
+              var meta = TYPE_META[t] || TYPE_META.visited;
+              var active = activePlace === p;
+              return (
+                <motion.button
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  onClick={function () { flyTo(p) }}
+                  className={
+                    "group relative flex items-center gap-2.5 sm:gap-3 px-3 sm:px-3.5 py-3 sm:py-3.5 rounded-2xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.98] " +
+                    (active
+                      ? "border-accent/40 bg-accent-soft"
+                      : "border-border hover:border-border-hover")
+                  }
+                  style={active ? { boxShadow: '0 0 0 1px ' + meta.color + '55, 0 8px 24px -10px ' + meta.color } : {}}
+                >
+                  <span
+                    className="absolute left-0 top-0 bottom-0 w-[3px] rounded-full"
+                    style={{ background: meta.color, opacity: active ? 1 : 0.35, boxShadow: active ? '0 0 8px ' + meta.color : 'none' }}
+                  />
+                  <span
+                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center text-base sm:text-lg shrink-0 border"
+                    style={{
+                      background: meta.soft,
+                      borderColor: meta.color + '33',
+                      boxShadow: active ? '0 0 12px ' + meta.color + '44' : 'none',
+                    }}
+                  >
+                    {p.emoji || <MapPin size={15} style={{ color: meta.color }} />}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-baseline gap-1.5 min-w-0">
+                      <span className="text-[9px] font-mono text-text-quaternary shrink-0">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <span className="text-[14px] sm:text-[15px] font-semibold truncate leading-tight">
+                        {p.city}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-0.5 min-w-0">
+                      <span
+                        className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold uppercase tracking-wider shrink-0 whitespace-nowrap"
+                        style={{ color: meta.color }}
+                      >
+                        <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 4px ' + meta.color + 'aa' }} />
+                        {meta.label}
+                      </span>
+                      <span className="text-[10px] text-text-quaternary truncate font-mono min-w-0">
+                        {p.country}{p.date ? ' · ' + p.date : ''}
+                      </span>
+                    </div>
+                  </div>
+                  <span
+                    className="w-6 h-6 rounded-lg border flex items-center justify-center shrink-0"
+                    style={{ borderColor: meta.color + '44', color: meta.color, background: meta.soft }}
+                  >
+                    <ArrowUpRight size={11} />
+                  </span>
+                </motion.button>
+              );
+            })}
+            {visible.length === 0 && (
+              <div className="flex flex-col items-center justify-center py-12 gap-2 text-center rounded-2xl border border-border bg-bg sm:col-span-2">
+                <MapPin size={20} className="text-text-quaternary" />
+                <p className="text-[12px] text-text-tertiary">No destinations match the current filters.</p>
+              </div>
+            )}
+          </div>
+        </div>
       </motion.div>
     </div>
   );
