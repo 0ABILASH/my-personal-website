@@ -170,7 +170,7 @@ export default function Space() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 max-w-4xl mx-auto">
           {/* Map */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -359,21 +359,21 @@ export default function Space() {
                       <div className="text-[12px] font-semibold truncate leading-tight">
                         {p.city}
                       </div>
-                      <div className="flex items-center gap-1.5 mt-0.5">
+                      <div className="flex items-center gap-1.5 mt-0.5 min-w-0">
                         <span
-                          className="inline-flex items-center gap-1 text-[8px] font-mono font-semibold uppercase tracking-wider"
+                          className="inline-flex items-center gap-1 text-[8px] font-mono font-semibold uppercase tracking-wider shrink-0"
                           style={{ color: meta.color }}
                         >
                           <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 4px ' + meta.color + 'aa' }} />
                           {meta.label}
                         </span>
-                        <span className="text-[8px] text-text-quaternary truncate font-mono">
+                        <span className="text-[8px] text-text-quaternary truncate font-mono min-w-0">
                           {p.country}{p.date ? ' · ' + p.date : ''}
                         </span>
                       </div>
                     </div>
                     <span
-                      className="w-4 h-4 rounded-md border flex items-center justify-center shrink-0 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-300"
+                      className="w-4 h-4 rounded-md border items-center justify-center shrink-0 hidden group-hover:flex -translate-x-1 group-hover:translate-x-0 transition-all duration-300"
                       style={{ borderColor: meta.color + '44', color: meta.color, background: meta.soft }}
                     >
                       <ArrowUpRight size={9} />
