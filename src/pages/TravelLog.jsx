@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Globe, RefreshCw } from "lucide-react";
+import { Globe, RefreshCw, Check, AlertCircle, CloudOff } from "lucide-react";
 import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS, addLegend, markerType } from "../services/map";
 
 export default function Space() {
@@ -14,6 +14,7 @@ export default function Space() {
   const [error, setError] = useState(false);
   const [showVisited, setShowVisited] = useState(false);
   const [showSmall, setShowSmall] = useState(false);
+  const [fetchStatus, setFetchStatus] = useState("loading");
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const mapReady = useRef(false);
@@ -25,10 +26,17 @@ export default function Space() {
       .then(function (data) {
         if (data.places && data.places.length > 0) {
           var filtered = data.places.filter(function (p) { return p.lat && p.lng });
-          if (filtered.length > 0) setPlaces(filtered);
+          if (filtered.length > 0) {
+            setPlaces(filtered);
+            setFetchStatus("ok");
+            return;
+          }
         }
+        setFetchStatus("fallback");
       })
-      .catch(function () {});
+      .catch(function () {
+        setFetchStatus("error");
+      });
   }, []);
 
   // Init Leaflet map with Carto Dark Matter tiles
@@ -121,6 +129,39 @@ export default function Space() {
                 {places.length} places
               </span>
             )}
+            {fetchStatus === "ok" && (
+              <motion.span
+                initial={{ opacity: 0, y: -4, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/25 text-[10px] font-semibold text-emerald-400 font-mono"
+              >
+                <Check size={10} />
+                Data loaded
+              </motion.span>
+            )}
+            {fetchStatus === "fallback" && (
+              <motion.span
+                initial={{ opacity: 0, y: -4, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/25 text-[10px] font-semibold text-amber-400 font-mono"
+              >
+                <CloudOff size={10} />
+                Offline data
+              </motion.span>
+            )}
+            {fetchStatus === "error" && (
+              <motion.span
+                initial={{ opacity: 0, y: -4, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-red-500/10 border border-red-500/25 text-[10px] font-semibold text-red-400 font-mono"
+              >
+                <AlertCircle size={10} />
+                Load failed
+              </motion.span>
+            )}
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight mb-1">
             Travel Log
@@ -129,7 +170,7 @@ export default function Space() {
             Destinations I&apos;ve visited, roads I&apos;ve traveled, and the moments that made each journey unforgettable.
           </p>
           <div className="flex flex-wrap gap-2 pt-1">
-            {["Love", "Money", "Travel", "Music", "Tea"].map(function (tag, i) {
+            {["Passionate", "Traveler", "Motorcyclist","5000+ Km ",].map(function (tag, i) {
               return (
                 <span
                   key={i}
