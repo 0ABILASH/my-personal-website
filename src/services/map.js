@@ -12,9 +12,9 @@ const ROUTE_STYLE = {
 
 // ─── Marker color palette ────────────────────────────────────────────
 var MARKER_COLORS = {
-  current:  { fill: '#3bf66a', stroke: '#ffffff', glow: 'rgba(59,130,246,0.4)' },
-  visited:  { fill: '#3b82f6', stroke: '#ffffff', glow: 'rgba(59,130,246,0.3)' },
-  small:    { fill: '#ff0505f5', stroke: '#fbfbfc', glow: 'rgba(255,255,255,0.2)' },
+  current:  { fill: '#65ea86cf', stroke: '#ffffff', glow: 'rgba(59,130,246,0.4)' },
+  visited:  { fill: '#99C2FF', stroke: '#ffffff', glow: 'rgba(59,130,246,0.3)' },
+  small:    { fill: '#249D8F', stroke: '#fbfbfc', glow: 'rgba(255,255,255,0.2)' },
 }
 
 // ─── API providers ──────────────────────────────────────────────────
@@ -218,9 +218,9 @@ export function addLegend(map) {
     var div = L.DomUtil.create('div', 'travel-legend')
     div.innerHTML =
       '<div class="travel-legend-inner">' +
-        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#3bf66a"></span><span>Current Location</span></div>' +
-        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#3b82f6"></span><span>Visited City</span></div>' +
-        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#ff0505f5;"></span><span>Favorites</span></div>' +
+        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#65ea86cf"></span><span>Current Location</span></div>' +
+        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#99C2FF"></span><span>Visited City</span></div>' +
+        '<div class="travel-legend-item"><span class="travel-legend-dot" style="background:#249D8F;"></span><span>Favorites</span></div>' +
         '<div class="travel-legend-item"><span class="travel-legend-line" style="background:#f7e309c2"></span><span>Travel Route</span></div>' +
       '</div>'
     return div
