@@ -268,7 +268,7 @@ export default function Home({ onCvOpen }) {
       {/* Copyright */}
       <footer className="max-w-5xl mx-auto px-5 sm:px-6 pb-10">
         <div className="h-px bg-border mb-8" />
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-text-quaternary">
+        <div className="flex flex-wrap items-center justify-between gap-3 text-[11px] text-text-quaternary">
           <p>Licenced Under <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" className="hover:text-text transition-colors">CC NC-ND-4.0</a></p>
           <p className="font-mono">Developed by <span className="hover:text-text transition-colors cursor-default">Abilash</span></p>
         </div>

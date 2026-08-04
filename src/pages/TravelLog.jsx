@@ -8,7 +8,7 @@ import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS
 var TYPE_META = {
   current: { label: "Current Location", color: "#3bf66a", soft: "rgba(59,246,106,0.10)" },
   visited: { label: "Visited", color: "#3b82f6", soft: "rgba(59,130,246,0.10)" },
-  small: { label: "Stop", color: "#ff0505f5", soft: "rgba(255,5,5,0.10)" },
+  small: { label: "Favorites", color: "#90CAF9", soft: "rgba(255,5,5,0.10)" },
 };
 
 export default function Space() {
@@ -32,6 +32,12 @@ export default function Space() {
       .then(function (data) {
         if (data.places && data.places.length > 0) {
           var filtered = data.places.filter(function (p) { return p.lat && p.lng });
+          filtered.forEach(function (p) {
+            var img = p.image || p["image "] || "";
+            if (!img || typeof img === "object") img = "";
+            p.image = img;
+            p.description = p.description || p["description "] || "";
+          });
           if (filtered.length > 0) {
             setPlaces(filtered);
             setFetchStatus("ok");
@@ -223,7 +229,7 @@ export default function Space() {
           </span>
           <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/25 text-[9px] font-mono font-semibold text-red-300">
             <span className="w-1 h-1 rounded-full bg-red-400 shadow-[0_0_4px_rgba(255,5,5,0.8)]" />
-            Stops
+            Favorites
           </span>
         </div>
         <div className="cards-scroll flex-1 overflow-y-auto p-2.5 flex flex-col gap-2 min-h-0">
@@ -384,7 +390,7 @@ export default function Space() {
                     (showSmall ? "bg-red-400 shadow-[0_0_8px_rgba(255,5,5,0.9)]" : "bg-text-quaternary")
                   }
                 />
-                Stops
+                Favorites
               </button>
             </div>
           )}
@@ -480,7 +486,7 @@ export default function Space() {
               </span>
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/25 text-[10px] font-mono font-semibold text-red-300">
                 <span className="w-1.5 h-1.5 rounded-full bg-red-400 shadow-[0_0_5px_rgba(255,5,5,0.8)]" />
-                Stops
+                Favorites
               </span>
             </div>
 
