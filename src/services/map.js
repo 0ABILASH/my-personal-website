@@ -12,9 +12,9 @@ const ROUTE_STYLE = {
 
 // ─── Marker color palette ────────────────────────────────────────────
 var MARKER_COLORS = {
-  current:  { fill: '#65ea86cf', stroke: '#ffffff', glow: 'rgba(59,130,246,0.4)' },
-  visited:  { fill: '#99C2FF', stroke: '#ffffff', glow: 'rgba(59,130,246,0.3)' },
-  small:    { fill: '#249D8F', stroke: '#fbfbfc', glow: 'rgba(255,255,255,0.2)' },
+  current:  { fill: '#65ea86cf', stroke: '#', glow: 'rgba(59,130,246,0.4)' },
+  visited:  { fill: '#99C2FF', stroke: '#', glow: 'rgba(59,130,246,0.3)' },
+  small:    { fill: '#249D8F', stroke: '#', glow: 'rgba(255,255,255,0.2)' },
 }
 
 // ─── API providers ──────────────────────────────────────────────────
@@ -118,17 +118,17 @@ function makeMarkerIcon(type) {
         '<animate attributeName="r" from="10" to="17" dur="2s" repeatCount="indefinite"/>' +
         '<animate attributeName="opacity" from="0.6" to="0" dur="2s" repeatCount="indefinite"/>' +
       '</circle>' +
-      '<circle cx="18" cy="18" r="5" fill="' + c.fill + '" stroke="#fff" stroke-width="2"/>' +
+      '<circle cx="18" cy="18" r="5" fill="' + c.fill + '" stroke="#" stroke-width="2"/>' +
       '</svg>'
   } else if (type === 'visited') {
     svg =
       '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">' +
-      '<circle cx="5" cy="5" r="5" fill="' + c.fill + '" stroke="#fff" stroke-width="1.5"/>' +
+      '<circle cx="6" cy="6" r="6" fill="' + c.fill + '" stroke="#" stroke-width="1.5"/>' +
       '</svg>'
   } else if (type === 'small') {
     svg =
       '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">' +
-      '<circle cx="5" cy="5" r="5" fill="' + c.fill + '" stroke="' + c.stroke + '" stroke-width="1.5"/>' +
+      '<circle cx="6" cy="6" r="6" fill="' + c.fill + '" stroke="' + c.stroke + '" stroke-width="1.5"/>' +
       '</svg>'
   }
 
