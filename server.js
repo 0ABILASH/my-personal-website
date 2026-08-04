@@ -15,7 +15,10 @@ app.use(express.static(join(__dirname, 'dist')))
 
 async function gasGet(params) {
   var url = GAS_URL + '?' + params.toString()
-  var res = await fetch(url, { redirect: 'manual' })
+  var controller = new AbortController()
+  var timeout = setTimeout(function () { controller.abort() }, 15000)
+  var res = await fetch(url, { redirect: 'manual', signal: controller.signal })
+  clearTimeout(timeout)
 
   if (res.status >= 300 && res.status < 400) {
     var location = res.headers.get('location')
@@ -23,10 +26,15 @@ async function gasGet(params) {
       if (location.startsWith('/')) {
         location = new URL(url).origin + location
       }
-      if (location.indexOf('?') === -1) {
-        location += '?' + params.toString()
-      }
-      var finalRes = await fetch(location)
+      var locUrl = new URL(location)
+      params.forEach(function (v, k) {
+        if (!locUrl.searchParams.has(k)) locUrl.searchParams.append(k, v)
+      })
+      locUrl.searchParams.set('_', Date.now().toString())
+      var c2 = new AbortController()
+      var t2 = setTimeout(function () { c2.abort() }, 15000)
+      var finalRes = await fetch(locUrl.toString(), { signal: c2.signal })
+      clearTimeout(t2)
       return finalRes
     }
   }
@@ -81,33 +89,18 @@ app.post('/api/track', async function (req, res) {
 
 app.get('/api/travel', async function (req, res) {
   try {
-    var params = new URLSearchParams({ action: 'travel' })
-    var url = GAS_URL + '?' + params.toString()
-    var gasRes = await fetch(url, { redirect: 'manual' })
-    var finalRes = gasRes
-
-    // GAS returns 302 redirect — follow it manually
-    if (gasRes.status >= 300 && gasRes.status < 400) {
-      var location = gasRes.headers.get('location')
-      if (location) {
-        if (location.startsWith('/')) {
-          location = new URL(url).origin + location
-        }
-        if (location.indexOf('?') === -1) {
-          location += '?' + params.toString()
-        }
-        // Use redirect: 'follow' so the body is readable
-        finalRes = await fetch(location, { redirect: 'follow' })
-      }
-    }
-
-    var text = await finalRes.text()
+    var params = new URLSearchParams({ action: 'travel', _: Date.now().toString() })
+    var gasRes = await gasGet(params)
+    var text = await gasRes.text()
     try {
-      res.json(JSON.parse(text))
+      var data = JSON.parse(text)
+      res.json(data)
     } catch (e) {
+      console.error('[travel] JSON parse failed, raw:', text.substring(0, 200))
       res.json({ places: [] })
     }
   } catch (err) {
+    console.error('[travel] error:', err.message)
     res.json({ places: [] })
   }
 })
