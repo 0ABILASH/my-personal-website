@@ -8,7 +8,7 @@ import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS
 var TYPE_META = {
   current: { label: "Current Location", color: "#3bf66a", soft: "rgba(59,246,106,0.10)" },
   visited: { label: "Visited", color: "#3b82f6", soft: "rgba(59,130,246,0.10)" },
-  small: { label: "Favorites", color: "#90CAF9", soft: "rgba(255,5,5,0.10)" },
+  small: { label: "Favorites", color: "#249D8F", soft: "rgba(36,157,143,0.10)" },
 };
 
 export default function Space() {
@@ -227,8 +227,8 @@ export default function Space() {
             <span className="w-1 h-1 rounded-full bg-blue-400 shadow-[0_0_4px_rgba(59,130,246,0.9)]" />
             Visited
           </span>
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/25 text-[9px] font-mono font-semibold text-red-300">
-            <span className="w-1 h-1 rounded-full bg-red-400 shadow-[0_0_4px_rgba(255,5,5,0.8)]" />
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#249D8F]/10 border border-[#249D8F]/25 text-[9px] font-mono font-semibold text-[#5FC9BC]">
+            <span className="w-1 h-1 rounded-full bg-[#249D8F] shadow-[0_0_4px_rgba(36,157,143,0.8)]" />
             Favorites
           </span>
         </div>
@@ -380,14 +380,14 @@ export default function Space() {
                 className={
                   "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-wide transition-all duration-300 cursor-pointer " +
                   (showSmall
-                    ? "bg-red-500/20 text-red-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+                    ? "bg-[#249D8F]/20 text-[#7FD8CC] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
                     : "text-text-tertiary hover:text-text-secondary hover:bg-white/5")
                 }
               >
                 <span
                   className={
                     "w-1.5 h-1.5 rounded-full transition-all duration-300 " +
-                    (showSmall ? "bg-red-400 shadow-[0_0_8px_rgba(255,5,5,0.9)]" : "bg-text-quaternary")
+                    (showSmall ? "bg-[#249D8F] shadow-[0_0_8px_rgba(36,157,143,0.9)]" : "bg-text-quaternary")
                   }
                 />
                 Favorites

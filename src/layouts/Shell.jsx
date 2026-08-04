@@ -69,15 +69,15 @@ export default function Shell({ children, onCvOpen }) {
               href="https://abilash-dev.onrender.com"
               target="_blank"
               rel="noreferrer"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-[12px] font-medium text-text-secondary hover:text-text transition-all"
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-[12px] font-medium text-text-secondary hover:text-text transition-all"
             >
               <ArrowUpRight size={12} />
               Portfolio
             </a>
-            <div className="w-px h-4 bg-border hidden sm:block" />
+            <div className="w-px h-4 bg-border hidden md:block" />
             <button
               onClick={onCvOpen}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-[12px] font-medium text-text-secondary hover:text-text transition-all cursor-pointer"
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-[12px] font-medium text-text-secondary hover:text-text transition-all cursor-pointer"
             >
               <Download size={12} />
               Data
