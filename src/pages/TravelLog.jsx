@@ -6,8 +6,8 @@ import { Globe, RefreshCw, ChevronDown, MapPin } from "lucide-react";
 import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS, addLegend, markerType } from "../services/map";
 
 var TYPE_META = {
-  current: { label: "Current Location", color: "#3bf66a", soft: "rgba(59,246,106,0.10)" },
-  visited: { label: "Visited", color: "#3b82f6", soft: "rgba(59,130,246,0.10)" },
+  current: { label: "Current Location", color: "#65ea86cf", soft: "rgba(59,246,106,0.10)" },
+  visited: { label: "Visited", color: "#99C2FF", soft: "rgba(59,130,246,0.10)" },
   small: { label: "Favorites", color: "#249D8F", soft: "rgba(36,157,143,0.10)" },
 };
 
