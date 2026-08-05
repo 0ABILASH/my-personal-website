@@ -88,7 +88,7 @@ const POSTS = [
     date: "July 2026",
     read: "3 min",
     audio: {
-      title: "SoundHelix Song 6",
+      title: "Most Needed",
       src: "/audio/flute-soulful.mp3",
     },
     content: [
