@@ -7,32 +7,32 @@ import headerImg from "../services/headerImg";
 const AVATAR_POOL = [headerImg, profileImg].filter(Boolean);
 
 const TRAITS = [
-  { label: "R-Status", sub: "Single", icon: "https://picsum.photos/seed/status/80/80" },
-  { label: "Values", sub: "Loyal & Kindness", icon: "https://picsum.photos/seed/values/80/80" },
-  { label: "Profession", sub: "Software Engineer", icon: "https://picsum.photos/seed/profession/80/80" },
-  { label: "Passion", sub: "Traveler/Eco-Farmer", icon: "https://picsum.photos/seed/passion/80/80" },
+  { label: "R-Status", sub: "Single", icon: "/src/images/IMG_7004.jpeg" },
+  { label: "Values", sub: "Loyal & Kindness", icon: "/src/images/jorah-mormont.avif" },
+  { label: "Profession", sub: "Software Engineer", icon: "/src/images/Software-engineer.webp" },
+  { label: "Passion", sub: "Traveler/Eco-Farmer", icon: "/src/images/traveler.webp" },
 ];
 
 const LINKS = [
   {
     label: "Instagram",
     href: "https://instagram.com/0abilash",
-    icon: "https://picsum.photos/seed/instagram/80/80",
+    icon: "/src/images/instagram-icon.webp",
   },
   {
     label: "Snapchat",
     href: "https://snapchat.com/t/iUJngNIp",
-    icon: "https://picsum.photos/seed/snapchat/80/80",
+    icon: "/src/images/snapchat-image.webp",
   },
   {
     label: "Twitter",
     href: "https://twitter.com/0ABILASHH",
-    icon: "https://picsum.photos/seed/twitter/80/80",
+    icon: "/src/images/sl_z_072523_61700_01.jpg",
   },
   {
     label: "E-mail",
     href: "mailto:mailtoabilashy@gmail.com",
-    icon: "https://picsum.photos/seed/email/80/80",
+    icon: "/src/images/google-mail.webp",
   },
 ];
 
