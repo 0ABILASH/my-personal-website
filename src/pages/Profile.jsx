@@ -104,105 +104,111 @@ export default function Profile() {
         {/* Hero Card */}
         <motion.div
           variants={fadeUp}
-          className="relative overflow-hidden rounded-3xl border border-border bg-surface/40 backdrop-blur-sm mb-4 group/card"
+          className="relative overflow-hidden rounded-3xl border border-border mb-4"
         >
-          {/* Top gradient line */}
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-br from-accent/[0.08] via-transparent to-[#118ab2]/[0.06] pointer-events-none" />
+          {/* Visible image background — sharp, full bleed */}
+          {profileImg && (
+            <img
+              src={profileImg}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 w-full h-full object-cover object-top"
+            />
+          )}
+          {/* Light scrim so the glass card pops */}
+          <div className="absolute inset-0 bg-gradient-to-b from-bg/40 via-bg/55 to-bg/75" />
+          {/* Top sheen */}
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent" />
+          {/* Accent glow */}
+          <div className="absolute -top-16 right-8 w-56 h-56 rounded-full bg-accent/15 blur-[80px] pointer-events-none" />
+          <div className="absolute -bottom-16 left-8 w-56 h-56 rounded-full bg-[#118ab2]/15 blur-[80px] pointer-events-none" />
 
-          <div className="relative flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 p-6 sm:p-8">
-            {/* Avatar */}
-            <div
-              className="relative flex-shrink-0"
-              onMouseEnter={() => setImgHover(true)}
-              onMouseLeave={() => setImgHover(false)}
-            >
-              <div className="absolute -inset-1 rounded-[26px] bg-gradient-to-br from-accent/60 via-[#118ab2]/40 to-transparent blur-sm opacity-70" />
-              <div className="relative p-[3px] rounded-[24px] bg-gradient-to-br from-accent/70 via-border to-[#118ab2]/60">
-                {profileImg ? (
-                  <img
-                    src={profileImg}
-                    alt="Profile"
-                    className="w-24 h-24 sm:w-28 sm:h-28 rounded-[21px] object-cover bg-bg"
-                  />
-                ) : (
-                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[21px] bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-3xl font-black text-white">
-                    A
-                  </div>
-                )}
-              </div>
-              {/* Status dot — always visible */}
-              <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-[3px] border-surface bg-[#22c55e] flex items-center justify-center shadow-[0_0_12px_rgba(34,197,94,0.6)]">
-                <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-              </div>
-              {/* Hover tooltip */}
-              {imgHover && (
-                <motion.div
-                  initial={{ opacity: 0, y: 4, scale: 0.9 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  className="absolute -bottom-10 left-1/2 -translate-x-1/2 px-3 py-1 rounded-xl bg-surface border border-border text-[10px] font-bold whitespace-nowrap shadow-xl shadow-black/40 z-10"
-                  style={{ color: "#22c55e" }}
-                >
-                  Available
-                </motion.div>
-              )}
-            </div>
+          {/* Floating glass identity card */}
+          <div className="relative flex items-center justify-center min-h-[480px] sm:min-h-[520px] px-5 sm:px-8 py-16">
+            <div className="relative w-full max-w-xl rounded-3xl border border-white/15 bg-bg/65 backdrop-blur-2xl shadow-[0_30px_80px_-20px_rgba(0,0,0,0.8)] px-6 sm:px-10 pt-16 sm:pt-20 pb-8 sm:pb-10 text-center">
+              {/* Top accent line */}
+              <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-accent/70 to-transparent" />
 
-            {/* Info */}
-            <div className="flex-1 min-w-0 text-center sm:text-left">
-              <div className="relative overflow-hidden rounded-2xl border border-border mb-3">
-                {profileImg && (
-                  <img
-                    src={profileImg}
-                    alt=""
-                    aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-cover object-top opacity-25 blur-md scale-110"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-r from-bg/95 via-bg/70 to-bg/20" />
-                <div className="relative px-5 py-5 sm:px-6">
-                  <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
-                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#22c55e] shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
-                    <span className="text-[9px] font-mono font-bold text-text-quaternary uppercase tracking-[0.25em]">
-                      Hello, I'm
-                    </span>
-                  </div>
-                  <h1 className="text-4xl sm:text-5xl font-black tracking-tight mb-2">
-                    Abilash
-                  </h1>
-                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1">
-                    <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-accent">
-                      <Briefcase size={11} />
-                      Software Engineer
-                    </span>
-                    <span className="hidden sm:block w-1 h-1 rounded-full bg-text-quaternary" />
-                    <span className="inline-flex items-center gap-1.5 text-[11px] text-text-tertiary font-mono">
-                      <MapPin size={11} />
-                      Coimbatore, India
-                    </span>
-                  </div>
+              {/* Avatar — overlaps the glass card top edge */}
+              <div
+                className="absolute left-1/2 -translate-x-1/2 -top-12 sm:-top-14"
+                onMouseEnter={() => setImgHover(true)}
+                onMouseLeave={() => setImgHover(false)}
+              >
+                <div className="absolute -inset-1.5 rounded-[30px] bg-accent/30 blur-lg opacity-70" />
+                <div className="relative p-[3px] rounded-[26px] bg-gradient-to-br from-accent via-[#118ab2] to-transparent shadow-[0_24px_60px_-16px_rgba(0,0,0,0.8)]">
+                  {profileImg ? (
+                    <img
+                      src={profileImg}
+                      alt="Profile"
+                      className="w-24 h-24 sm:w-28 sm:h-28 rounded-[23px] object-cover object-top bg-bg"
+                    />
+                  ) : (
+                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[23px] bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-4xl font-black text-white">
+                      A
+                    </div>
+                  )}
                 </div>
+                {/* Status dot — always visible */}
+                <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full border-[3px] border-bg bg-[#22c55e] flex items-center justify-center shadow-[0_0_14px_rgba(34,197,94,0.7)]">
+                  <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                </div>
+                {/* Hover tooltip */}
+                {imgHover && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 6, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute left-1/2 -translate-x-1/2 -bottom-10 px-3 py-1.5 rounded-xl bg-bg/95 backdrop-blur-md border border-border text-[10px] font-bold whitespace-nowrap shadow-xl shadow-black/40 z-20"
+                    style={{ color: "#22c55e" }}
+                  >
+                    Available
+                  </motion.div>
+                )}
               </div>
-              <p className="text-[13px] text-text-secondary leading-relaxed mb-4 max-w-md">
+
+              {/* Name */}
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <span className="h-px w-6 bg-gradient-to-r from-transparent to-accent/70" />
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#22c55e] shadow-[0_0_8px_rgba(34,197,94,0.8)]" />
+                <span className="text-[9px] font-mono font-bold text-text-quaternary uppercase tracking-[0.3em]">
+                  Hello, I'm
+                </span>
+                <span className="h-px w-6 bg-gradient-to-l from-transparent to-accent/70" />
+              </div>
+
+              <h1 className="text-4xl sm:text-5xl font-black tracking-tight mb-3 text-white">
+                Abilash
+              </h1>
+
+              {/* Badges */}
+              <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 mb-4">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent text-white text-[10px] font-bold shadow-[0_2px_10px_rgba(59,130,246,0.4)]">
+                  <Briefcase size={10} />
+                  Software Engineer
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-[11px] text-text-secondary font-mono">
+                  <MapPin size={11} />
+                  India
+                </span>
+              </div>
+
+              {/* Bio */}
+              <p className="text-[12.5px] text-text-secondary leading-relaxed max-w-md mb-5 mx-auto">
                 I'm someone who believes that life is meant to be experienced,
                 not just lived. I enjoy exploring unfamiliar places, taking
                 spontaneous road trips, and finding beauty in the little moments
                 that often go unnoticed.
               </p>
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-bg/60 border border-border text-[11px] font-medium text-text-secondary">
-                  {/* <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22c55e]" />
-                  </span> */}
-                  Currently somewhere, collecting another life experience.
-                </div>
-              </div>
-            </div>
 
-            {/* Decorative corner */}
-            <div className="hidden lg:block absolute bottom-4 right-5 text-[9px] font-mono text-text-quaternary/40 group-hover/card:text-text-quaternary/70 transition-colors">
-              ~ 01
+              {/* Status pill */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-bg/70 backdrop-blur-md border border-border text-[11px] font-medium text-text-secondary">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22c55e]" />
+                </span>
+                Currently somewhere, collecting another life experience.
+              </div>
             </div>
           </div>
         </motion.div>

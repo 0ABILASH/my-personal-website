@@ -89,7 +89,7 @@ const POSTS = [
     read: "3 min",
     audio: {
       title: "SoundHelix Song 6",
-      src: "/audio/Naan-Pizhai",
+      src: "/audio/flute-soulful.mp3",
     },
     content: [
       "The way I see life is completely different from how most people do. Maybe that\u2019s why I often feel like I don\u2019t fit into society.",
@@ -399,8 +399,7 @@ export default function Writing() {
             Blogs
           </h1>
           <p className="text-[12px] text-text-tertiary">
-            Experiance, Voyage, and updates.
-          </p>
+This is more than writing. This is who I am.          </p>
         </div>
 
         <div className="flex gap-2 mb-8">
