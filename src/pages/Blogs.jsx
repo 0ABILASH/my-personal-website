@@ -36,7 +36,7 @@ const POSTS = [
     read: "5 min",
     audio: {
       title: "SoundHelix Song 8",
-      src: "/audio/beyond-the-miles.mp3",
+      src: "/audio/ilayaraja-bgm.mp3",
     },
     content: [
       "I have ridden More than- 5,000 km alone, and those journeys make me feel truly alive. The feeling of being on the open road, with nothing but my thoughts and the endless horizon ahead, is one of the greatest joys of my life. It is a feeling I want to carry with me until my last day.",
@@ -89,7 +89,7 @@ const POSTS = [
     read: "3 min",
     audio: {
       title: "Most Needed",
-      src: "/audio/flute-soulful.mp3",
+      src: "/audio/flute - soulful.mp3",
     },
     content: [
       "The way I see life is completely different from how most people do. Maybe that\u2019s why I often feel like I don\u2019t fit into society.",
@@ -126,8 +126,8 @@ const POSTS = [
     date: "July 2026",
     read: "0 min",
     audio: {
-      title: "SoundHelix Song 16",
-      src: "/audio/",
+      title: "Coming Soon",
+      src: "/audio/coming-soon.mp3",
     },
     content: ["This blog is under construction."],
   },
