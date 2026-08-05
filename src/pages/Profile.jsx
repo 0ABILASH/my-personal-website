@@ -3,36 +3,44 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, Briefcase, MapPin, RefreshCw } from "lucide-react";
 import profileImg from "../services/profileImg";
 import headerImg from "../services/headerImg";
+import IMG_7004 from "../images/IMG_7004.jpeg";
+import JORAH from "../images/jorah-mormont.avif";
+import SOFTWARE from "../images/Software-engineer.webp";
+import TRAVELER from "../images/traveler.webp";
+import INSTAGRAM_ICON from "../images/instagram-icon.webp";
+import SNAPCHAT_ICON from "../images/snapchat-image.webp";
+import TWITTER_ICON from "../images/sl_z_072523_61700_01.jpg";
+import GMAIL_ICON from "../images/google-mail.webp";
 
 const AVATAR_POOL = [headerImg, profileImg].filter(Boolean);
 
 const TRAITS = [
-  { label: "R-Status", sub: "Single", icon: "/src/images/IMG_7004.jpeg" },
-  { label: "Values", sub: "Loyal & Kindness", icon: "/src/images/jorah-mormont.avif" },
-  { label: "Profession", sub: "Software Engineer", icon: "/src/images/Software-engineer.webp" },
-  { label: "Passion", sub: "Traveler/Eco-Farmer", icon: "/src/images/traveler.webp" },
+  { label: "R-Status", sub: "Single", icon: IMG_7004 },
+  { label: "Values", sub: "Loyal & Kindness", icon: JORAH },
+  { label: "Profession", sub: "Software Engineer", icon: SOFTWARE },
+  { label: "Passion", sub: "Traveler/Eco-Farmer", icon: TRAVELER },
 ];
 
 const LINKS = [
   {
     label: "Instagram",
     href: "https://instagram.com/0abilash",
-    icon: "/src/images/instagram-icon.webp",
+    icon: INSTAGRAM_ICON,
   },
   {
     label: "Snapchat",
     href: "https://snapchat.com/t/iUJngNIp",
-    icon: "/src/images/snapchat-image.webp",
+    icon: SNAPCHAT_ICON,
   },
   {
     label: "Twitter",
     href: "https://twitter.com/0ABILASHH",
-    icon: "/src/images/sl_z_072523_61700_01.jpg",
+    icon: TWITTER_ICON,
   },
   {
     label: "E-mail",
     href: "mailto:mailtoabilashy@gmail.com",
-    icon: "/src/images/google-mail.webp",
+    icon: GMAIL_ICON,
   },
 ];
 
