@@ -131,35 +131,32 @@ export default function Profile() {
               {/* Photo scrim for edge legibility */}
               <div className="absolute inset-0 bg-gradient-to-t from-bg/60 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-bg/40" />
 
-              {/* Avatar — circular image inside a larger circular outline */}
+              {/* Avatar — circular image inside a refined gradient ring */}
               <div className="absolute bottom-6 right-6 sm:right-0 sm:translate-x-1/2 z-10">
-                <div className="relative w-[104px] h-[104px] sm:w-[120px] sm:h-[120px] rounded-full bg-gradient-to-br from-accent/30 via-white/5 to-[#118ab2]/30 p-[6px] shadow-[0_24px_60px_-16px_rgba(0,0,0,0.8)]">
-                  {/* Smooth inner outline */}
-                  <div className="w-full h-full rounded-full bg-bg p-1">
-                    <div className="w-full h-full rounded-full overflow-hidden">
-                      {avatarSrc ? (
-                        <div className="relative w-full h-full">
-                          <AnimatePresence initial={false}>
-                            <motion.img
-                              key={avatarIndex}
-                              src={avatarSrc}
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              transition={{ duration: 0.45, ease: "easeInOut" }}
-                              className="absolute inset-0 w-full h-full object-cover object-top"
-                            />
-                          </AnimatePresence>
-                        </div>
-                      ) : (
-                        <div className="w-full h-full rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-3xl font-black text-white">
-                          A
-                        </div>
-                      )}
-                    </div>
+                <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-accent via-[#118ab2] to-accent-hover p-[3px] shadow-[0_12px_40px_-10px_rgba(59,130,246,0.5)]">
+                  <div className="w-full h-full rounded-full overflow-hidden ring-1 ring-white/20">
+                    {avatarSrc ? (
+                      <div className="relative w-full h-full">
+                        <AnimatePresence initial={false}>
+                          <motion.img
+                            key={avatarIndex}
+                            src={avatarSrc}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.45, ease: "easeInOut" }}
+                            className="absolute inset-0 w-full h-full object-cover object-top"
+                          />
+                        </AnimatePresence>
+                      </div>
+                    ) : (
+                      <div className="w-full h-full rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-3xl font-black text-white">
+                        A
+                      </div>
+                    )}
                   </div>
                   {/* Shuffle button — toggles the avatar image */}
-                  <div className="absolute -right-1 top-18 z-30">
+                  <div className="absolute -right-2 top-18 z-30">
                     <motion.span
                       key={avatarIndex}
                       initial={{ rotate: -180, scale: 0.6 }}
@@ -167,10 +164,9 @@ export default function Profile() {
                       transition={{ type: "spring", stiffness: 300, damping: 18 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => setAvatarIndex((i) => (i + 1) % AVATAR_POOL.length)}
-                      className="block w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer border border-black/10"
+                      className="block w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center cursor-pointer shadow-[0_4px_14px_rgba(0,0,0,0.45)]"
                     >
-                      <span className="absolute inset-[2.5px] rounded-full border-[1.5px] border-white/30" />
-                      <RefreshCw className="relative w-[15px] h-[15px] text-black" aria-hidden="true" />
+                      <RefreshCw className="w-6 h-6 text-white" aria-hidden="true" />
                     </motion.span>
                   </div>
                 </div>
@@ -239,11 +235,11 @@ export default function Profile() {
                         className="w-full h-full object-cover"
                       />
                     </span>
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="text-[9px] font-bold text-text-quaternary uppercase tracking-wider">
                         {t.label}
                       </div>
-                      <div className="text-[12px] font-semibold text-text truncate">
+                      <div className="text-[12px] font-semibold text-text whitespace-nowrap overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
                         {t.sub}
                       </div>
                     </div>
@@ -348,11 +344,11 @@ export default function Profile() {
                       className="w-full h-full object-cover"
                     />
                   </span>
-                  <div className="min-w-0">
-                    <div className="text-[12px] font-semibold text-text truncate">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[12px] font-semibold text-text whitespace-nowrap overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
                       {item.name}
                     </div>
-                    <div className="text-[10px] text-text-quaternary truncate">
+                    <div className="text-[10px] text-text-quaternary whitespace-nowrap overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
                       {item.sub}
                     </div>
                   </div>
