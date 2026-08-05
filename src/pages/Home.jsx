@@ -42,7 +42,7 @@ const PANELS = [
     to: "/blogs",
     icon: PenLine,
     label: "Blogs",
-    desc: "Experiance,life, and updates.",
+    desc: "Where Experiences Become Stories.",
     num: "03",
   },
 ];

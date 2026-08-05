@@ -45,7 +45,6 @@ export default function Shell({ children, onCvOpen }) {
                 <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_16px_rgba(59,130,246,0.25)]">A</div>
               </button>
             )}
-            <span className="text-[13px] font-semibold tracking-tight text-text">Abilash</span>
           </div>
 
           <nav className="hidden md:flex items-center gap-0.5">

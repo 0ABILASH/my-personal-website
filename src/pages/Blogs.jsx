@@ -67,7 +67,7 @@ const POSTS = [
   },
   {
     id: 3,
-    title: "Web Update",
+    title: "WebSite Update",
     excerpt: "Soon gonna a fix",
     tag: "update",
     date: "July 2026",
@@ -84,7 +84,7 @@ const POSTS = [
     id: 4,
     title: "My Kind of Peace",
     excerpt: "This is What i need the most",
-    tag: "life",
+    tag: "Voyage",
     date: "July 2026",
     read: "3 min",
     audio: {
@@ -101,27 +101,14 @@ const POSTS = [
   },
   {
     id: 5,
-    title: "Coming Soon",
-    excerpt: "This blog is under construction. Stay tuned.",
-    tag: "life",
-    date: "July 2026",
-    read: "0 min",
-    audio: {
-      title: "SoundHelix Song 16",
-      src: "/audio/coming-soon.mp3",
-    },
-    content: ["Coming soon. This blog is under construction."],
-  },
-  {
-    id: 6,
     title: "The Quiet Strength",
     excerpt: "Amma - The Love That Raised Me.",
-    tag: "life",
+    tag: "Voyage",
     date: "July 2026",
     read: "2 min",
     audio: {
-      title: "SoundHelix Song 16",
-      src: "/audio/coming-soon.mp3",
+      title: "Mom's Magic",
+      src: "/audio/mother-bgm.mp3",
     },
     content: [
       "Amma",
@@ -131,15 +118,28 @@ const POSTS = [
       "I may not always express my love and care in obvious ways, and others may not notice it, but deep in my heart, I will always care for her. She is, and always will be, my greatest blessing.",
     ],
   },
+  {
+    id: 6,
+    title: "Available Soon",
+    excerpt: "Stay tuned.",
+    tag: "Voyage",
+    date: "July 2026",
+    read: "0 min",
+    audio: {
+      title: "SoundHelix Song 16",
+      src: "/audio/",
+    },
+    content: ["This blog is under construction."],
+  },
 ];
 
 const TAG_COLORS = {
   Experiance: { text: "text-emerald-400", bg: "bg-emerald-500/15" },
-  life: { text: "text-red-400", bg: "bg-red-500/15" },
+  Voyage: { text: "text-[#118ab2]", bg: "bg-[#118ab2]/15" },
   update: { text: "text-violet-400", bg: "bg-violet-500/15" },
 };
 
-const FILTERS = ["all", "Experiance", "life", "update"];
+const FILTERS = ["all", "Experiance", "Voyage", "update"];
 
 export default function Writing() {
   const isMobile = useIsMobile();
@@ -149,7 +149,7 @@ export default function Writing() {
   const [audioError, setAudioError] = useState(false);
   const [likes, setLikes] = useState({});
   const pendingLikeRef = useRef({});
-  const [showTip, setShowTip] = useState(true);
+  const [showTip, setShowTip] = useState(false);
   const [likedPosts, setLikedPosts] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem("blogLikes") || "{}");
@@ -173,8 +173,12 @@ export default function Writing() {
   }, []);
 
   useEffect(() => {
-    const t = setTimeout(() => setShowTip(false), 6000);
-    return () => clearTimeout(t);
+    const showT = setTimeout(() => setShowTip(true), 1200);
+    const hideT = setTimeout(() => setShowTip(false), 7200);
+    return () => {
+      clearTimeout(showT);
+      clearTimeout(hideT);
+    };
   }, []);
 
   const toggleLike = () => {
@@ -395,7 +399,7 @@ export default function Writing() {
             Blogs
           </h1>
           <p className="text-[12px] text-text-tertiary">
-            Experiance, life, and updates.
+            Experiance, Voyage, and updates.
           </p>
         </div>
 
