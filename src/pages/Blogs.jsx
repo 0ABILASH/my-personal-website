@@ -35,7 +35,7 @@ const POSTS = [
     date: "Aug 2026",
     read: "5 min",
     audio: {
-      title: "SoundHelix Song 8",
+      title: "Song Aid",
       src: "/audio/ilayaraja-bgm.mp3",
     },
     content: [
