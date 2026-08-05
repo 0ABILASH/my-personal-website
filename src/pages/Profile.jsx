@@ -1,49 +1,55 @@
-import { motion } from "framer-motion";
-import { ExternalLink, Briefcase, MapPin } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ExternalLink, Briefcase, MapPin, RefreshCw } from "lucide-react";
 import profileImg from "../services/profileImg";
 import headerImg from "../services/headerImg";
 import allImages from "../services/allImages";
 
-const randomIcon = () =>
-  allImages[Math.floor(Math.random() * allImages.length)] || "/icons/ring.svg";
+const fixedIcon = (key) => {
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+  return allImages[hash % allImages.length] || "/icons/ring.svg";
+};
+
+const AVATAR_POOL = [headerImg, profileImg].filter(Boolean);
 
 const TRAITS = [
-  { label: "R-Status", sub: "Single", icon: randomIcon() },
-  { label: "Values", sub: "Loyal & Kindness", icon: randomIcon() },
-  { label: "Profession", sub: "Software Engineer", icon: randomIcon() },
-  { label: "Passion", sub: "Traveler/Eco-Farmer", icon: randomIcon() },
+  { label: "R-Status", sub: "Single", icon: fixedIcon("R-Status") },
+  { label: "Values", sub: "Loyal & Kindness", icon: fixedIcon("Values") },
+  { label: "Profession", sub: "Software Engineer", icon: fixedIcon("Profession") },
+  { label: "Passion", sub: "Traveler/Eco-Farmer", icon: fixedIcon("Passion") },
 ];
 
 const LINKS = [
   {
     label: "Instagram",
     href: "https://instagram.com/0abilash",
-    icon: randomIcon(),
+    icon: fixedIcon("Instagram"),
   },
   {
     label: "Snapchat",
     href: "https://snapchat.com/t/iUJngNIp",
-    icon: randomIcon(),
+    icon: fixedIcon("Snapchat"),
   },
   {
     label: "Twitter",
     href: "https://twitter.com/0ABILASHH",
-    icon: randomIcon(),
+    icon: fixedIcon("Twitter"),
   },
   {
     label: "E-mail",
     href: "mailto:mailtoabilashy@gmail.com",
-    icon: randomIcon(),
+    icon: fixedIcon("E-mail"),
   },
 ];
 
 const INTERESTS = [
-  { name: "Traveling", sub: "Exploring new places", icon: randomIcon() },
-  { name: "Minimalism", sub: "Keeping life simple and intentional", icon: randomIcon() },
-  { name: "Chess", sub: "Thinking several moves ahead", icon: randomIcon() },
-  { name: "Cooking", sub: "Experimenting with new flavors", icon: randomIcon() },
-  { name: "Mountains", sub: "Home is wherever the peaks are", icon: randomIcon() },
-  { name: "Love", sub: "Choosing kindness every day", icon: randomIcon() },
+  { name: "Traveling", sub: "Exploring new places", icon: fixedIcon("Traveling") },
+  { name: "Minimalism", sub: "Keeping life simple and intentional", icon: fixedIcon("Minimalism") },
+  { name: "Chess", sub: "Thinking several moves ahead", icon: fixedIcon("Chess") },
+  { name: "Cooking", sub: "Experimenting with new flavors", icon: fixedIcon("Cooking") },
+  { name: "Mountains", sub: "Home is wherever the peaks are", icon: fixedIcon("Mountains") },
+  { name: "Love", sub: "Choosing kindness every day", icon: fixedIcon("Love") },
 ];
 
 const TAGS = ["Love", "Money", "Travel", "Music", "Tea"];
@@ -72,6 +78,9 @@ const SectionTitle = ({ label }) => (
 );
 
 export default function Profile() {
+  const [avatarIndex, setAvatarIndex] = useState(0);
+  const avatarSrc = AVATAR_POOL[avatarIndex % AVATAR_POOL.length];
+
   return (
     <div className="relative max-w-5xl mx-auto px-5 sm:px-6 py-12 sm:py-16">
       <motion.div
@@ -122,27 +131,48 @@ export default function Profile() {
               {/* Photo scrim for edge legibility */}
               <div className="absolute inset-0 bg-gradient-to-t from-bg/60 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-bg/40" />
 
-              {/* Byline avatar — straddles the photo/content boundary */}
+              {/* Avatar — circular image inside a larger circular outline */}
               <div className="absolute bottom-6 right-6 sm:right-0 sm:translate-x-1/2 z-10">
-                <div className="absolute -inset-1.5 rounded-full bg-accent/30 blur-lg opacity-70" />
-                <div className="relative p-[3px] rounded-full bg-gradient-to-br from-accent via-[#118ab2] to-transparent shadow-[0_24px_60px_-16px_rgba(0,0,0,0.8)]">
-                  {headerImg ? (
-                    <img
-                      src={headerImg}
-                      alt="Profile"
-                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover object-top bg-bg"
-                    />
-                  ) : (
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-3xl font-black text-white">
-                      A
+                <div className="relative w-[104px] h-[104px] sm:w-[120px] sm:h-[120px] rounded-full bg-gradient-to-br from-accent/30 via-white/5 to-[#118ab2]/30 p-[6px] shadow-[0_24px_60px_-16px_rgba(0,0,0,0.8)]">
+                  {/* Smooth inner outline */}
+                  <div className="w-full h-full rounded-full bg-bg p-1">
+                    <div className="w-full h-full rounded-full overflow-hidden">
+                      {avatarSrc ? (
+                        <div className="relative w-full h-full">
+                          <AnimatePresence initial={false}>
+                            <motion.img
+                              key={avatarIndex}
+                              src={avatarSrc}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.45, ease: "easeInOut" }}
+                              className="absolute inset-0 w-full h-full object-cover object-top"
+                            />
+                          </AnimatePresence>
+                        </div>
+                      ) : (
+                        <div className="w-full h-full rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-3xl font-black text-white">
+                          A
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                {/* Ping ring — always animating */}
-                <span className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#22c55e] animate-ping opacity-40 pointer-events-none" />
-                {/* Status dot — always visible */}
-                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-[3px] border-bg bg-[#22c55e] flex items-center justify-center shadow-[0_0_14px_rgba(34,197,94,0.7)]">
-                  <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                  </div>
+                  {/* Shuffle button — toggles the avatar image */}
+                  <div className="absolute -right-1 top-18 z-30">
+                    <motion.span
+                      key={avatarIndex}
+                      initial={{ rotate: -180, scale: 0.6 }}
+                      animate={{ rotate: 0, scale: 1 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 18 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setAvatarIndex((i) => (i + 1) % AVATAR_POOL.length)}
+                      className="block w-8 h-8 rounded-full bg-white flex items-center justify-center cursor-pointer border border-black/10"
+                    >
+                      <span className="absolute inset-[2.5px] rounded-full border-[1.5px] border-white/30" />
+                      <RefreshCw className="relative w-[15px] h-[15px] text-black" aria-hidden="true" />
+                    </motion.span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -153,19 +183,7 @@ export default function Profile() {
               <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-accent/10 blur-[80px] pointer-events-none" />
               <div className="absolute -bottom-16 -right-16 w-56 h-56 rounded-full bg-[#118ab2]/10 blur-[80px] pointer-events-none" />
 
-              {/* Availability badge — always visible */}
-              <div className="relative inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#22c55e]/10 border border-[#22c55e]/30 mb-3">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#22c55e]" />
-                </span>
-                <span
-                  className="text-[10px] font-bold tracking-wide"
-                  style={{ color: "#22c55e" }}
-                >
-                  Available
-                </span>
-              </div>
+             
 
               <h1 className="relative text-4xl sm:text-5xl font-black tracking-tight mb-3 text-white">
                 Abilash
