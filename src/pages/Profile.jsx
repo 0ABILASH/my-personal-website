@@ -1,46 +1,49 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink, Briefcase, MapPin } from "lucide-react";
 import profileImg from "../services/profileImg";
 import headerImg from "../services/headerImg";
+import allImages from "../services/allImages";
+
+const randomIcon = () =>
+  allImages[Math.floor(Math.random() * allImages.length)] || "/icons/ring.svg";
 
 const TRAITS = [
-  { label: "R-Status", sub: "Single", icon: "/icons/ring.svg" },
-  { label: "Values", sub: "Loyal & Kindness", icon: "/icons/gem.svg" },
-  { label: "Profession", sub: "Software Engineer", icon: "/icons/laptop.svg" },
-  { label: "Passion", sub: "Traveler/Eco-Farmer", icon: "/icons/motorcycle.svg" },
+  { label: "R-Status", sub: "Single", icon: randomIcon() },
+  { label: "Values", sub: "Loyal & Kindness", icon: randomIcon() },
+  { label: "Profession", sub: "Software Engineer", icon: randomIcon() },
+  { label: "Passion", sub: "Traveler/Eco-Farmer", icon: randomIcon() },
 ];
 
 const LINKS = [
   {
     label: "Instagram",
     href: "https://instagram.com/0abilash",
-    icon: "/icons/instagram.svg",
+    icon: randomIcon(),
   },
   {
     label: "Snapchat",
     href: "https://snapchat.com/t/iUJngNIp",
-    icon: "/icons/snapchat.svg",
+    icon: randomIcon(),
   },
   {
     label: "Twitter",
     href: "https://twitter.com/0ABILASHH",
-    icon: "/icons/twitter.svg",
+    icon: randomIcon(),
   },
   {
     label: "E-mail",
     href: "mailto:mailtoabilashy@gmail.com",
-    icon: "/icons/mail.svg",
+    icon: randomIcon(),
   },
 ];
 
 const INTERESTS = [
-  { name: "Traveling", sub: "Exploring new places", icon: "/icons/map-pin.svg" },
-  { name: "Minimalism", sub: "Keeping life simple and intentional", icon: "/icons/leaf.svg" },
-  { name: "Chess", sub: "Thinking several moves ahead", icon: "/icons/chess.svg" },
-  { name: "Cooking", sub: "Experimenting with new flavors", icon: "/icons/chef-hat.svg" },
-  { name: "Mountains", sub: "Home is wherever the peaks are", icon: "/icons/mountain.svg" },
-  { name: "Love", sub: "Choosing kindness every day", icon: "/icons/heart.svg" },
+  { name: "Traveling", sub: "Exploring new places", icon: randomIcon() },
+  { name: "Minimalism", sub: "Keeping life simple and intentional", icon: randomIcon() },
+  { name: "Chess", sub: "Thinking several moves ahead", icon: randomIcon() },
+  { name: "Cooking", sub: "Experimenting with new flavors", icon: randomIcon() },
+  { name: "Mountains", sub: "Home is wherever the peaks are", icon: randomIcon() },
+  { name: "Love", sub: "Choosing kindness every day", icon: randomIcon() },
 ];
 
 const TAGS = ["Love", "Money", "Travel", "Music", "Tea"];
@@ -69,16 +72,8 @@ const SectionTitle = ({ label }) => (
 );
 
 export default function Profile() {
-  const [imgHover, setImgHover] = useState(false);
-
   return (
     <div className="relative max-w-5xl mx-auto px-5 sm:px-6 py-12 sm:py-16">
-      {/* Ambient background glows */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-24 left-1/4 w-[420px] h-[420px] bg-accent/[0.06] rounded-full blur-[120px]" />
-        <div className="absolute top-1/2 right-0 w-[360px] h-[360px] bg-[#118ab2]/[0.05] rounded-full blur-[110px]" />
-      </div>
-
       <motion.div
         variants={stagger}
         initial="hidden"
@@ -128,11 +123,7 @@ export default function Profile() {
               <div className="absolute inset-0 bg-gradient-to-t from-bg/60 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-bg/40" />
 
               {/* Byline avatar — straddles the photo/content boundary */}
-              <div
-                className="absolute bottom-6 right-6 sm:right-0 sm:translate-x-1/2 z-10"
-                onMouseEnter={() => setImgHover(true)}
-                onMouseLeave={() => setImgHover(false)}
-              >
+              <div className="absolute bottom-6 right-6 sm:right-0 sm:translate-x-1/2 z-10">
                 <div className="absolute -inset-1.5 rounded-full bg-accent/30 blur-lg opacity-70" />
                 <div className="relative p-[3px] rounded-full bg-gradient-to-br from-accent via-[#118ab2] to-transparent shadow-[0_24px_60px_-16px_rgba(0,0,0,0.8)]">
                   {headerImg ? (
@@ -147,35 +138,12 @@ export default function Profile() {
                     </div>
                   )}
                 </div>
-                {/* Status dot — static by default, pings on hover */}
+                {/* Ping ring — always animating */}
+                <span className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#22c55e] animate-ping opacity-40 pointer-events-none" />
+                {/* Status dot — always visible */}
                 <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-[3px] border-bg bg-[#22c55e] flex items-center justify-center shadow-[0_0_14px_rgba(34,197,94,0.7)]">
                   <span className="w-1.5 h-1.5 rounded-full bg-white" />
                 </div>
-                {/* Ping ring — only on hover */}
-                {imgHover && (
-                  <motion.span
-                    initial={{ opacity: 0, scale: 0.6 }}
-                    animate={{ opacity: 0.5, scale: 1.6 }}
-                    transition={{
-                      duration: 0.9,
-                      repeat: Infinity,
-                      ease: "easeOut",
-                    }}
-                    className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#22c55e] pointer-events-none"
-                  />
-                )}
-                {/* Hover status popup */}
-                {imgHover && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 6, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute right-0 -bottom-11 px-3 py-1.5 rounded-xl bg-bg/95 backdrop-blur-md border border-border text-[10px] font-bold whitespace-nowrap shadow-xl shadow-black/40 z-20"
-                    style={{ color: "#22c55e" }}
-                  >
-                    Available
-                  </motion.div>
-                )}
               </div>
             </div>
 
@@ -185,7 +153,19 @@ export default function Profile() {
               <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-accent/10 blur-[80px] pointer-events-none" />
               <div className="absolute -bottom-16 -right-16 w-56 h-56 rounded-full bg-[#118ab2]/10 blur-[80px] pointer-events-none" />
 
-              {/* Eyebrow */}
+              {/* Availability badge — always visible */}
+              <div className="relative inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#22c55e]/10 border border-[#22c55e]/30 mb-3">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#22c55e]" />
+                </span>
+                <span
+                  className="text-[10px] font-bold tracking-wide"
+                  style={{ color: "#22c55e" }}
+                >
+                  Available
+                </span>
+              </div>
 
               <h1 className="relative text-4xl sm:text-5xl font-black tracking-tight mb-3 text-white">
                 Abilash
@@ -234,11 +214,11 @@ export default function Profile() {
                     key={i}
                     className="flex items-center gap-3 px-3 py-3 rounded-xl bg-bg border border-border hover:border-accent/25 hover:bg-accent-soft/40 transition-all duration-200 cursor-default group/tile"
                   >
-                    <span className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/15 flex items-center justify-center shrink-0 transition-transform group-hover/tile:scale-110">
+                    <span className="w-8 h-8 rounded-lg border border-accent/15 overflow-hidden flex-shrink-0 transition-transform group-hover/tile:scale-110">
                       <img
                         src={t.icon}
                         alt={t.label}
-                        className="w-[15px] h-[15px] object-contain"
+                        className="w-full h-full object-cover"
                       />
                     </span>
                     <div className="min-w-0">
@@ -270,11 +250,11 @@ export default function Profile() {
                     rel="noreferrer"
                     className="flex items-center gap-3 px-3 py-3 rounded-xl bg-bg border border-border hover:border-accent/25 hover:bg-accent-soft/40 hover:-translate-y-0.5 transition-all duration-200 group/link"
                   >
-                    <span className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/15 flex items-center justify-center shrink-0 transition-transform group-hover/link:scale-110">
+                    <span className="w-8 h-8 rounded-lg border border-accent/15 overflow-hidden flex-shrink-0 transition-transform group-hover/link:scale-110">
                       <img
                         src={l.icon}
                         alt={l.label}
-                        className="w-[13px] h-[13px] object-contain"
+                        className="w-full h-full object-cover"
                       />
                     </span>
                     <span className="text-[12px] font-semibold flex-1 truncate">
@@ -343,11 +323,11 @@ export default function Profile() {
                   key={i}
                   className="group flex items-center gap-3 px-3.5 py-3.5 rounded-xl bg-bg border border-border hover:border-accent/25 hover:bg-accent-soft/40 hover:-translate-y-0.5 transition-all duration-200 cursor-default"
                 >
-                  <span className="relative w-9 h-9 rounded-xl bg-accent/10 border border-accent/15 flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                  <span className="relative w-9 h-9 rounded-xl border border-accent/15 overflow-hidden flex-shrink-0 transition-transform group-hover:scale-110">
                     <img
                       src={item.icon}
                       alt={item.name}
-                      className="w-[16px] h-[16px] object-contain"
+                      className="w-full h-full object-cover"
                     />
                   </span>
                   <div className="min-w-0">
