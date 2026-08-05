@@ -1,55 +1,48 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, Briefcase, MapPin, RefreshCw } from "lucide-react";
 import profileImg from "../services/profileImg";
 import headerImg from "../services/headerImg";
-import allImages from "../services/allImages";
-
-const fixedIcon = (key) => {
-  let hash = 0;
-  for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
-  return allImages[hash % allImages.length] || "/icons/ring.svg";
-};
 
 const AVATAR_POOL = [headerImg, profileImg].filter(Boolean);
 
 const TRAITS = [
-  { label: "R-Status", sub: "Single", icon: fixedIcon("R-Status") },
-  { label: "Values", sub: "Loyal & Kindness", icon: fixedIcon("Values") },
-  { label: "Profession", sub: "Software Engineer", icon: fixedIcon("Profession") },
-  { label: "Passion", sub: "Traveler/Eco-Farmer", icon: fixedIcon("Passion") },
+  { label: "R-Status", sub: "Single", icon: "https://picsum.photos/seed/status/80/80" },
+  { label: "Values", sub: "Loyal & Kindness", icon: "https://picsum.photos/seed/values/80/80" },
+  { label: "Profession", sub: "Software Engineer", icon: "https://picsum.photos/seed/profession/80/80" },
+  { label: "Passion", sub: "Traveler/Eco-Farmer", icon: "https://picsum.photos/seed/passion/80/80" },
 ];
 
 const LINKS = [
   {
     label: "Instagram",
     href: "https://instagram.com/0abilash",
-    icon: fixedIcon("Instagram"),
+    icon: "https://picsum.photos/seed/instagram/80/80",
   },
   {
     label: "Snapchat",
     href: "https://snapchat.com/t/iUJngNIp",
-    icon: fixedIcon("Snapchat"),
+    icon: "https://picsum.photos/seed/snapchat/80/80",
   },
   {
     label: "Twitter",
     href: "https://twitter.com/0ABILASHH",
-    icon: fixedIcon("Twitter"),
+    icon: "https://picsum.photos/seed/twitter/80/80",
   },
   {
     label: "E-mail",
     href: "mailto:mailtoabilashy@gmail.com",
-    icon: fixedIcon("E-mail"),
+    icon: "https://picsum.photos/seed/email/80/80",
   },
 ];
 
 const INTERESTS = [
-  { name: "Traveling", sub: "Exploring new places", icon: fixedIcon("Traveling") },
-  { name: "Minimalism", sub: "Keeping life simple and intentional", icon: fixedIcon("Minimalism") },
-  { name: "Chess", sub: "Thinking several moves ahead", icon: fixedIcon("Chess") },
-  { name: "Cooking", sub: "Experimenting with new flavors", icon: fixedIcon("Cooking") },
-  { name: "Mountains", sub: "Home is wherever the peaks are", icon: fixedIcon("Mountains") },
-  { name: "Love", sub: "Choosing kindness every day", icon: fixedIcon("Love") },
+  { name: "Traveling", sub: "Exploring new places", icon: "https://picsum.photos/seed/traveling/80/80" },
+  { name: "Minimalism", sub: "Keeping life simple and intentional", icon: "https://picsum.photos/seed/minimalism/80/80" },
+  { name: "Chess", sub: "Thinking several moves ahead", icon: "https://picsum.photos/seed/chess/80/80" },
+  { name: "Cooking", sub: "Experimenting with new flavors", icon: "https://picsum.photos/seed/cooking/80/80" },
+  { name: "Mountains", sub: "Home is wherever the peaks are", icon: "https://picsum.photos/seed/mountains/80/80" },
+  { name: "Love", sub: "Choosing kindness every day", icon: "https://picsum.photos/seed/love/80/80" },
 ];
 
 const TAGS = ["Love", "Money", "Travel", "Music", "Tea"];
@@ -76,6 +69,50 @@ const SectionTitle = ({ label }) => (
     <div className="flex-1 h-px bg-border" />
   </div>
 );
+
+const ScrollText = ({ text, className }) => {
+  const ref = useRef(null);
+  const [overflow, setOverflow] = useState(false);
+  const [dist, setDist] = useState(0);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const check = () => {
+      setOverflow(el.scrollWidth > el.clientWidth + 1);
+      setDist(el.scrollWidth - el.clientWidth);
+    };
+    check();
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [text]);
+
+  return (
+    <div
+      ref={ref}
+      className={`whitespace-nowrap overflow-hidden [&::-webkit-scrollbar]:hidden [scrollbar-width:none] ${className}`}
+    >
+      {overflow ? (
+        <motion.span
+          className="inline-block"
+          animate={{ x: [0, -dist, -dist, 0] }}
+          transition={{
+            duration: Math.max(5, dist / 30),
+            times: [0, 0.45, 0.75, 1],
+            ease: "linear",
+            repeat: Infinity,
+            repeatDelay: 2,
+          }}
+        >
+          {text}
+        </motion.span>
+      ) : (
+        <span>{text}</span>
+      )}
+    </div>
+  );
+};
 
 export default function Profile() {
   const [avatarIndex, setAvatarIndex] = useState(0);
@@ -144,7 +181,7 @@ export default function Profile() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            transition={{ duration: 0.45, ease: "easeInOut" }}
+                            transition={{ duration: 0.2, ease: "easeOut" }}
                             className="absolute inset-0 w-full h-full object-cover object-top"
                           />
                         </AnimatePresence>
@@ -226,7 +263,7 @@ export default function Profile() {
                 return (
                   <div
                     key={i}
-                    className="flex items-center gap-3 px-3 py-3 rounded-xl bg-bg border border-border hover:border-accent/25 hover:bg-accent-soft/40 transition-all duration-200 cursor-default group/tile"
+                    className="flex items-center gap-3 px-3 py-3 rounded-xl bg-bg border border-border hover:border-accent/25 hover:bg-accent-soft/40 transition-all duration-200 cursor-default group/tile min-w-0"
                   >
                     <span className="w-8 h-8 rounded-lg border border-accent/15 overflow-hidden flex-shrink-0 transition-transform group-hover/tile:scale-110">
                       <img
@@ -239,9 +276,7 @@ export default function Profile() {
                       <div className="text-[9px] font-bold text-text-quaternary uppercase tracking-wider">
                         {t.label}
                       </div>
-                      <div className="text-[12px] font-semibold text-text whitespace-nowrap overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
-                        {t.sub}
-                      </div>
+                      <ScrollText text={t.sub} className="text-[12px] font-semibold text-text" />
                     </div>
                   </div>
                 );
@@ -335,7 +370,7 @@ export default function Profile() {
               return (
                 <div
                   key={i}
-                  className="group flex items-center gap-3 px-3.5 py-3.5 rounded-xl bg-bg border border-border hover:border-accent/25 hover:bg-accent-soft/40 hover:-translate-y-0.5 transition-all duration-200 cursor-default"
+                  className="group flex items-center gap-3 px-3.5 py-3.5 rounded-xl bg-bg border border-border hover:border-accent/25 hover:bg-accent-soft/40 hover:-translate-y-0.5 transition-all duration-200 cursor-default min-w-0"
                 >
                   <span className="relative w-9 h-9 rounded-xl border border-accent/15 overflow-hidden flex-shrink-0 transition-transform group-hover:scale-110">
                     <img
@@ -345,12 +380,8 @@ export default function Profile() {
                     />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <div className="text-[12px] font-semibold text-text whitespace-nowrap overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
-                      {item.name}
-                    </div>
-                    <div className="text-[10px] text-text-quaternary whitespace-nowrap overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
-                      {item.sub}
-                    </div>
+                    <ScrollText text={item.name} className="text-[12px] font-semibold text-text" />
+                    <ScrollText text={item.sub} className="text-[10px] text-text-quaternary" />
                   </div>
                 </div>
               );
