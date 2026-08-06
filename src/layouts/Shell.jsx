@@ -18,7 +18,7 @@ const ROUTE_MSGS = {
    
   ],
   '/profile': [
-    'Explore my profile',
+    'The Person Behind the Pages',
     'Get to know about me',
   ],
   '/travel-log': [
@@ -34,12 +34,11 @@ const ROUTE_MSGS = {
 const BOTTOM_MSGS = {
   '/': [
     'You reached the end',
-    'More stories waiting for you',
+    'More stuffs, waiting for you',
   ],
   '/profile': [
     'That is all about me',
-    'Thanks for visiting',
-    'Have a great day',
+    'Just a glimpse',
   ],
   '/travel-log': [
     'Tap a destination to explore',
