@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, Briefcase, MapPin, RefreshCw } from "lucide-react";
 import profileImg from "../services/profileImg";
-import headerImg from "../services/headerImg";
+import avatar1 from "../images/99.png";
+import avatar2 from "../images/00.png";
 import IMG_7004 from "../images/IMG_7004.jpeg";
 import JORAH from "../images/jorah-mormont.avif";
 import SOFTWARE from "../images/Software-engineer.webp";
@@ -12,7 +13,7 @@ import SNAPCHAT_ICON from "../images/snapchat-image.webp";
 import TWITTER_ICON from "../images/sl_z_072523_61700_01.jpg";
 import GMAIL_ICON from "../images/google-mail.webp";
 
-const AVATAR_POOL = [headerImg, profileImg].filter(Boolean);
+const AVATAR_POOL = [avatar1, avatar2];
 
 const TRAITS = [
   { label: "R-Status", sub: "Single", icon: IMG_7004 },
@@ -177,45 +178,45 @@ export default function Profile() {
               <div className="absolute inset-0 bg-gradient-to-t from-bg/60 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-bg/40" />
 
               {/* Avatar — circular image inside a refined gradient ring */}
-              <div className="absolute bottom-6 right-6 sm:right-0 sm:translate-x-1/2 z-10">
-                <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-accent via-[#118ab2] to-accent-hover p-[3px] shadow-[0_12px_40px_-10px_rgba(59,130,246,0.5)]">
-                  <div className="w-full h-full rounded-full overflow-hidden ring-1 ring-white/20">
-                    {avatarSrc ? (
-                      <div className="relative w-full h-full">
-                        <AnimatePresence initial={false}>
-                          <motion.img
-                            key={avatarIndex}
-                            src={avatarSrc}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2, ease: "easeOut" }}
-                            className="absolute inset-0 w-full h-full object-cover object-top"
-                          />
-                        </AnimatePresence>
-                      </div>
-                    ) : (
-                      <div className="w-full h-full rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-3xl font-black text-white">
-                        A
-                      </div>
-                    )}
-                  </div>
-                  {/* Shuffle button — toggles the avatar image */}
-                  <div className="absolute -right-2 top-18 z-30">
-                    <motion.span
-                      key={avatarIndex}
-                      initial={{ rotate: -180, scale: 0.6 }}
-                      animate={{ rotate: 0, scale: 1 }}
-                      transition={{ type: "spring", stiffness: 300, damping: 18 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => setAvatarIndex((i) => (i + 1) % AVATAR_POOL.length)}
-                      className="block w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center cursor-pointer shadow-[0_4px_14px_rgba(0,0,0,0.45)]"
-                    >
-                      <RefreshCw className="w-6 h-6 text-white" aria-hidden="true" />
-                    </motion.span>
+                <div className="absolute bottom-6 right-6 sm:right-0 sm:translate-x-1/2 z-10">
+                  <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-accent via-[#118ab2] to-accent-hover p-[3px] shadow-[0_12px_40px_-10px_rgba(59,130,246,0.5)]">
+                    <div className="w-full h-full rounded-full overflow-hidden ring-1 ring-white/20">
+                      {avatarSrc ? (
+                        <div className="relative w-full h-full">
+                          <AnimatePresence initial={false}>
+                            <motion.img
+                              key={avatarIndex}
+                              src={avatarSrc}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.2, ease: "easeOut" }}
+                              className="absolute inset-0 w-full h-full object-cover object-top"
+                            />
+                          </AnimatePresence>
+                        </div>
+                      ) : (
+                        <div className="w-full h-full rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-3xl font-black text-white">
+                          A
+                        </div>
+                      )}
+                    </div>
+                    {/* Shuffle button — toggles the avatar image */}
+                    <div className="absolute -right-2 top-18 z-30">
+                      <motion.span
+                        key={avatarIndex}
+                        initial={{ rotate: -180, scale: 0.6 }}
+                        animate={{ rotate: 0, scale: 1 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 18 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => setAvatarIndex((i) => (i + 1) % AVATAR_POOL.length)}
+                        className="block w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center cursor-pointer shadow-[0_4px_14px_rgba(0,0,0,0.45)]"
+                      >
+                        <RefreshCw className="w-6 h-6 text-white" aria-hidden="true" />
+                      </motion.span>
+                    </div>
                   </div>
                 </div>
-              </div>
             </div>
 
             {/* Content panel */}
