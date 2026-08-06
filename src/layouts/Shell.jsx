@@ -104,10 +104,10 @@ export default function Shell({ children, onCvOpen }) {
     let list = (nearBottom ? BOTTOM_MSGS[path] : ROUTE_MSGS[path]) || ['Welcome']
     if (path === '/' && !nearBottom) {
       list = [...list]
-      if (localStorage.getItem('mpw_visited')) {
+      if (sessionStorage.getItem('mpw_visited')) {
         list.unshift('Hey, welcome back')
       } else {
-        localStorage.setItem('mpw_visited', '1')
+        sessionStorage.setItem('mpw_visited', '1')
         list.unshift('Hey, welcome')
       }
     }

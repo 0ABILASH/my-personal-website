@@ -10,6 +10,12 @@ import {
   Headphones,
 } from "lucide-react";
 import profileImg from "../services/profileImg";
+import ilayarajaBgm from "../audio/ilayaraja-bgm.mp3";
+import kanneKalaimaane from "../audio/Kanne-Kalaimaane-Flute-Instrumental.mp3";
+import webUpdateBgm from "../audio/web-update.mp3";
+import fluteSoulful from "../audio/flute - soulful.mp3";
+import motherBgm from "../audio/mother-bgm.mp3";
+import comingSoonBgm from "../audio/coming-soon.mp3";
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(() =>
@@ -36,7 +42,7 @@ const POSTS = [
     read: "5 min",
     audio: {
       title: "Song Aid",
-      src: "/audio/ilayaraja-bgm.mp3",
+      src: ilayarajaBgm,
     },
     content: [
       "I have ridden More than- 5,000 km alone, and those journeys make me feel truly alive. The feeling of being on the open road, with nothing but my thoughts and the endless horizon ahead, is one of the greatest joys of my life. It is a feeling I want to carry with me until my last day.",
@@ -54,7 +60,7 @@ const POSTS = [
     read: "3 min",
     audio: {
       title: "En Kanne Kalaimaane",
-      src: "/audio/Kanne-Kalaimaane-Flute-Instrumental.mp3",
+      src: kanneKalaimaane,
     },
     content: [
       "Yes, I loved with all my heart, and I lost with a heart that was left empty.",
@@ -74,7 +80,7 @@ const POSTS = [
     read: "0 min",
     audio: {
       title: "SoundHelix ",
-      src: "/audio/web-update.mp3",
+      src: webUpdateBgm,
     },
     content: [
       "Im making a few improvements behind the scenes. Some pages are still under construction while I add new content and polish the overall experience. Check back soon—theres more on the way!",
@@ -89,7 +95,7 @@ const POSTS = [
     read: "3 min",
     audio: {
       title: "Most Needed",
-      src: "/audio/flute - soulful.mp3",
+      src: fluteSoulful,
     },
     content: [
       "The way I see life is completely different from how most people do. Maybe that\u2019s why I often feel like I don\u2019t fit into society.",
@@ -108,7 +114,7 @@ const POSTS = [
     read: "2 min",
     audio: {
       title: "Mom's Magic",
-      src: "/audio/mother-bgm.mp3",
+      src: motherBgm,
     },
     content: [
       "Amma",
@@ -127,7 +133,7 @@ const POSTS = [
     read: "0 min",
     audio: {
       title: "Coming Soon",
-      src: "/audio/coming-soon.mp3",
+      src: comingSoonBgm,
     },
     content: ["This blog is under construction."],
   },
