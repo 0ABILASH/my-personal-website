@@ -162,6 +162,7 @@ export default function Writing() {
   const audioRef = useRef(null);
   const audioCtxRef = useRef(null);
   const lastActivityRef = useRef(Date.now());
+  const openPostRef = useRef(null);
 
   useEffect(() => {
     fetch("/api/likes")
@@ -226,9 +227,20 @@ export default function Writing() {
   useEffect(() => {
     const a = new Audio();
     a.preload = "metadata";
-    const onPlay = () => setPlaying(true);
-    const onPause = () => setPlaying(false);
-    const onEnded = () => setPlaying(false);
+    const onPlay = () => {
+      setPlaying(true);
+      if (openPostRef.current) {
+        window.dispatchEvent(new CustomEvent("blog-playing"));
+      }
+    };
+    const onPause = () => {
+      setPlaying(false);
+      window.dispatchEvent(new CustomEvent("blog-stopped"));
+    };
+    const onEnded = () => {
+      setPlaying(false);
+      window.dispatchEvent(new CustomEvent("blog-stopped"));
+    };
     const onError = () => setAudioError(true);
     a.addEventListener("play", onPlay);
     a.addEventListener("pause", onPause);
@@ -320,6 +332,7 @@ export default function Writing() {
 
   const openPostWith = (post) => {
     setOpenPost(post);
+    openPostRef.current = post;
     setAudioError(false);
     const a = audioRef.current;
     if (!a || !post.audio) return;
@@ -333,8 +346,10 @@ export default function Writing() {
 
   const closePost = () => {
     setOpenPost(null);
+    openPostRef.current = null;
     const a = audioRef.current;
     if (a) a.pause();
+    window.dispatchEvent(new CustomEvent("blog-done"));
   };
 
   const togglePlay = () => {

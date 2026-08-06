@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowUpRight, Download, X } from 'lucide-react'
@@ -13,9 +13,10 @@ const NAV = [
 
 const ROUTE_MSGS = {
   '/': [
-    'Hey, welcome!!',
     'Glad you are here',
     'Fresh stories await',
+    'Your home base',
+    'Motorcyclist at heart',
   ],
   '/profile': [
     'Explore my profile',
@@ -47,8 +48,9 @@ const BOTTOM_MSGS = {
   ],
   '/blogs': [
     'How were my blogs?',
-    'Thanks for reading',
     'Your feedback keeps me writing',
+    'Until the next story',
+    'Come back for more stories',
   ],
 }
 
@@ -57,7 +59,16 @@ export default function Shell({ children, onCvOpen }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [imgOpen, setImgOpen] = useState(false)
   const [nearBottom, setNearBottom] = useState(false)
-  const [msgIndex, setMsgIndex] = useState(0)
+  const [headerMsg, setHeaderMsg] = useState('')
+  const lastMsgCtxRef = useRef(null)
+  const lastRouteRef = useRef(null)
+  const ctxIdxRef = useRef({})
+  const blogDoneTimerRef = useRef(null)
+  const blogNextTimerRef = useRef(null)
+  const pathRef = useRef(location.pathname)
+  const nearBottomRef = useRef(nearBottom)
+  pathRef.current = location.pathname
+  nearBottomRef.current = nearBottom
 
   const isActive = (to) => to === '/' ? location.pathname === '/' : location.pathname.startsWith(to)
 
@@ -78,15 +89,59 @@ export default function Shell({ children, onCvOpen }) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  useEffect(() => { setMsgIndex(0) }, [location.pathname, nearBottom])
+  const msgIndexRef = useRef(-1)
 
   useEffect(() => {
-    const id = setInterval(() => setMsgIndex((i) => i + 1), 4200)
-    return () => clearInterval(id)
+    const path = location.pathname
+    if (path !== lastRouteRef.current) {
+      lastRouteRef.current = path
+      ctxIdxRef.current = {}
+    }
+    const ctx = `${path}|${nearBottom ? 'bottom' : 'top'}`
+    if (ctx === lastMsgCtxRef.current) return
+    lastMsgCtxRef.current = ctx
+    ctxIdxRef.current[ctx] = (ctxIdxRef.current[ctx] ?? -1) + 1
+    let list = (nearBottom ? BOTTOM_MSGS[path] : ROUTE_MSGS[path]) || ['Welcome']
+    if (path === '/' && !nearBottom) {
+      list = [...list]
+      if (localStorage.getItem('mpw_visited')) {
+        list.unshift('Hey, welcome back')
+      } else {
+        localStorage.setItem('mpw_visited', '1')
+        list.unshift('Hey, welcome')
+      }
+    }
+    setHeaderMsg(list[ctxIdxRef.current[ctx] % list.length])
+  }, [location.pathname, nearBottom])
+
+  useEffect(() => {
+    const onBlogDone = () => {
+      if (blogDoneTimerRef.current) clearTimeout(blogDoneTimerRef.current)
+      if (blogNextTimerRef.current) clearTimeout(blogNextTimerRef.current)
+      setHeaderMsg('Thanks for reading')
+      blogNextTimerRef.current = setTimeout(() => {
+        const path = pathRef.current
+        const nearBottomNow = nearBottomRef.current
+        const ctx = `${path}|${nearBottomNow ? 'bottom' : 'top'}`
+        lastMsgCtxRef.current = ctx
+        ctxIdxRef.current[ctx] = (ctxIdxRef.current[ctx] ?? -1) + 1
+        const list = (nearBottomNow ? BOTTOM_MSGS[path] : ROUTE_MSGS[path]) || ['Welcome']
+        setHeaderMsg(list[ctxIdxRef.current[ctx] % list.length])
+      }, 4000)
+    }
+    window.addEventListener('blog-done', onBlogDone)
+    return () => {
+      window.removeEventListener('blog-done', onBlogDone)
+      if (blogDoneTimerRef.current) clearTimeout(blogDoneTimerRef.current)
+      if (blogNextTimerRef.current) clearTimeout(blogNextTimerRef.current)
+    }
   }, [])
 
-  const msgList = (nearBottom ? BOTTOM_MSGS[location.pathname] : ROUTE_MSGS[location.pathname]) || ['Welcome']
-  const headerMsg = msgList[msgIndex % msgList.length]
+  useEffect(() => {
+    const onPlaying = () => setHeaderMsg('Headphones recommended')
+    window.addEventListener('blog-playing', onPlaying)
+    return () => window.removeEventListener('blog-playing', onPlaying)
+  }, [])
 
   return (
     <div className="min-h-screen bg-bg text-text flex flex-col">
