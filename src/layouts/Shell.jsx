@@ -11,10 +11,53 @@ const NAV = [
   { to: '/blogs', label: 'Blogs' },
 ]
 
+const ROUTE_MSGS = {
+  '/': [
+    'Hey, welcome!!',
+    'Glad you are here',
+    'Fresh stories await',
+  ],
+  '/profile': [
+    'Explore my profile',
+    'Get to know about me',
+  ],
+  '/travel-log': [
+    'My travel journeys',
+    'Destinations on the map',
+  ],
+  '/blogs': [
+    'Read the latest blogs',
+    'Headphones recommended',
+  ],
+}
+
+const BOTTOM_MSGS = {
+  '/': [
+    'You reached the end',
+    'More stories waiting for you',
+  ],
+  '/profile': [
+    'That is all about me',
+    'Thanks for visiting',
+    'Have a great day',
+  ],
+  '/travel-log': [
+    'Tap a destination to explore',
+    'Every pin has a story',
+  ],
+  '/blogs': [
+    'How were my blogs?',
+    'Thanks for reading',
+    'Your feedback keeps me writing',
+  ],
+}
+
 export default function Shell({ children, onCvOpen }) {
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [imgOpen, setImgOpen] = useState(false)
+  const [nearBottom, setNearBottom] = useState(false)
+  const [msgIndex, setMsgIndex] = useState(0)
 
   const isActive = (to) => to === '/' ? location.pathname === '/' : location.pathname.startsWith(to)
 
@@ -25,11 +68,31 @@ export default function Shell({ children, onCvOpen }) {
 
   useEffect(() => { setMobileOpen(false) }, [location.pathname])
 
+  useEffect(() => {
+    const onScroll = () => {
+      const doc = document.documentElement
+      setNearBottom(window.innerHeight + window.scrollY >= doc.scrollHeight - 200)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => { setMsgIndex(0) }, [location.pathname, nearBottom])
+
+  useEffect(() => {
+    const id = setInterval(() => setMsgIndex((i) => i + 1), 4200)
+    return () => clearInterval(id)
+  }, [])
+
+  const msgList = (nearBottom ? BOTTOM_MSGS[location.pathname] : ROUTE_MSGS[location.pathname]) || ['Welcome']
+  const headerMsg = msgList[msgIndex % msgList.length]
+
   return (
     <div className="min-h-screen bg-bg text-text flex flex-col">
       <header className="fixed top-0 left-0 right-0 z-[2000] bg-bg/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-5xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             {headerImg ? (
               <button
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); setImgOpen(true); }}
@@ -45,6 +108,37 @@ export default function Shell({ children, onCvOpen }) {
                 <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_16px_rgba(59,130,246,0.25)]">A</div>
               </button>
             )}
+
+            {/* Live status message — mobile & tablet only */}
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={headerMsg}
+                initial={{ opacity: 0, x: -8, y: 3 }}
+                animate={{ opacity: 1, x: 0, y: 0 }}
+                exit={{ opacity: 0, x: 8, y: -3 }}
+                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                className="md:hidden flex items-center gap-2 h-7 px-2.5 rounded-full bg-surface/50 border border-border/50 text-[10px] font-medium text-text-secondary whitespace-nowrap overflow-hidden"
+              >
+                <span className="flex items-center gap-[3px] shrink-0">
+                  <motion.span
+                    animate={{ opacity: [0.2, 1, 0.2], y: [0, -1.5, 0] }}
+                    transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: 0 }}
+                    className="w-[4px] h-[4px] rounded-full bg-accent"
+                  />
+                  <motion.span
+                    animate={{ opacity: [0.2, 1, 0.2], y: [0, -1.5, 0] }}
+                    transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                    className="w-[4px] h-[4px] rounded-full bg-accent"
+                  />
+                  <motion.span
+                    animate={{ opacity: [0.2, 1, 0.2], y: [0, -1.5, 0] }}
+                    transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+                    className="w-[4px] h-[4px] rounded-full bg-accent"
+                  />
+                </span>
+                <span className="truncate">{headerMsg}</span>
+              </motion.span>
+            </AnimatePresence>
           </div>
 
           <nav className="hidden md:flex items-center gap-0.5">

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Globe, RefreshCw, ChevronDown, MapPin } from "lucide-react";
+import { Globe, RefreshCw, ChevronDown, MapPin, Plane, Heart, MonitorSmartphone } from "lucide-react";
 import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS, addLegend, markerType } from "../services/map";
 
 var TYPE_META = {
@@ -380,6 +380,14 @@ export default function Space() {
           </div>
         </div>
 
+        {/* Mobile hint — better on desktop */}
+        <div className="lg:hidden flex justify-center mb-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface/60 backdrop-blur border border-border text-[11px] font-medium text-text-secondary">
+            <MonitorSmartphone size={13} className="text-accent shrink-0" />
+            Better experience use desktop
+          </div>
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -389,48 +397,31 @@ export default function Space() {
           <div ref={mapRef} className="w-full h-[420px] sm:h-[500px] lg:h-[560px] bg-bg" />
           <div className="absolute inset-0 pointer-events-none rounded-2xl shadow-[inset_0_0_80px_rgba(0,0,0,0.4)]" />
 
-          {/* Toggle pills — top center */}
+          {/* Map filter toggles — segmented control */}
           {!loading && !error && (
-            <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-1.5 p-1 rounded-full bg-surface/70 backdrop-blur-xl border border-border shadow-lg shadow-black/40">
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-1 p-1 rounded-full bg-surface/80 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/50">
               <button
                 onClick={function () { setShowVisited(function (v) { return !v }) }}
                 className={
-                  "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-wide transition-all duration-300 cursor-pointer " +
+                  "flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-semibold tracking-wide transition-all duration-300 cursor-pointer " +
                   (showVisited
-                    ? "bg-blue-500/20 text-blue-200 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
-                    : "text-text-tertiary hover:text-text-secondary hover:bg-white/5")
+                    ? "bg-blue-500 text-white shadow-[0_4px_16px_-4px_rgba(59,130,246,0.9)]"
+                    : "text-text-tertiary hover:text-text hover:bg-white/5")
                 }
               >
-                <span
-                  className={
-                    "w-1.5 h-1.5 rounded-full transition-all duration-300 " +
-                    (showVisited ? "bg-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.9)]" : "bg-text-quaternary")
-                  }
-                />
+                <Plane size={12} />
                 Visited
               </button>
               <button
                 onClick={function () { setShowSmall(function (v) { return !v }) }}
                 className={
-                  "flex items-center gap-2 pl-3 pr-2 py-1 rounded-full text-[11px] font-semibold tracking-wide transition-all duration-300 cursor-pointer " +
+                  "flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-semibold tracking-wide transition-all duration-300 cursor-pointer " +
                   (showSmall
-                    ? "text-[#7FD8CC]"
-                    : "text-text-tertiary hover:text-text-secondary")
+                    ? "bg-[#249D8F] text-white shadow-[0_4px_16px_-4px_rgba(36,157,143,0.9)]"
+                    : "text-text-tertiary hover:text-text hover:bg-white/5")
                 }
               >
-                <span
-                  className={
-                    "relative w-8 h-[18px] rounded-full transition-all duration-300 " +
-                    (showSmall ? "bg-[#249D8F]" : "bg-bg border border-border")
-                  }
-                >
-                  <span
-                    className={
-                      "absolute top-[2px] left-[2px] w-[14px] h-[14px] rounded-full bg-white transition-all duration-300 " +
-                      (showSmall ? "translate-x-[14px] shadow-[0_0_6px_rgba(36,157,143,0.8)]" : "")
-                    }
-                  />
-                </span>
+                <Heart size={12} />
                 Favorites
               </button>
             </div>
@@ -468,8 +459,8 @@ export default function Space() {
           </div>
         </motion.div>
 
-        {/* Description below the map */}
-        <div className="mt-5 flex items-start gap-3">
+        {/* Description below the map — desktop */}
+        <div className="hidden lg:flex mt-5 items-start gap-3">
           <span className="w-6 h-6 rounded-lg bg-accent-soft border border-accent/20 flex items-center justify-center shrink-0 mt-0.5">
             <MapPin size={12} className="text-accent" />
           </span>
@@ -629,6 +620,17 @@ export default function Space() {
               )}
             </div>
           </div>
+        </div>
+
+        {/* Description below destinations — mobile & tablet */}
+        <div className="lg:hidden mt-5 flex items-start gap-3">
+          <span className="w-6 h-6 rounded-lg bg-accent-soft border border-accent/20 flex items-center justify-center shrink-0 mt-0.5">
+            <MapPin size={12} className="text-accent" />
+          </span>
+          <p className="text-[12.5px] text-text-secondary leading-relaxed max-w-2xl">
+            Every pin tells a story — the roads I&apos;ve ridden, the cities I&apos;ve explored, and the
+            memories that made each journey unforgettable. Tap a destination to fly across the map.
+          </p>
         </div>
       </motion.div>
     </div>
