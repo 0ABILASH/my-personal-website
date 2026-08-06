@@ -21,12 +21,19 @@ export default function Space() {
   const [showVisited, setShowVisited] = useState(false);
   const [showSmall, setShowSmall] = useState(false);
   const [fetchStatus, setFetchStatus] = useState("loading");
+  const [fetchSecs, setFetchSecs] = useState("0.0");
+  const startTime = useRef(0);
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const mapReady = useRef(false);
 
   // Fetch places from API
   useEffect(() => {
+    startTime.current = Date.now();
+    var t0 = startTime.current;
+    var timer = setInterval(function () {
+      setFetchSecs(((Date.now() - t0) / 1000).toFixed(1));
+    }, 200);
     fetch("/api/travel")
       .then(function (r) { return r.json() })
       .then(function (data) {
@@ -48,6 +55,10 @@ export default function Space() {
       })
       .catch(function () {
         setFetchStatus("error");
+      })
+      .finally(function () {
+        clearInterval(timer);
+        setFetchSecs(((Date.now() - t0) / 1000).toFixed(1));
       });
   }, []);
 
@@ -251,12 +262,12 @@ export default function Space() {
               }}
             />
             {fetchStatus === "ok"
-              ? "Data loaded"
+              ? "Data loaded · " + fetchSecs + "s"
               : fetchStatus === "fallback"
-                ? "Offline data"
+                ? "Offline data · " + fetchSecs + "s"
                 : fetchStatus === "error"
-                  ? "Load failed"
-                  : "Data fetching..."}
+                  ? "Load failed · " + fetchSecs + "s"
+                  : "API data fetching... " + fetchSecs + "s"}
           </span>
         </div>
         <div className="cards-scroll flex-1 overflow-y-auto p-2.5 flex flex-col gap-2 min-h-0">
@@ -380,7 +391,7 @@ export default function Space() {
 
           {/* Toggle pills — top center */}
           {!loading && !error && (
-            <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-1 p-1 rounded-full bg-surface/70 backdrop-blur-xl border border-border shadow-lg shadow-black/40">
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-1.5 p-1 rounded-full bg-surface/70 backdrop-blur-xl border border-border shadow-lg shadow-black/40">
               <button
                 onClick={function () { setShowVisited(function (v) { return !v }) }}
                 className={
@@ -401,18 +412,25 @@ export default function Space() {
               <button
                 onClick={function () { setShowSmall(function (v) { return !v }) }}
                 className={
-                  "flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] font-semibold tracking-wide transition-all duration-300 cursor-pointer " +
+                  "flex items-center gap-2 pl-3 pr-2 py-1 rounded-full text-[11px] font-semibold tracking-wide transition-all duration-300 cursor-pointer " +
                   (showSmall
-                    ? "bg-[#249D8F]/20 text-[#7FD8CC] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
-                    : "text-text-tertiary hover:text-text-secondary hover:bg-white/5")
+                    ? "text-[#7FD8CC]"
+                    : "text-text-tertiary hover:text-text-secondary")
                 }
               >
                 <span
                   className={
-                    "w-1.5 h-1.5 rounded-full transition-all duration-300 " +
-                    (showSmall ? "bg-[#249D8F] shadow-[0_0_8px_rgba(36,157,143,0.9)]" : "bg-text-quaternary")
+                    "relative w-8 h-[18px] rounded-full transition-all duration-300 " +
+                    (showSmall ? "bg-[#249D8F]" : "bg-bg border border-border")
                   }
-                />
+                >
+                  <span
+                    className={
+                      "absolute top-[2px] left-[2px] w-[14px] h-[14px] rounded-full bg-white transition-all duration-300 " +
+                      (showSmall ? "translate-x-[14px] shadow-[0_0_6px_rgba(36,157,143,0.8)]" : "")
+                    }
+                  />
+                </span>
                 Favorites
               </button>
             </div>
@@ -530,12 +548,12 @@ export default function Space() {
                   }}
                 />
                 {fetchStatus === "ok"
-                  ? "Data loaded"
+                  ? "Data loaded · " + fetchSecs + "s"
                   : fetchStatus === "fallback"
-                    ? "Offline data"
+                    ? "Offline data · " + fetchSecs + "s"
                     : fetchStatus === "error"
-                      ? "Load failed"
-                      : "Data fetching..."}
+                      ? "Load failed · " + fetchSecs + "s"
+                      : "API data fetching... " + fetchSecs + "s"}
               </span>
             </div>
 
