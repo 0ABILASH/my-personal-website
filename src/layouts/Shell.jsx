@@ -14,9 +14,8 @@ const NAV = [
 const ROUTE_MSGS = {
   '/': [
     'Glad you are here',
-    'Fresh stories await',
-    'Your home base',
-    'Motorcyclist at heart',
+    'Every Page Holds a Piece of Me.',
+   
   ],
   '/profile': [
     'Explore my profile',
@@ -44,13 +43,12 @@ const BOTTOM_MSGS = {
   ],
   '/travel-log': [
     'Tap a destination to explore',
-    'Every pin has a story',
+    'Every destination has a story',
   ],
   '/blogs': [
-    'How were my blogs?',
     'Your feedback keeps me writing',
-    'Until the next story',
-    'Come back for more stories',
+    'How were my blogs?',
+    'From the Heart to the Page.',
   ],
 }
 
