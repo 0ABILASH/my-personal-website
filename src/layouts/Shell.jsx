@@ -93,6 +93,22 @@ export default function Shell({ children, onCvOpen }) {
     if (path !== lastRouteRef.current) {
       lastRouteRef.current = path
       ctxIdxRef.current = {}
+      setNearBottom(false)
+      const ctx = `${path}|top`
+      lastMsgCtxRef.current = ctx
+      ctxIdxRef.current[ctx] = (ctxIdxRef.current[ctx] ?? -1) + 1
+      let list = ROUTE_MSGS[path] || ['Welcome']
+      if (path === '/') {
+        list = [...list]
+        if (sessionStorage.getItem('mpw_visited')) {
+          list.unshift('Hey, welcome back')
+        } else {
+          sessionStorage.setItem('mpw_visited', '1')
+          list.unshift('Hey, welcome')
+        }
+      }
+      setHeaderMsg(list[ctxIdxRef.current[ctx] % list.length])
+      return
     }
     const ctx = `${path}|${nearBottom ? 'bottom' : 'top'}`
     if (ctx === lastMsgCtxRef.current) return
