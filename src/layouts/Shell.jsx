@@ -83,12 +83,13 @@ export default function Shell({ children, onCvOpen }) {
             </button>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden relative w-7 h-7 rounded-lg bg-surface border border-border flex items-center justify-center hover:border-border-hover transition-all cursor-pointer"
+              className="md:hidden relative w-9 h-9 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-surface active:bg-surface-hover cursor-pointer"
               aria-label="Toggle menu"
             >
-              <span className="flex flex-col gap-[5px] w-3.5">
-                <span className={`block h-[1.5px] bg-text-secondary rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] origin-center ${mobileOpen ? 'rotate-45 translate-y-[3.25px]' : ''}`} />
-                <span className={`block h-[1.5px] bg-text-secondary rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] origin-center ${mobileOpen ? '-rotate-45 -translate-y-[3.25px]' : ''}`} />
+              <span className="relative block w-4 h-[14px]">
+                <span className={`absolute left-0 top-0 w-4 h-[2px] bg-text-secondary rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobileOpen ? 'translate-y-[6px] rotate-45' : ''}`} />
+                <span className={`absolute left-0 top-[6px] w-4 h-[2px] bg-text-secondary rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobileOpen ? 'opacity-0 scale-x-0' : ''}`} />
+                <span className={`absolute left-0 bottom-0 w-4 h-[2px] bg-text-secondary rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobileOpen ? '-translate-y-[6px] -rotate-45' : ''}`} />
               </span>
             </button>
           </div>

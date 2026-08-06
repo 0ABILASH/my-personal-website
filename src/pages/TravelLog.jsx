@@ -192,7 +192,7 @@ export default function Space() {
           </span>
           <div className="flex-1 h-px bg-border" />
           <span
-            className="w-2 h-2 rounded-full cursor-help"
+            className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-mono font-semibold shrink-0"
             title={
               fetchStatus === "ok"
                 ? "Travel data loaded successfully"
@@ -205,31 +205,58 @@ export default function Space() {
             style={{
               background:
                 fetchStatus === "ok"
+                  ? "rgba(52,211,153,0.12)"
+                  : fetchStatus === "fallback"
+                    ? "rgba(251,191,36,0.12)"
+                    : fetchStatus === "error"
+                      ? "rgba(248,113,113,0.12)"
+                      : "rgba(161,161,170,0.12)",
+              border:
+                fetchStatus === "ok"
+                  ? "1px solid rgba(52,211,153,0.3)"
+                  : fetchStatus === "fallback"
+                    ? "1px solid rgba(251,191,36,0.3)"
+                    : fetchStatus === "error"
+                      ? "1px solid rgba(248,113,113,0.3)"
+                      : "1px solid rgba(161,161,170,0.3)",
+              color:
+                fetchStatus === "ok"
                   ? "#34d399"
                   : fetchStatus === "fallback"
                     ? "#fbbf24"
                     : fetchStatus === "error"
                       ? "#f87171"
                       : "#a1a1aa",
-              boxShadow:
-                fetchStatus === "ok"
-                  ? "0 0 6px rgba(52,211,153,0.6)"
-                  : fetchStatus === "fallback"
-                    ? "0 0 6px rgba(251,191,36,0.5)"
-                    : fetchStatus === "error"
-                      ? "0 0 6px rgba(248,113,113,0.5)"
-                      : "none",
             }}
-          />
-        </div>
-        <div className="flex flex-wrap items-center gap-2 px-4 py-2 border-b border-border shrink-0">
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/25 text-[9px] font-mono font-semibold text-blue-300">
-            <span className="w-1 h-1 rounded-full bg-blue-400 shadow-[0_0_4px_rgba(59,130,246,0.9)]" />
-            Visited
-          </span>
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#249D8F]/10 border border-[#249D8F]/25 text-[9px] font-mono font-semibold text-[#5FC9BC]">
-            <span className="w-1 h-1 rounded-full bg-[#249D8F] shadow-[0_0_4px_rgba(36,157,143,0.8)]" />
-            Favorites
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{
+                background:
+                  fetchStatus === "ok"
+                    ? "#34d399"
+                    : fetchStatus === "fallback"
+                      ? "#fbbf24"
+                      : fetchStatus === "error"
+                        ? "#f87171"
+                        : "#a1a1aa",
+                boxShadow:
+                  fetchStatus === "ok"
+                    ? "0 0 6px rgba(52,211,153,0.7)"
+                    : fetchStatus === "fallback"
+                      ? "0 0 6px rgba(251,191,36,0.6)"
+                      : fetchStatus === "error"
+                        ? "0 0 6px rgba(248,113,113,0.6)"
+                        : "0 0 6px rgba(161,161,170,0.5)",
+              }}
+            />
+            {fetchStatus === "ok"
+              ? "Data loaded"
+              : fetchStatus === "fallback"
+                ? "Offline data"
+                : fetchStatus === "error"
+                  ? "Load failed"
+                  : "Data fetching..."}
           </span>
         </div>
         <div className="cards-scroll flex-1 overflow-y-auto p-2.5 flex flex-col gap-2 min-h-0">
@@ -245,40 +272,39 @@ export default function Space() {
                   transition={{ delay: 0.2 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                   onClick={function () { togglePlace(p) }}
                   className={
-                    "group relative flex items-center gap-3 px-3 h-[54px] rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 w-full " +
+                    "group relative flex items-center gap-3 px-3 h-[54px] rounded-xl text-left cursor-pointer overflow-hidden transition-all duration-300 w-full " +
                     (active
-                      ? "border-accent/30 bg-accent-soft/60"
-                      : "border-border hover:border-border-hover hover:bg-surface")
+                      ? "bg-gradient-to-r from-accent-soft/80 via-accent-soft/40 to-transparent"
+                      : "bg-bg/40 hover:bg-surface")
                   }
-                  style={active ? { boxShadow: '0 4px 14px -10px rgba(0,0,0,0.6)' } : {}}
+                  style={{
+                    border: active ? '1px solid ' + meta.color + '44' : '1px solid rgba(255,255,255,0.08)',
+                    boxShadow: active ? '0 10px 26px -16px rgba(0,0,0,0.8), 0 0 0 1px ' + meta.color + '1a' : 'none',
+                  }}
                 >
                   <span
-                    className="absolute left-0 top-0 bottom-0 w-[2px] rounded-full transition-all duration-300"
-                    style={{ background: meta.color, opacity: active ? 0.7 : 0.3, boxShadow: 'none' }}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 h-7 w-[3px] rounded-full transition-all duration-300"
+                    style={{ background: meta.color, opacity: active ? 1 : 0.25, boxShadow: active ? '0 0 8px ' + meta.color : 'none' }}
                   />
-                  <span className="flex-shrink-0 text-[9px] font-mono text-text-quaternary w-3.5 text-right">
+                  <span className="flex-shrink-0 w-6 text-[9px] font-mono text-text-quaternary text-center">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <span
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0 border transition-all duration-300"
-                    style={{
-                    background: meta.soft,
-                    borderColor: meta.color + '33',
-                    boxShadow: 'none',
-                  }}
-                >
-                  {p.emoji || <MapPin size={13} style={{ color: meta.color }} />}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <div className="text-[13px] font-semibold truncate leading-tight">
-                    {p.city}
-                  </div>
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-base shrink-0 transition-transform duration-300 group-hover:scale-105"
+                    style={{ background: meta.soft, boxShadow: 'inset 0 0 0 1px ' + meta.color + '33' }}
+                  >
+                    {p.emoji || <MapPin size={14} style={{ color: meta.color }} />}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[13px] font-semibold truncate leading-tight">
+                      {p.city}
+                    </div>
                     <div className="flex items-center gap-1.5 mt-1 min-w-0">
                       <span
                         className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold uppercase tracking-wider shrink-0 whitespace-nowrap"
                         style={{ color: meta.color }}
                       >
-                        <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 4px ' + meta.color + 'aa' }} />
+                        <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 5px ' + meta.color + 'aa' }} />
                         {meta.label}
                       </span>
                       <span className="text-[9px] text-text-quaternary truncate font-mono min-w-0">
@@ -287,13 +313,10 @@ export default function Space() {
                     </div>
                   </div>
                   <span
-                    className={
-                      "w-4 h-4 rounded-md border items-center justify-center shrink-0 -translate-x-1 group-hover:translate-x-0 transition-all duration-300 " +
-                      (active ? "flex" : "hidden group-hover:flex")
-                    }
-                    style={{ borderColor: meta.color + '44', color: meta.color, background: meta.soft }}
+                    className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-all duration-300"
+                    style={{ color: meta.color, background: active ? meta.soft : 'transparent' }}
                   >
-                    <ChevronDown size={9} className={"transition-transform duration-300 " + (active ? "rotate-180" : "")} />
+                    <ChevronDown size={10} className={"transition-transform duration-300 " + (active ? "rotate-180" : "")} />
                   </span>
                 </motion.button>
                 {active && renderDetail(p, meta)}
@@ -448,7 +471,7 @@ export default function Space() {
               </span>
               <div className="flex-1 h-px bg-border" />
               <span
-                className="w-2 h-2 rounded-full shrink-0"
+                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] font-mono font-semibold shrink-0"
                 title={
                   fetchStatus === "ok"
                     ? "Travel data loaded successfully"
@@ -461,32 +484,58 @@ export default function Space() {
                 style={{
                   background:
                     fetchStatus === "ok"
+                      ? "rgba(52,211,153,0.12)"
+                      : fetchStatus === "fallback"
+                        ? "rgba(251,191,36,0.12)"
+                        : fetchStatus === "error"
+                          ? "rgba(248,113,113,0.12)"
+                          : "rgba(161,161,170,0.12)",
+                  border:
+                    fetchStatus === "ok"
+                      ? "1px solid rgba(52,211,153,0.3)"
+                      : fetchStatus === "fallback"
+                        ? "1px solid rgba(251,191,36,0.3)"
+                        : fetchStatus === "error"
+                          ? "1px solid rgba(248,113,113,0.3)"
+                          : "1px solid rgba(161,161,170,0.3)",
+                  color:
+                    fetchStatus === "ok"
                       ? "#34d399"
                       : fetchStatus === "fallback"
                         ? "#fbbf24"
                         : fetchStatus === "error"
                           ? "#f87171"
                           : "#a1a1aa",
-                  boxShadow:
-                    fetchStatus === "ok"
-                      ? "0 0 8px rgba(52,211,153,0.7)"
-                      : fetchStatus === "fallback"
-                        ? "0 0 8px rgba(251,191,36,0.6)"
-                        : fetchStatus === "error"
-                          ? "0 0 8px rgba(248,113,113,0.6)"
-                          : "none",
                 }}
-              />
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2 px-4 py-2.5 border-b border-white/10 shrink-0">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/25 text-[10px] font-mono font-semibold text-blue-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_5px_rgba(59,130,246,0.9)]" />
-                Visited
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/25 text-[10px] font-mono font-semibold text-red-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-red-400 shadow-[0_0_5px_rgba(255,5,5,0.8)]" />
-                Favorites
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full"
+                  style={{
+                    background:
+                      fetchStatus === "ok"
+                        ? "#34d399"
+                        : fetchStatus === "fallback"
+                          ? "#fbbf24"
+                          : fetchStatus === "error"
+                            ? "#f87171"
+                            : "#a1a1aa",
+                    boxShadow:
+                      fetchStatus === "ok"
+                        ? "0 0 6px rgba(52,211,153,0.7)"
+                        : fetchStatus === "fallback"
+                          ? "0 0 6px rgba(251,191,36,0.6)"
+                          : fetchStatus === "error"
+                            ? "0 0 6px rgba(248,113,113,0.6)"
+                            : "0 0 6px rgba(161,161,170,0.5)",
+                  }}
+                />
+                {fetchStatus === "ok"
+                  ? "Data loaded"
+                  : fetchStatus === "fallback"
+                    ? "Offline data"
+                    : fetchStatus === "error"
+                      ? "Load failed"
+                      : "Data fetching..."}
               </span>
             </div>
 
@@ -503,27 +552,26 @@ export default function Space() {
                       transition={{ delay: 0.15 + i * 0.04, duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                       onClick={function () { togglePlace(p) }}
                       className={
-                        "group relative flex items-center gap-2.5 px-3 h-[58px] rounded-xl bg-bg border text-left cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.98] w-full " +
+                        "group relative flex items-center gap-3 px-3 h-[58px] rounded-xl text-left cursor-pointer overflow-hidden transition-all duration-300 active:scale-[0.98] w-full " +
                         (active
-                          ? "border-accent/30 bg-accent-soft/60"
-                          : "border-border hover:border-border-hover")
+                          ? "bg-gradient-to-r from-accent-soft/80 via-accent-soft/40 to-transparent"
+                          : "bg-bg/40 hover:bg-surface")
                       }
-                      style={active ? { boxShadow: '0 6px 18px -12px rgba(0,0,0,0.6)' } : {}}
+                      style={{
+                        border: active ? '1px solid ' + meta.color + '44' : '1px solid rgba(255,255,255,0.08)',
+                        boxShadow: active ? '0 10px 26px -16px rgba(0,0,0,0.8), 0 0 0 1px ' + meta.color + '1a' : 'none',
+                      }}
                     >
                       <span
-                        className="absolute left-0 top-0 bottom-0 w-[3px] rounded-full"
-                        style={{ background: meta.color, opacity: active ? 0.7 : 0.3, boxShadow: 'none' }}
+                        className="absolute left-0 top-1/2 -translate-y-1/2 h-7 w-[3px] rounded-full transition-all duration-300"
+                        style={{ background: meta.color, opacity: active ? 1 : 0.25, boxShadow: active ? '0 0 8px ' + meta.color : 'none' }}
                       />
-                      <span className="text-[9px] font-mono text-text-quaternary shrink-0">
+                      <span className="flex-shrink-0 w-6 text-[9px] font-mono text-text-quaternary text-center">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <span
-                        className="w-8 h-8 rounded-lg flex items-center justify-center text-base shrink-0 border"
-                        style={{
-                          background: meta.soft,
-                          borderColor: meta.color + '33',
-                          boxShadow: 'none',
-                        }}
+                        className="w-9 h-9 rounded-full flex items-center justify-center text-base shrink-0 transition-transform duration-300 group-hover:scale-105"
+                        style={{ background: meta.soft, boxShadow: 'inset 0 0 0 1px ' + meta.color + '33' }}
                       >
                         {p.emoji || <MapPin size={14} style={{ color: meta.color }} />}
                       </span>
@@ -531,12 +579,12 @@ export default function Space() {
                         <div className="text-[13px] font-semibold truncate leading-tight">
                           {p.city}
                         </div>
-                        <div className="flex items-center gap-1.5 mt-0.5 min-w-0">
+                        <div className="flex items-center gap-1.5 mt-1 min-w-0">
                           <span
                             className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold uppercase tracking-wider shrink-0 whitespace-nowrap"
                             style={{ color: meta.color }}
                           >
-                            <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 4px ' + meta.color + 'aa' }} />
+                            <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 5px ' + meta.color + 'aa' }} />
                             {meta.label}
                           </span>
                           <span className="text-[9px] text-text-quaternary truncate font-mono min-w-0">
@@ -545,8 +593,8 @@ export default function Space() {
                         </div>
                       </div>
                       <span
-                        className="w-5 h-5 rounded-md border flex items-center justify-center shrink-0"
-                        style={{ borderColor: meta.color + '44', color: meta.color, background: meta.soft }}
+                        className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-all duration-300"
+                        style={{ color: meta.color, background: active ? meta.soft : 'transparent' }}
                       >
                         <ChevronDown size={10} className={"transition-transform duration-300 " + (active ? "rotate-180" : "")} />
                       </span>

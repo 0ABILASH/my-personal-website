@@ -51,7 +51,7 @@ const TRAITS = [
   { img: teaImg, name: "Tea Person", sub: "Proud Teetotaler" },
   { img: batmanImg, name: "Im Batman", sub: "Night Person" },
   { img: musicImg, name: "Music Addict", sub: "Yes I'm" },
-  { img: petImg, name: "Pet", sub: "Soon" },
+  { img: petImg, name: "Pet Partner", sub: "Very Soon" },
   { img: godImg, name: "God", sub: "God First" },
   { img: bikeImg, name: "Motorcyclist", sub: "Road Therapy" },
 ];
