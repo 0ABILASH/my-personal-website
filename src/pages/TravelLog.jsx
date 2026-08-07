@@ -164,7 +164,7 @@ export default function Space() {
             )}
             <span
               className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[8px] font-mono font-bold uppercase tracking-wider"
-              style={{ background: meta.color, color: "#000", boxShadow: "0 0 10px " + meta.color }}
+              style={{ background: meta.color, color: "#000", boxShadow: "0 0 5px " + meta.color }}
             >
               {meta.label}
             </span>
@@ -295,14 +295,13 @@ export default function Space() {
                 >
                   <span
                     className="absolute left-0 top-1/2 -translate-y-1/2 h-7 w-[3px] rounded-full transition-all duration-300"
-                    style={{ background: meta.color, opacity: active ? 1 : 0.25, boxShadow: active ? '0 0 8px ' + meta.color : 'none' }}
+                    style={{ background: meta.color, opacity: active ? 1 : 0.25, boxShadow: active ? '0 0 4px ' + meta.color : 'none' }}
                   />
                   <span className="flex-shrink-0 w-6 text-[9px] font-mono text-text-quaternary text-center">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <span
-                    className="w-9 h-9 rounded-full flex items-center justify-center text-base shrink-0 transition-transform duration-300 group-hover:scale-105"
-                    style={{ background: meta.soft }}
+                    className="w-9 h-9 flex items-center justify-center text-base shrink-0 transition-transform duration-300 group-hover:scale-105"
                   >
                     {p.emoji || <MapPin size={14} style={{ color: meta.color }} />}
                   </span>
@@ -315,7 +314,7 @@ export default function Space() {
                         className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold uppercase tracking-wider shrink-0 whitespace-nowrap"
                         style={{ color: meta.color }}
                       >
-                        <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 5px ' + meta.color + 'aa' }} />
+                        <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 2px ' + meta.color + 'aa' }} />
                         {meta.label}
                       </span>
                       <span className="text-[9px] text-text-quaternary truncate font-mono min-w-0">
@@ -573,14 +572,13 @@ export default function Space() {
                     >
                       <span
                         className="absolute left-0 top-1/2 -translate-y-1/2 h-7 w-[3px] rounded-full transition-all duration-300"
-                        style={{ background: meta.color, opacity: active ? 1 : 0.25, boxShadow: active ? '0 0 8px ' + meta.color : 'none' }}
+                        style={{ background: meta.color, opacity: active ? 1 : 0.25, boxShadow: active ? '0 0 4px ' + meta.color : 'none' }}
                       />
                       <span className="flex-shrink-0 w-6 text-[9px] font-mono text-text-quaternary text-center">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                         <span
-                          className="w-9 h-9 rounded-full flex items-center justify-center text-base shrink-0 transition-transform duration-300 group-hover:scale-105"
-                          style={{ background: meta.soft }}
+                          className="w-9 h-9 flex items-center justify-center text-base shrink-0 transition-transform duration-300 group-hover:scale-105"
                         >
                           {p.emoji || <MapPin size={14} style={{ color: meta.color }} />}
                         </span>
@@ -593,7 +591,7 @@ export default function Space() {
                             className="inline-flex items-center gap-1 text-[9px] font-mono font-semibold uppercase tracking-wider shrink-0 whitespace-nowrap"
                             style={{ color: meta.color }}
                           >
-                            <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 5px ' + meta.color + 'aa' }} />
+                            <span className="w-1 h-1 rounded-full" style={{ background: meta.color, boxShadow: '0 0 2px ' + meta.color + 'aa' }} />
                             {meta.label}
                           </span>
                           <span className="text-[9px] text-text-quaternary truncate font-mono min-w-0">
