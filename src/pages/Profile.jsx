@@ -125,7 +125,6 @@ const ScrollText = ({ text, className }) => {
 
 export default function Profile() {
   const [avatarIndex, setAvatarIndex] = useState(0);
-  const avatarSrc = AVATAR_POOL[avatarIndex % AVATAR_POOL.length];
 
   return (
     <div className="relative max-w-5xl mx-auto px-5 sm:px-6 py-12 sm:py-16">
@@ -181,19 +180,18 @@ export default function Profile() {
                 <div className="absolute bottom-6 right-6 sm:right-0 sm:translate-x-1/2 z-10">
                   <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-accent via-[#118ab2] to-accent-hover p-[3px] shadow-[0_12px_40px_-10px_rgba(59,130,246,0.5)]">
                     <div className="w-full h-full rounded-full overflow-hidden ring-1 ring-white/20">
-                      {avatarSrc ? (
+                      {AVATAR_POOL.length ? (
                         <div className="relative w-full h-full">
-                          <AnimatePresence initial={false}>
-                            <motion.img
-                              key={avatarIndex}
-                              src={avatarSrc}
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              transition={{ duration: 0.2, ease: "easeOut" }}
-                              className="absolute inset-0 w-full h-full object-cover object-top"
+                          {AVATAR_POOL.map((img, i) => (
+                            <img
+                              key={i}
+                              src={img}
+                              alt=""
+                              className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-200 ease-out ${
+                                i === avatarIndex ? "opacity-100" : "opacity-0"
+                              }`}
                             />
-                          </AnimatePresence>
+                          ))}
                         </div>
                       ) : (
                         <div className="w-full h-full rounded-full bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center text-3xl font-black text-white">
@@ -220,7 +218,7 @@ export default function Profile() {
             </div>
 
             {/* Content panel */}
-            <div className="relative md:col-span-2 flex flex-col justify-center items-start px-6 sm:px-8 py-10 sm:py-12 bg-gradient-to-br from-surface via-surface to-bg">
+            <div className="relative md:col-span-2 flex flex-col justify-center items-start px-6 sm:px-8 md:pl-24 py-10 sm:py-12 bg-gradient-to-br from-surface via-surface to-bg">
               {/* Accent glow */}
               <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-accent/10 blur-[80px] pointer-events-none" />
               <div className="absolute -bottom-16 -right-16 w-56 h-56 rounded-full bg-[#118ab2]/10 blur-[80px] pointer-events-none" />
@@ -252,9 +250,10 @@ export default function Profile() {
               </p>
 
               {/* Status pill */}
-              <div className="relative inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-bg/70 backdrop-blur-md border border-border text-[11px] font-medium text-text-secondary">
-                
-                Currently somewhere, collecting another life experience.
+              <div className="flex w-fit max-w-full items-start gap-2 rounded-full bg-bg/70 backdrop-blur-md border border-border px-3.5 py-1.5 text-[11px] font-medium text-text-secondary">
+                <span className="min-w-0 leading-snug">
+                  Currently somewhere, collecting another life experience.
+                </span>
               </div>
             </div>
           </div>
