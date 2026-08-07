@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, Briefcase, MapPin, RefreshCw } from "lucide-react";
-import profileImg from "../services/profileImg";
+import profileImg from "../images/imagebg.jpeg";
 import avatar1 from "../images/99.png";
 import avatar2 from "../images/00.png";
 import IMG_7004 from "../images/IMG_7004.jpeg";

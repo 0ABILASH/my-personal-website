@@ -9,7 +9,7 @@ import {
   Heart,
   Headphones,
 } from "lucide-react";
-import profileImg from "../services/profileImg";
+import profileImg from "../images/pimage.jpeg";
 import ilayarajaBgm from "../audio/ilayaraja-bgm.mp3";
 import kanneKalaimaane from "../audio/Kanne-Kalaimaane-Flute-Instrumental.mp3";
 import webUpdateBgm from "../audio/web-update.mp3";

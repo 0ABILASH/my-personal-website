@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Globe, RefreshCw, ChevronDown, MapPin, Plane, Heart, MonitorSmartphone } from "lucide-react";
+import { Globe, RefreshCw, ChevronDown, MapPin, Bike, Heart, MonitorSmartphone } from "lucide-react";
 import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS, addLegend, markerType } from "../services/map";
 
 var TYPE_META = {
@@ -302,7 +302,7 @@ export default function Space() {
                   </span>
                   <span
                     className="w-9 h-9 rounded-full flex items-center justify-center text-base shrink-0 transition-transform duration-300 group-hover:scale-105"
-                    style={{ background: meta.soft, boxShadow: 'inset 0 0 0 1px ' + meta.color + '33' }}
+                    style={{ background: meta.soft }}
                   >
                     {p.emoji || <MapPin size={14} style={{ color: meta.color }} />}
                   </span>
@@ -409,7 +409,7 @@ export default function Space() {
                     : "text-text-tertiary hover:text-text hover:bg-white/5")
                 }
               >
-                <Plane size={12} />
+                <Bike size={12} />
                 Visited
               </button>
               <button
@@ -578,12 +578,12 @@ export default function Space() {
                       <span className="flex-shrink-0 w-6 text-[9px] font-mono text-text-quaternary text-center">
                         {String(i + 1).padStart(2, '0')}
                       </span>
-                      <span
-                        className="w-9 h-9 rounded-full flex items-center justify-center text-base shrink-0 transition-transform duration-300 group-hover:scale-105"
-                        style={{ background: meta.soft, boxShadow: 'inset 0 0 0 1px ' + meta.color + '33' }}
-                      >
-                        {p.emoji || <MapPin size={14} style={{ color: meta.color }} />}
-                      </span>
+                        <span
+                          className="w-9 h-9 rounded-full flex items-center justify-center text-base shrink-0 transition-transform duration-300 group-hover:scale-105"
+                          style={{ background: meta.soft }}
+                        >
+                          {p.emoji || <MapPin size={14} style={{ color: meta.color }} />}
+                        </span>
                       <div className="min-w-0 flex-1">
                         <div className="text-[13px] font-semibold truncate leading-tight">
                           {p.city}
