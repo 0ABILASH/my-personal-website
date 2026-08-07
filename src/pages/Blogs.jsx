@@ -407,7 +407,7 @@ export default function Writing() {
       >
         <div className="mb-8">
           <div className="flex items-center gap-2.5 mb-3">
-            <PenLine size={16} className="text-accent" />
+            {/* <PenLine size={16} className="text-accent" /> */}
             <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">
               Blogs
             </span>

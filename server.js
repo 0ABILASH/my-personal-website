@@ -13,6 +13,23 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static(join(__dirname, 'dist')))
 
+// Tiny in-memory TTL cache — GAS responses are cached so repeat requests
+// are served instantly instead of hitting the (slow) Apps Script endpoint.
+function createCache(ttlMs) {
+  var store = {}
+  return {
+    get: function (key) {
+      var entry = store[key]
+      if (!entry) return null
+      if (Date.now() - entry.t > ttlMs) { delete store[key]; return null }
+      return entry.v
+    },
+    set: function (key, value) {
+      store[key] = { t: Date.now(), v: value }
+    },
+  }
+}
+
 async function gasGet(params) {
   var url = GAS_URL + '?' + params.toString()
   var controller = new AbortController()
@@ -87,13 +104,21 @@ app.post('/api/track', async function (req, res) {
   res.json({ ok: true })
 })
 
+const travelCache = createCache(5 * 60 * 1000)
+const likesCache = createCache(30 * 1000)
+
 app.get('/api/travel', async function (req, res) {
+  res.set('Cache-Control', 'public, max-age=60')
   try {
+    var cached = travelCache.get('travel')
+    if (cached) return res.json(cached)
+
     var params = new URLSearchParams({ action: 'travel', _: Date.now().toString() })
     var gasRes = await gasGet(params)
     var text = await gasRes.text()
     try {
       var data = JSON.parse(text)
+      if (data.places && data.places.length > 0) travelCache.set('travel', data)
       res.json(data)
     } catch (e) {
       console.error('[travel] JSON parse failed, raw:', text.substring(0, 200))
@@ -107,12 +132,17 @@ app.get('/api/travel', async function (req, res) {
 
 // Blog like counts from Google Sheets (via GAS)
 app.get('/api/likes', async function (req, res) {
+  res.set('Cache-Control', 'public, max-age=30')
   try {
+    var cached = likesCache.get('likes')
+    if (cached) return res.json(cached)
+
     var params = new URLSearchParams({ action: 'getLikes' })
     var gasRes = await gasGet(params)
     var text = await gasRes.text()
     var data = JSON.parse(text)
     if (data && typeof data.likes === 'object') {
+      likesCache.set('likes', { likes: data.likes })
       res.json({ likes: data.likes })
     } else {
       res.json({ likes: data || {} })
@@ -173,3 +203,19 @@ app.get('*', function (req, res) {
 })
 
 app.listen(PORT)
+
+// Warm the travel cache shortly after boot so the first visitor request is
+// served instantly (only the very first warm-up hits the slow GAS endpoint).
+setTimeout(async function () {
+  if (travelCache.get('travel')) return
+  try {
+    var params = new URLSearchParams({ action: 'travel', _: Date.now().toString() })
+    var gasRes = await gasGet(params)
+    var text = await gasRes.text()
+    var data = JSON.parse(text)
+    if (data.places && data.places.length > 0) travelCache.set('travel', data)
+    console.log('[warm] travel cache primed')
+  } catch (err) {
+    console.error('[warm] travel warm-up failed:', err.message)
+  }
+}, 1000)

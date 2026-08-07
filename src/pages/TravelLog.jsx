@@ -356,7 +356,6 @@ export default function Space() {
       >
         <div className="mb-8">
           <div className="flex items-center gap-2.5 mb-3">
-            <Globe size={16} className="text-accent" />
             <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">
               Travel Log
             </span>
@@ -463,9 +462,6 @@ export default function Space() {
 
         {/* Description below the map — desktop */}
         <div className="hidden lg:flex mt-5 items-start gap-3">
-          <span className="w-6 h-6 rounded-lg bg-accent-soft border border-accent/20 flex items-center justify-center shrink-0 mt-0.5">
-            <MapPin size={12} className="text-accent" />
-          </span>
           <p className="text-[12.5px] text-text-secondary leading-relaxed max-w-2xl">
             Every pin tells a story — the roads I&apos;ve ridden, the cities I&apos;ve explored, and the
             memories that made each journey unforgettable. Tap a destination to fly across the map.
@@ -476,7 +472,6 @@ export default function Space() {
         <div className="lg:hidden mt-8">
           <div className="rounded-2xl border border-white/10 bg-surface/10 backdrop-blur-2xl overflow-hidden shadow-2xl shadow-black/40">
             <div className="flex items-center gap-2.5 px-4 h-12 border-b border-white/10 shrink-0">
-              <MapPin size={13} className="text-accent" />
               <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">
                 Destinations
               </span>
@@ -647,9 +642,6 @@ export default function Space() {
 
         {/* Description below destinations — mobile & tablet */}
         <div className="lg:hidden mt-5 flex items-start gap-3">
-          <span className="w-6 h-6 rounded-lg bg-accent-soft border border-accent/20 flex items-center justify-center shrink-0 mt-0.5">
-            <MapPin size={12} className="text-accent" />
-          </span>
           <p className="text-[12.5px] text-text-secondary leading-relaxed max-w-2xl">
             Every pin tells a story — the roads I&apos;ve ridden, the cities I&apos;ve explored, and the
             memories that made each journey unforgettable. Tap a destination to fly across the map.

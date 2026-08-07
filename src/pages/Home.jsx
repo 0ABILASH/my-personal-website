@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowRight, MapPin, PenLine, User, X } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 import teaImg from "../images/tea.webp";
 import batmanImg from "../images/batman.jpg";
 import musicImg from "../images/music.jpg";
@@ -26,21 +26,18 @@ const fadeUp = {
 const PANELS = [
   {
     to: "/profile",
-    icon: User,
     label: "Profile",
     desc: "Who I am and what I do.",
     num: "01",
   },
   {
     to: "/travel-log",
-    icon: MapPin,
     label: "Travel Log",
     desc: "Places I've been — interactive travel map.",
     num: "02",
   },
   {
     to: "/blogs",
-    icon: PenLine,
     label: "Blogs",
     desc: "Where Experiences Become Stories.",
     num: "03",
@@ -197,19 +194,21 @@ export default function Home({ onCvOpen }) {
 
       {/* Explore */}
       <section className="max-w-5xl mx-auto px-5 sm:px-6 pb-20 sm:pb-28">
-        <motion.h2
+        <motion.div
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.35 }}
-          className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono mb-5"
+          className="flex items-center gap-2.5 mb-5"
         >
-          Explore
-        </motion.h2>
+          <h2 className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono shrink-0">
+            Explore
+          </h2>
+          <div className="flex-1 h-px bg-border" />
+        </motion.div>
 
         <div className="grid sm:grid-cols-3 gap-3">
           {PANELS.map((panel, i) => {
-            const Icon = panel.icon;
             return (
               <motion.div
                 key={panel.to}
@@ -230,25 +229,18 @@ export default function Home({ onCvOpen }) {
                   <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                   <div className="p-5 sm:p-6">
-                    {/* Number + Icon row */}
-                    <div className="flex items-center justify-between mb-6">
+                    {/* Number */}
+                    <div className="mb-6">
                       <span className="text-[10px] font-mono font-bold text-text-quaternary/50">
                         {panel.num}
                       </span>
-                      <div className="w-10 h-10 rounded-xl bg-bg border border-border group-hover:border-accent/30 group-hover:bg-accent/5 flex items-center justify-center transition-all duration-500">
-                        <Icon size={16} className="text-text-tertiary group-hover:text-accent transition-colors duration-500" />
-                      </div>
                     </div>
 
-                    {/* Label + Arrow */}
-                    <div className="flex items-center gap-2 mb-2">
+                    {/* Label */}
+                    <div className="mb-2">
                       <h3 className="text-[15px] font-bold tracking-tight">
                         {panel.label}
                       </h3>
-                      <ArrowRight
-                        size={13}
-                        className="text-text-quaternary -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
-                      />
                     </div>
 
                     <p className="text-[12px] text-text-tertiary leading-relaxed">

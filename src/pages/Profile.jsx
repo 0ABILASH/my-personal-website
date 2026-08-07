@@ -71,7 +71,6 @@ const fadeUp = {
 
 const SectionTitle = ({ label }) => (
   <div className="flex items-center gap-2 mb-4">
-    <span className="w-1 h-3.5 rounded-full bg-accent/70" />
     <h3 className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.2em] font-mono">
       {label}
     </h3>
