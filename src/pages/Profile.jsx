@@ -161,20 +161,18 @@ export default function Profile() {
 
           <div className="relative grid grid-cols-1 md:grid-cols-5">
             {/* Photo panel — the image stays fully visible */}
-            <div className="relative md:col-span-3 h-60 sm:h-72 md:h-auto md:min-h-[460px] md:border-r md:border-border">
+            <div className="relative md:col-span-3 h-60 sm:h-72 md:h-auto md:min-h-[460px] bg-surface">
               {profileImg ? (
                 <img
                   src={profileImg}
                   alt="Abilash"
-                  className="absolute inset-0 w-full h-full object-cover object-top"
+                  className="absolute inset-0 w-full h-full object-cover object-top [mask-image:linear-gradient(to_top,#000_0%,#000_50%,transparent_90%)] md:[mask-image:linear-gradient(to_right,#000_0%,#000_55%,transparent_100%)]"
                 />
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-accent to-[#118ab2] flex items-center justify-center">
                   <span className="text-9xl font-black text-white/30">A</span>
                 </div>
               )}
-              {/* Photo scrim for edge legibility */}
-              <div className="absolute inset-0 bg-gradient-to-t from-bg/60 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-bg/40" />
 
               {/* Avatar — circular image inside a refined gradient ring */}
                 <div className="absolute bottom-6 right-6 sm:right-0 sm:translate-x-1/2 z-10">
@@ -218,7 +216,7 @@ export default function Profile() {
             </div>
 
             {/* Content panel */}
-            <div className="relative md:col-span-2 flex flex-col justify-center items-start px-6 sm:px-8 md:pl-24 py-10 sm:py-12 bg-gradient-to-br from-surface via-surface to-bg">
+            <div className="relative md:col-span-2 flex flex-col justify-center items-start px-6 sm:px-8 md:pl-16 lg:pl-24 py-10 sm:py-12 bg-gradient-to-r from-surface via-surface to-bg">
               {/* Accent glow */}
               <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-accent/10 blur-[80px] pointer-events-none" />
               <div className="absolute -bottom-16 -right-16 w-56 h-56 rounded-full bg-[#118ab2]/10 blur-[80px] pointer-events-none" />
@@ -252,7 +250,7 @@ export default function Profile() {
               {/* Status pill */}
               <div className="flex w-fit max-w-full items-start gap-2 rounded-full bg-bg/70 backdrop-blur-md border border-border px-3.5 py-1.5 text-[11px] font-medium text-text-secondary">
                 <span className="min-w-0 leading-snug">
-                  Currently somewhere, collecting another life experience.
+                   collecting another life experience.
                 </span>
               </div>
             </div>
