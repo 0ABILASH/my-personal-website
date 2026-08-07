@@ -9,6 +9,7 @@ import TravelLog from './pages/TravelLog'
 import Blogs from './pages/Blogs'
 import Profile from './pages/Profile'
 import { trackVisitor } from './services/track'
+import { preloadTravel } from './services/travel'
 
 const TIMEOUT_MS = 60 * 1000
 
@@ -46,6 +47,7 @@ export default function App() {
   useEffect(() => {
     trackVisitor('pageview')
     resetTimer()
+    preloadTravel()
 
     const handler = () => {
       if (!timedOut) lastActivity.current = Date.now()

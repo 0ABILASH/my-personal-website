@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Globe, RefreshCw, ChevronDown, MapPin, Bike, Heart, MonitorSmartphone } from "lucide-react";
-import { FALLBACK_PLACES, renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS, addLegend, markerType } from "../services/map";
+import { renderLayers, fetchAllRoutes, DARK_TILES, TILE_OPTIONS, addLegend, markerType } from "../services/map";
+import { preloadTravel } from "../services/travel";
 
 var TYPE_META = {
   current: { label: "Current Location", color: "#65ea86cf", soft: "rgba(59,246,106,0.10)" },
@@ -27,41 +28,19 @@ export default function Space() {
   const mapInstance = useRef(null);
   const mapReady = useRef(false);
 
-  // Fetch places from API
+  // Fetch places from API (preloaded at app start — shared promise)
   useEffect(() => {
     startTime.current = Date.now();
     var t0 = startTime.current;
     var timer = setInterval(function () {
       setFetchSecs(((Date.now() - t0) / 1000).toFixed(1));
     }, 200);
-    fetch("/api/travel")
-      .then(function (r) { return r.json() })
-      .then(function (data) {
-        if (data.places && data.places.length > 0) {
-          var filtered = data.places.filter(function (p) { return p.lat && p.lng });
-          filtered.forEach(function (p) {
-            var img = p.image || p["image "] || "";
-            if (!img || typeof img === "object") img = "";
-            p.image = img;
-            p.description = p.description || p["description "] || "";
-          });
-          if (filtered.length > 0) {
-            setPlaces(filtered);
-            setFetchStatus("ok");
-            return;
-          }
-        }
-        setPlaces(FALLBACK_PLACES);
-        setFetchStatus("fallback");
-      })
-      .catch(function () {
-        setPlaces(FALLBACK_PLACES);
-        setFetchStatus("error");
-      })
-      .finally(function () {
-        clearInterval(timer);
-        setFetchSecs(((Date.now() - t0) / 1000).toFixed(1));
-      });
+    preloadTravel().then(function (result) {
+      clearInterval(timer);
+      setFetchSecs(((Date.now() - t0) / 1000).toFixed(1));
+      setPlaces(result.places);
+      setFetchStatus(result.fetchStatus);
+    });
   }, []);
 
   // Init Leaflet map with Carto Dark Matter tiles
@@ -355,7 +334,11 @@ export default function Space() {
             <div className="flex flex-col items-center justify-center flex-1 py-12 gap-2 text-center">
               <MapPin size={20} className="text-text-quaternary" />
               <p className="text-[12px] text-text-tertiary">
-                {fetchStatus === "loading" ? "Loading destinations..." : "No destinations match the current filters."}
+                {fetchStatus === "loading"
+                  ? "Loading destinations..."
+                  : fetchStatus === "ok"
+                    ? "No destinations match the current filters."
+                    : "Failed to load destinations — reload the page."}
               </p>
             </div>
           )}
@@ -650,7 +633,11 @@ export default function Space() {
                 <div className="flex flex-col items-center justify-center flex-1 py-12 gap-2 text-center">
                   <MapPin size={20} className="text-text-quaternary" />
                   <p className="text-[12px] text-text-tertiary">
-                    {fetchStatus === "loading" ? "Loading destinations..." : "No destinations match the current filters."}
+                    {fetchStatus === "loading"
+                      ? "Loading destinations..."
+                      : fetchStatus === "ok"
+                        ? "No destinations match the current filters."
+                        : "Failed to load destinations — reload the page."}
                   </p>
                 </div>
               )}
