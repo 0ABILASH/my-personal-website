@@ -8,6 +8,7 @@ import Home from './pages/Home'
 import TravelLog from './pages/TravelLog'
 import Blogs from './pages/Blogs'
 import Profile from './pages/Profile'
+import AdminApp from './admin/AdminApp'
 import { trackVisitor } from './services/track'
 import { preloadTravel } from './services/travel'
 
@@ -26,6 +27,8 @@ export default function App() {
   const [timedOut, setTimedOut] = useState(false)
   const lastActivity = useRef(Date.now())
   const timerRef = useRef(null)
+  const location = useLocation()
+  const isAdmin = location.pathname.startsWith('/admin')
 
   const resetTimer = useCallback(() => {
     lastActivity.current = Date.now()
@@ -45,6 +48,7 @@ export default function App() {
   }, [resetTimer])
 
   useEffect(() => {
+    if (isAdmin) return
     trackVisitor('pageview')
     resetTimer()
     preloadTravel()
@@ -60,21 +64,27 @@ export default function App() {
       events.forEach(e => window.removeEventListener(e, handler))
       if (timerRef.current) clearInterval(timerRef.current)
     }
-  }, [resetTimer])
+  }, [resetTimer, isAdmin])
 
   return (
     <>
       <ScrollToTop />
-      <Shell onCvOpen={() => setCvOpen(true)}>
-        <Routes>
-          <Route path="/" element={<Home onCvOpen={() => setCvOpen(true)} />} />
-          <Route path="/travel-log" element={<TravelLog />} />
-          <Route path="/blogs" element={<Blogs />} />
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
-      </Shell>
-      <DownloadModal open={cvOpen} onClose={() => setCvOpen(false)} />
-      {timedOut && <TimeoutModal onRetry={handleRetry} />}
+      {isAdmin ? (
+        <AdminApp />
+      ) : (
+        <>
+          <Shell onCvOpen={() => setCvOpen(true)}>
+            <Routes>
+              <Route path="/" element={<Home onCvOpen={() => setCvOpen(true)} />} />
+              <Route path="/travel-log" element={<TravelLog />} />
+              <Route path="/blogs" element={<Blogs />} />
+              <Route path="/profile" element={<Profile />} />
+            </Routes>
+          </Shell>
+          <DownloadModal open={cvOpen} onClose={() => setCvOpen(false)} />
+          {timedOut && <TimeoutModal onRetry={handleRetry} />}
+        </>
+      )}
     </>
   )
 }

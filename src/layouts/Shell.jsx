@@ -223,6 +223,13 @@ export default function Shell({ children, onCvOpen }) {
                 {link.label}
               </Link>
             ))}
+            <Link
+              to="/admin/login"
+              className="ml-0.5 px-2 py-1.5 rounded-lg text-[10px] font-medium text-text-quaternary hover:text-text hover:bg-surface-hover transition-all duration-200"
+              title="Admin"
+            >
+              Admin
+            </Link>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -338,6 +345,19 @@ export default function Shell({ children, onCvOpen }) {
                       <Download size={14} />
                       Download Data
                     </button>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.45, duration: 0.3 }}
+                  >
+                    <Link
+                      to="/admin/login"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center justify-center px-4 py-2 text-[10px] font-medium text-text-quaternary hover:text-text transition-all w-full"
+                    >
+                      Admin
+                    </Link>
                   </motion.div>
                 </div>
               </div>

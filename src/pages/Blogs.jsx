@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   PenLine,
@@ -16,6 +16,7 @@ import webUpdateBgm from "../audio/web-update.mp3";
 import fluteSoulful from "../audio/flute - soulful.mp3";
 import motherBgm from "../audio/mother-bgm.mp3";
 import comingSoonBgm from "../audio/coming-soon.mp3";
+import sanitizeHtml from "../utils/sanitize";
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(() =>
@@ -145,12 +146,62 @@ const TAG_COLORS = {
   update: { text: "text-violet-400", bg: "bg-violet-500/15" },
 };
 
+const EXTRA_TAG_COLORS = [
+  { text: "text-sky-400", bg: "bg-sky-500/15" },
+  { text: "text-rose-400", bg: "bg-rose-500/15" },
+  { text: "text-amber-400", bg: "bg-amber-500/15" },
+  { text: "text-lime-400", bg: "bg-lime-500/15" },
+  { text: "text-cyan-400", bg: "bg-cyan-500/15" },
+  { text: "text-fuchsia-400", bg: "bg-fuchsia-500/15" },
+];
+
+function tagColor(tag) {
+  const k = String(tag || "").trim();
+  if (TAG_COLORS[k]) return TAG_COLORS[k];
+  let h = 0;
+  for (let i = 0; i < k.length; i++) h = (h * 31 + k.charCodeAt(i)) >>> 0;
+  return EXTRA_TAG_COLORS[h % EXTRA_TAG_COLORS.length];
+}
+
+function formatMonth(d) {
+  const m = String(d || "").slice(0, 10);
+  const dt = new Date(m);
+  if (isNaN(dt.getTime())) return String(d || "").slice(0, 7);
+  return dt.toLocaleString("en-US", { month: "short", year: "numeric" });
+}
+
+function readTime(html) {
+  const words = String(html || "")
+    .replace(/<[^>]+>/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
+  if (words <= 40) return "1 min";
+  return Math.ceil(words / 180) + " min";
+}
+
+function toPost(c) {
+  return {
+    id: "sheet-" + c.id,
+    title: c.title,
+    excerpt: c.excerpt || "",
+    tag: c.category || "update",
+    date: formatMonth(c.date),
+    read: readTime(c.content),
+    audio: c.audioSrc
+      ? { title: c.audioTitle || c.title, src: c.audioSrc }
+      : null,
+    content: c.content || "",
+  };
+}
+
 const FILTERS = ["all", "Experiance", "Voyage", "update"];
 
 export default function Writing() {
   const isMobile = useIsMobile();
   const [filter, setFilter] = useState("all");
   const [openPost, setOpenPost] = useState(null);
+  const [sheetPosts, setSheetPosts] = useState([]);
   const [playing, setPlaying] = useState(false);
   const [audioError, setAudioError] = useState(false);
   const [likes, setLikes] = useState({});
@@ -175,6 +226,23 @@ export default function Writing() {
       .then((r) => r.json())
       .then((d) => {
         if (d && typeof d.likes === "object") setLikes(d.likes);
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/chronicles")
+      .then((r) => r.json())
+      .then((d) => {
+        const list = Array.isArray(d && d.chronicles)
+          ? d.chronicles.filter(
+              (c) =>
+                c &&
+                c.title &&
+                String(c.status).toLowerCase() === "published",
+            )
+          : [];
+        if (list.length) setSheetPosts(list.map(toPost));
       })
       .catch(() => {});
   }, []);
@@ -395,8 +463,17 @@ export default function Writing() {
     return () => window.removeEventListener("mousemove", onMove);
   }, [openPost]);
 
+  const allPosts = useMemo(() => [...sheetPosts, ...POSTS], [sheetPosts]);
+  const filters = useMemo(
+    () => [
+      "all",
+      ...Array.from(new Set(allPosts.map((p) => p.tag))),
+    ],
+    [allPosts],
+  );
+
   const items =
-    filter === "all" ? POSTS : POSTS.filter((p) => p.tag === filter);
+    filter === "all" ? allPosts : allPosts.filter((p) => p.tag === filter);
 
   return (
     <div className="max-w-3xl mx-auto px-5 sm:px-6 py-12 sm:py-16">
@@ -413,7 +490,7 @@ export default function Writing() {
             </span>
             <div className="flex-1 h-px bg-border" />
             <span className="text-[10px] font-mono text-text-quaternary">
-              {POSTS.length} posts
+              {allPosts.length} posts
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
@@ -424,7 +501,7 @@ This is more than writing. This is who I am.          </p>
         </div>
 
         <div className="flex gap-2 mb-8">
-          {FILTERS.map((f) => (
+          {filters.map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
@@ -441,7 +518,7 @@ This is more than writing. This is who I am.          </p>
 
         <div className="flex flex-col gap-2">
           {items.map((post, i) => {
-            const tc = TAG_COLORS[post.tag] || TAG_COLORS.thoughts;
+            const tc = tagColor(post.tag);
             return (
               <motion.button
                 key={post.id}
@@ -579,7 +656,7 @@ This is more than writing. This is who I am.          </p>
                 <div className="overflow-y-auto p-5 sm:p-7 pt-3">
                   <div className="flex items-center gap-2.5 mb-4">
                     <span
-                      className={`inline-flex px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${TAG_COLORS[openPost.tag]?.text} ${TAG_COLORS[openPost.tag]?.bg}`}
+                      className={`inline-flex px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${tagColor(openPost.tag).text} ${tagColor(openPost.tag).bg}`}
                     >
                       {openPost.tag}
                     </span>
@@ -605,9 +682,18 @@ This is more than writing. This is who I am.          </p>
                     ref={blogRef}
                     className="space-y-3 text-[13px] sm:text-[14px] text-text-secondary leading-relaxed blog-content"
                   >
-                    {openPost.content.map((para, i) => (
-                      <p key={i}>{para}</p>
-                    ))}
+                    {Array.isArray(openPost.content) ? (
+                      openPost.content.map((para, i) => (
+                        <p key={i}>{para}</p>
+                      ))
+                    ) : (
+                      <div
+                        className="space-y-3"
+                        dangerouslySetInnerHTML={{
+                          __html: sanitizeHtml(openPost.content),
+                        }}
+                      />
+                    )}
                   </div>
 
                   <div className="flex justify-center pt-7">

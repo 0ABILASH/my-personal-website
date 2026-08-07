@@ -224,6 +224,28 @@
 .blog-content {
   cursor: none;
 }
+.blog-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.blog-content a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+.blog-content blockquote {
+  border-left: 2px solid var(--color-accent);
+  padding-left: 12px;
+  font-style: italic;
+  color: var(--color-text-tertiary);
+}
+.blog-content h1,
+.blog-content h2,
+.blog-content h3 {
+  color: var(--color-text);
+  font-weight: 700;
+  margin: 1.2em 0 0.5em;
+}
 .blog-cursor {
   position: fixed;
   width: 40px;

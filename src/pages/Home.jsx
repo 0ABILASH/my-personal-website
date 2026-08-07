@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, X } from "lucide-react";
@@ -55,6 +55,26 @@ const TRAITS = [
 
 export default function Home({ onCvOpen }) {
   const [greeting, setGreeting] = useState(false);
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+    fetch("/api/profile", { headers: { "Cache-Control": "no-cache" } })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("bad"))))
+      .then((d) => {
+        if (mounted && d && typeof d === "object" && Object.keys(d).length) setProfile(d);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (mounted) setProfile((p) => p || {});
+      });
+    return () => { mounted = false; };
+  }, []);
+
+  const p = profile && Object.keys(profile).length ? profile : {};
+  const tagline = p.tagline || "Software Engineer";
+  const heroName = (p.name || "ABILASH").toUpperCase();
+  const location = p.location || "Coimbatore, India";
 
   return (
     <div>
@@ -74,7 +94,7 @@ export default function Home({ onCvOpen }) {
           <div className="flex-1 min-w-0">
             <motion.div variants={fadeUp}>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border text-[11px] font-mono font-medium text-text-tertiary mb-5">
-                Software Engineer
+                {tagline}
               </span>
             </motion.div>
 
@@ -82,7 +102,7 @@ export default function Home({ onCvOpen }) {
               variants={fadeUp}
               className="text-5xl sm:text-6xl md:text-7xl font-black tracking-[-0.03em] leading-[0.92] mb-5"
             >
-              ABILASH
+              {heroName}
             </motion.h1>
 
             <motion.p
@@ -120,7 +140,7 @@ export default function Home({ onCvOpen }) {
           >
            <div className="flex items-center gap-1.5 text-[11px] text-text-tertiary">
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#22c55e' }} />
-              Coimbatore, India
+              {location}
             </div>
             <div className="w-px h-3.5 bg-border" />
             <div className="flex items-center gap-1.5">

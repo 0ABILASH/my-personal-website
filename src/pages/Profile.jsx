@@ -56,6 +56,11 @@ const INTERESTS = [
 
 const TAGS = ["Love", "Money", "Travel", "Music", "Tea"];
 
+const FALLBACK_ABOUT = [
+  "Hey! I'm Abilash.\u2014 I've always believed that the best stories begin with curiosity. Whether it's taking an unfamiliar road, watching the sunrise from a place I've never been, or simply pausing to appreciate the little moments, I find inspiration in experiences that can't be planned. I enjoy exploring places that feel untouched, meeting people with different perspectives, and creating memories that stay long after the journey ends. To me, life isn't about reaching a destination\u2014it's about embracing everything along the way.",
+  "This website is my digital journal, where I capture the moments, adventures, and stories that have shaped my perspective. Every photograph, every destination, and every memory is a reminder that there's always something new waiting to be discovered. Thanks for stopping by. I hope you enjoy exploring my world.",
+];
+
 const stagger = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.07 } },
@@ -124,6 +129,56 @@ const ScrollText = ({ text, className }) => {
 
 export default function Profile() {
   const [avatarIndex, setAvatarIndex] = useState(0);
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+    fetch("/api/profile", { headers: { "Cache-Control": "no-cache" } })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("bad"))))
+      .then((d) => {
+        if (mounted && d && typeof d === "object" && Object.keys(d).length) setProfile(d);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (mounted) setProfile((p) => p || {});
+      });
+    return () => { mounted = false; };
+  }, []);
+
+  const p = profile && Object.keys(profile).length ? profile : {};
+  const name = p.name || "Abilash";
+  const tagline = p.tagline || "Software Engineer";
+  const location = p.location || "India";
+  const bio =
+    p.bio ||
+    "I'm someone who believes that life is meant to be experienced, not just lived. I enjoy exploring unfamiliar places, taking spontaneous road trips, and finding beauty in the little moments that often go unnoticed.";
+  const status = p.status || "collecting another life experience.";
+  const about = Array.isArray(p.about) && p.about.length ? p.about : FALLBACK_ABOUT;
+  const tags = Array.isArray(p.tags) && p.tags.length ? p.tags : TAGS;
+  const traits =
+    Array.isArray(p.traits) && p.traits.length
+      ? p.traits.map((t, i) => ({
+          label: t.label || "",
+          sub: t.sub || "",
+          icon: (TRAITS[i] && TRAITS[i].icon) || "https://picsum.photos/seed/trait-" + i + "/80/80",
+        }))
+      : TRAITS;
+  const links =
+    Array.isArray(p.links) && p.links.length
+      ? p.links.map((l, i) => ({
+          label: l.label || "",
+          href: l.href || "#",
+          icon: (LINKS[i] && LINKS[i].icon) || GMAIL_ICON,
+        }))
+      : LINKS;
+  const interests =
+    Array.isArray(p.interests) && p.interests.length
+      ? p.interests.map((x, i) => ({
+          name: x.name || "",
+          sub: x.sub || "",
+          icon: (INTERESTS[i] && INTERESTS[i].icon) || "https://picsum.photos/seed/interest-" + i + "/80/80",
+        }))
+      : INTERESTS;
 
   return (
     <div className="relative max-w-5xl mx-auto px-5 sm:px-6 py-12 sm:py-16">
@@ -223,33 +278,30 @@ export default function Profile() {
              
 
               <h1 className="relative text-4xl sm:text-5xl font-black tracking-tight mb-3 text-white">
-                Abilash
+                {name}
               </h1>
 
               {/* Badges */}
               <div className="relative flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-4">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent text-white text-[10px] font-bold shadow-[0_2px_10px_rgba(59,130,246,0.4)]">
                   <Briefcase size={10} />
-                  Software Engineer
+                  {tagline}
                 </span>
                 <span className="inline-flex items-center gap-1.5 text-[11px] text-text-secondary font-mono">
                   <MapPin size={11} />
-                  India
+                  {location}
                 </span>
               </div>
 
               {/* Bio */}
               <p className="relative text-[12.5px] text-text-secondary leading-relaxed mb-5">
-                I'm someone who believes that life is meant to be experienced,
-                not just lived. I enjoy exploring unfamiliar places, taking
-                spontaneous road trips, and finding beauty in the little moments
-                that often go unnoticed.
+                {bio}
               </p>
 
               {/* Status pill */}
               <div className="flex w-fit max-w-full items-start gap-2 rounded-full bg-bg/70 backdrop-blur-md border border-border px-3.5 py-1.5 text-[11px] font-medium text-text-secondary">
                 <span className="min-w-0 leading-snug">
-                   collecting another life experience.
+                   {status}
                 </span>
               </div>
             </div>
@@ -264,7 +316,7 @@ export default function Profile() {
           >
             <SectionTitle label="Status" />
             <div className="grid grid-cols-2 gap-2">
-              {TRAITS.map((t, i) => {
+              {traits.map((t, i) => {
                 return (
                   <div
                     key={i}
@@ -295,7 +347,7 @@ export default function Profile() {
           >
             <SectionTitle label="Social Links" />
             <div className="grid grid-cols-2 gap-2">
-              {LINKS.map((l, i) => {
+              {links.map((l, i) => {
                 return (
                   <a
                     key={i}
@@ -332,27 +384,13 @@ export default function Profile() {
         >
           <SectionTitle label="About Me" />
           <div className="space-y-3">
-            <p className="text-[13px] text-text-secondary leading-relaxed">
-              Hey! I'm Abilash.&mdash; I've always believed that the best stories begin
-              with curiosity. Whether it's taking an unfamiliar road, watching
-              the sunrise from a place I've never been, or simply pausing to
-              appreciate the little moments, I find inspiration in experiences
-              that can't be planned. I enjoy exploring places that feel
-              untouched, meeting people with different perspectives, and
-              creating memories that stay long after the journey ends. To me,
-              life isn't about reaching a destination—it's about embracing
-              everything along the way.
-            </p>
-            <p className="text-[13px] text-text-secondary leading-relaxed">
-              This website is my digital journal,
-              where I capture the moments, adventures, and stories that have
-              shaped my perspective. Every photograph, every destination, and
-              every memory is a reminder that there's always something new
-              waiting to be discovered. Thanks for stopping by. I hope you enjoy
-              exploring my world.
-            </p>
+            {about.map((para, i) => (
+              <p key={i} className="text-[13px] text-text-secondary leading-relaxed">
+                {para}
+              </p>
+            ))}
             <div className="flex flex-wrap gap-2 pt-1">
-              {TAGS.map((tag, i) => (
+              {tags.map((tag, i) => (
                 <span
                   key={i}
                   className="px-3 py-1 rounded-full bg-bg border border-border hover:border-accent/30 text-[10px] font-semibold text-text-tertiary font-mono transition-colors cursor-default"
@@ -371,7 +409,7 @@ export default function Profile() {
         >
           <SectionTitle label="Things I Enjoy" />
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
-            {INTERESTS.map((item, i) => {
+            {interests.map((item, i) => {
               return (
                 <div
                   key={i}
