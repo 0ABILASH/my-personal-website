@@ -166,7 +166,7 @@ export default function Profile() {
                 <img
                   src={profileImg}
                   alt="Abilash"
-                  className="absolute inset-0 w-full h-full object-cover object-top [mask-image:linear-gradient(to_top,#000_0%,#000_50%,transparent_90%)] md:[mask-image:linear-gradient(to_right,#000_0%,#000_55%,transparent_100%)]"
+                  className="absolute inset-0 w-full h-full object-cover object-top md:[mask-image:linear-gradient(to_right,#000_0%,#000_55%,transparent_100%)]"
                 />
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-accent to-[#118ab2] flex items-center justify-center">
