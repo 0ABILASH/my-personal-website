@@ -83,8 +83,7 @@ export async function fetchAllRoutes(places, onProgress) {
         var decoded = await fetchSingleRoute(seg.from, seg.to)
         routes[seg.key] = decoded; cache[seg.key] = decoded
       } catch {
-        var fb = [[seg.from.lat, seg.from.lng], [seg.to.lat, seg.to.lng]]
-        routes[seg.key] = fb; cache[seg.key] = fb
+        routes[seg.key] = null
       }
       completed++
       if (onProgress) onProgress(completed, total)
@@ -180,9 +179,8 @@ export function renderLayers(map, places, routes, animate, showVisited, showSmal
   if (places.length >= 2) {
     for (var i = 0; i < places.length - 1; i++) {
       var key = routeKey(places[i], places[i + 1])
-      var coords = (routes && routes[key])
-        ? routes[key]
-        : [[places[i].lat, places[i].lng], [places[i + 1].lat, places[i + 1].lng]]
+      var coords = (routes && routes[key]) || null
+      if (!coords || coords.length < 2) continue
 
       L.polyline(coords, ROUTE_STYLE).addTo(map)
     }

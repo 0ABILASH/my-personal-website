@@ -12,7 +12,7 @@ var TYPE_META = {
 };
 
 export default function Space() {
-  const [places, setPlaces] = useState(FALLBACK_PLACES);
+  const [places, setPlaces] = useState([]);
   const [activePlace, setActivePlace] = useState(null);
   const [routes, setRoutes] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -51,9 +51,11 @@ export default function Space() {
             return;
           }
         }
+        setPlaces(FALLBACK_PLACES);
         setFetchStatus("fallback");
       })
       .catch(function () {
+        setPlaces(FALLBACK_PLACES);
         setFetchStatus("error");
       })
       .finally(function () {
@@ -264,9 +266,25 @@ export default function Space() {
             {fetchStatus === "ok"
               ? "Data loaded · " + fetchSecs + "s"
               : fetchStatus === "fallback"
-                ? "Offline data · " + fetchSecs + "s"
+                ? (
+                  <button
+                    onClick={function () { window.location.reload() }}
+                    className="inline-flex items-center gap-1 hover:text-text cursor-pointer"
+                  >
+                    <RefreshCw size={10} />
+                    Offline data · Reload
+                  </button>
+                )
                 : fetchStatus === "error"
-                  ? "Load failed · " + fetchSecs + "s"
+                  ? (
+                    <button
+                      onClick={function () { window.location.reload() }}
+                      className="inline-flex items-center gap-1 hover:text-text cursor-pointer"
+                    >
+                      <RefreshCw size={10} />
+                      Load failed · Reload
+                    </button>
+                  )
                   : "API data fetching... " + fetchSecs + "s"}
           </span>
         </div>
@@ -336,7 +354,9 @@ export default function Space() {
           {visible.length === 0 && (
             <div className="flex flex-col items-center justify-center flex-1 py-12 gap-2 text-center">
               <MapPin size={20} className="text-text-quaternary" />
-              <p className="text-[12px] text-text-tertiary">No destinations match the current filters.</p>
+              <p className="text-[12px] text-text-tertiary">
+                {fetchStatus === "loading" ? "Loading destinations..." : "No destinations match the current filters."}
+              </p>
             </div>
           )}
         </div>
@@ -540,9 +560,25 @@ export default function Space() {
                 {fetchStatus === "ok"
                   ? "Data loaded · " + fetchSecs + "s"
                   : fetchStatus === "fallback"
-                    ? "Offline data · " + fetchSecs + "s"
+                    ? (
+                      <button
+                        onClick={function () { window.location.reload() }}
+                        className="inline-flex items-center gap-1 hover:text-text cursor-pointer"
+                      >
+                        <RefreshCw size={10} />
+                        Offline data · Reload
+                      </button>
+                    )
                     : fetchStatus === "error"
-                      ? "Load failed · " + fetchSecs + "s"
+                      ? (
+                        <button
+                          onClick={function () { window.location.reload() }}
+                          className="inline-flex items-center gap-1 hover:text-text cursor-pointer"
+                        >
+                          <RefreshCw size={10} />
+                          Load failed · Reload
+                        </button>
+                      )
                       : "API data fetching... " + fetchSecs + "s"}
               </span>
             </div>
@@ -611,9 +647,11 @@ export default function Space() {
                 );
               })}
               {visible.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-12 gap-2 text-center rounded-2xl border border-border bg-bg">
+                <div className="flex flex-col items-center justify-center flex-1 py-12 gap-2 text-center">
                   <MapPin size={20} className="text-text-quaternary" />
-                  <p className="text-[12px] text-text-tertiary">No destinations match the current filters.</p>
+                  <p className="text-[12px] text-text-tertiary">
+                    {fetchStatus === "loading" ? "Loading destinations..." : "No destinations match the current filters."}
+                  </p>
                 </div>
               )}
             </div>
