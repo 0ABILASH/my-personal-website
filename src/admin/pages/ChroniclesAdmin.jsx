@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { PenLine, Pencil, Trash2, Plus, Eye, ExternalLink, RefreshCw, Image as ImageIcon } from 'lucide-react'
 import { adminApi } from '../services/adminApi'
+import { useAdminData } from '../context/AdminDataContext'
 import { useToast } from '../context/ToastContext'
 import Modal, { ConfirmDialog } from '../components/Modal'
 import RichEditor from '../components/RichEditor'
@@ -175,30 +176,13 @@ function ChronicleModal({ open, onClose, onSaved, chronicle }) {
 export default function ChroniclesAdmin() {
   const toast = useToast()
   const [searchParams, setSearchParams] = useSearchParams()
-  const [chronicles, setChronicles] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const { data, loading, reload } = useAdminData()
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState(null)
   const [deleting, setDeleting] = useState(null)
   const [deleteBusy, setDeleteBusy] = useState(false)
-
-  const load = useCallback(async () => {
-    setLoading(true)
-    setError('')
-    try {
-      const res = await adminApi.chronicles()
-      setChronicles(res.chronicles || [])
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => { load() }, [load])
 
   useEffect(() => {
     if (searchParams.get('new') === '1') {
@@ -208,6 +192,11 @@ export default function ChroniclesAdmin() {
       setSearchParams(searchParams, { replace: true })
     }
   }, [searchParams, setSearchParams])
+
+  const cRes = data.chronicles
+  if (cRes && !cRes.ok) return <ErrorState message={cRes.error} onRetry={reload} />
+  if (loading && !cRes) return <LoadingState label="Loading chronicles..." />
+  const chronicles = cRes ? cRes.value : []
 
   const openEdit = (c) => { setEditing(c); setModalOpen(true) }
   const closeModal = () => { setModalOpen(false); setEditing(null) }
@@ -220,7 +209,7 @@ export default function ChroniclesAdmin() {
       logActivity('Deleted chronicle "' + deleting.title + '"')
       toast.success('Chronicle deleted.')
       setDeleting(null)
-      load()
+      reload()
     } catch (err) {
       toast.error(err.message)
     } finally {
@@ -242,7 +231,7 @@ export default function ChroniclesAdmin() {
         subtitle="Write and manage blog posts published to your site."
         actions={
           <>
-            <Button variant="ghost" onClick={load} disabled={loading} title="Refresh">
+            <Button variant="ghost" onClick={reload} disabled={loading} title="Refresh">
               <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
             </Button>
             <Button onClick={() => { setEditing(null); setModalOpen(true) }}>
@@ -273,8 +262,6 @@ export default function ChroniclesAdmin() {
 
       {loading ? (
         <LoadingState label="Loading chronicles..." />
-      ) : error ? (
-        <ErrorState message={error} onRetry={load} />
       ) : filtered.length === 0 ? (
         <EmptyState icon={<PenLine size={18} />} title="No chronicles found" hint={query || filter !== 'all' ? 'Try changing your search or filter.' : 'Write your first chronicle.'} />
       ) : (
@@ -345,7 +332,7 @@ export default function ChroniclesAdmin() {
         </div>
       )}
 
-      <ChronicleModal open={modalOpen} onClose={closeModal} onSaved={load} chronicle={editing} />
+      <ChronicleModal open={modalOpen} onClose={closeModal} onSaved={reload} chronicle={editing} />
       <ConfirmDialog
         open={!!deleting}
         onCancel={() => setDeleting(null)}

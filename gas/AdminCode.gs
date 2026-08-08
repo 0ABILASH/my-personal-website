@@ -132,6 +132,8 @@ function doPost(e) {
       case 'adminMediaDelete':    checkSecret_(body.secret); deleteMedia_(body.data && body.data.id); return ok_()
       case 'adminProfile':        checkSecret_(body.secret); return json_(profile_())
       case 'adminProfileUpdate':  checkSecret_(body.secret); updateProfile_(body.data || {}); return ok_()
+      case 'adminVisitors':       checkSecret_(body.secret); return json_({ visitors: readTrack_('Visitor') })
+      case 'adminDownloads':      checkSecret_(body.secret); return json_({ downloads: readTrack_('Data Download') })
       default: return err_('Unknown action: ' + action)
     }
   } catch (ex) {
@@ -765,7 +767,6 @@ function deleteMedia_(id) {
 }
 
 // ─── Site Profile (key/value rows in the Profile sheet) ────────────────────
-
 function profile_() {
   var sheet = getSheet_(PROFILE_SHEET, ['field', 'value'])
   var keys = headerKeys_(sheet)
@@ -797,4 +798,78 @@ function updateProfile_(d) {
     rows.push([k, clean_(v)])
   }
   if (rows.length) sheet.getRange(2, 1, rows.length, 2).setValues(rows)
+}
+
+// ─── Visitors & Data Downloads (the tracking sheet) ────────────────────────
+//
+// The public site writes every page visit and data download into a tracking
+// sheet (any sheet whose header row has "type" and "name"). The rows carry
+// fields like type, action, name, date, time, browser, device, brand, os,
+// screen, language, referrer, url and optionally ip/city/country/region.
+// Visitors have type "Visitor"; downloads have type "Data Download".
+
+function findTrackSheet_() {
+  var sheets = ss_().getSheets()
+  for (var i = 0; i < sheets.length; i++) {
+    var s = sheets[i]
+    var cols = Math.min(s.getLastColumn(), 60)
+    if (cols < 1) continue
+    var first = s.getRange(1, 1, 1, cols).getValues()[0]
+    var hasType = false
+    var hasName = false
+    for (var c = 0; c < first.length; c++) {
+      var k = normKey_(first[c])
+      if (k === 'type') hasType = true
+      if (k === 'name') hasName = true
+    }
+    if (hasType && hasName) return s
+  }
+  throw new Error('Tracking sheet not found (no sheet with "type" and "name" headers)')
+}
+
+// Row number (1-indexed) of the last row that holds real tracking data. Probes
+// only a couple of columns so it never scans huge empty ranges.
+function lastTrackRow_(sheet, map) {
+  var probe = []
+  if (map['type'] !== undefined) probe.push(map['type'])
+  if (map['date'] !== undefined) probe.push(map['date'])
+  if (!probe.length) return 1
+  var total = sheet.getLastRow()
+  if (total < 2) return 1
+  var last = 1
+  for (var pi = 0; pi < probe.length; pi++) {
+    var vals = sheet.getRange(2, probe[pi] + 1, total - 1, 1).getValues()
+    for (var r = vals.length - 1; r >= 0; r--) {
+      var v = vals[r][0]
+      if (v !== '' && v !== undefined && v !== null && String(v).trim() !== '') {
+        if (r + 2 > last) last = r + 2
+        break
+      }
+    }
+  }
+  return last
+}
+
+// Returns the most recent rows of the given type (newest first), capped at
+// MAX_ROWS so responses stay small even with heavy traffic.
+var TRACK_MAX_ROWS = 500
+
+function readTrack_(typeFilter) {
+  var sheet = findTrackSheet_()
+  var map = placesMap_(sheet)
+  var last = lastTrackRow_(sheet, map)
+  if (last < 2) return []
+  var numCols = sheet.getLastColumn()
+  var values = sheet.getRange(2, 1, last - 1, numCols).getValues()
+  var out = []
+  for (var r = values.length - 1; r >= 0; r--) {
+    var t = clean_(values[r][map['type']]).toLowerCase()
+    if (typeFilter && t !== String(typeFilter).toLowerCase()) continue
+    if (!t) continue
+    var row = {}
+    for (var k in map) row[k] = clean_(values[r][map[k]])
+    out.push(row)
+    if (out.length >= TRACK_MAX_ROWS) break
+  }
+  return out
 }

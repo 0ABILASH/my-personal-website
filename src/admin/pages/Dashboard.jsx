@@ -1,48 +1,24 @@
-import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import {
   MapPin, PenLine, Heart, Compass, LocateFixed,
   FileText, Star, Clock, ArrowUpRight, Sparkles,
 } from 'lucide-react'
-import { adminApi } from '../services/adminApi'
+import { useAdminData } from '../context/AdminDataContext'
 import { StatCard, LoadingState, ErrorState, PageHeader, Chip } from '../components/ui'
 import { getActivity, timeAgo } from '../utils'
 
 export default function Dashboard() {
-  const [data, setData] = useState(null)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(true)
+  const { data, loading, reload } = useAdminData()
 
-  const load = useCallback(async () => {
-    setLoading(true)
-    setError('')
-    try {
-      const [placesRes, chroniclesRes, likesRes] = await Promise.all([
-        adminApi.places(),
-        adminApi.chronicles(),
-        adminApi.likes().catch(() => ({ likes: {} })),
-      ])
-      setData({
-        places: placesRes.places || [],
-        chronicles: chroniclesRes.chronicles || [],
-        likes: likesRes.likes || {},
-      })
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const coreFailed = ['places', 'chronicles', 'likes']
+    .map((k) => data[k])
+    .find((r) => r && !r.ok)
+  if (coreFailed) return <ErrorState message={coreFailed.error} onRetry={reload} />
+  if (loading && !data.places) return <LoadingState label="Loading dashboard..." />
 
-  useEffect(() => { load() }, [load])
-
-  if (loading) return <LoadingState label="Loading dashboard..." />
-  if (error) return <ErrorState message={error} onRetry={load} />
-  if (!data) return <LoadingState label="Loading dashboard..." />
-
-  const places = data.places || []
-  const chronicles = data.chronicles || []
-  const likes = data.likes || {}
+  const places = data.places ? data.places.value : []
+  const chronicles = data.chronicles ? data.chronicles.value : []
+  const likes = data.likes ? data.likes.value : {}
 
   const visited = places.filter((p) => String(p.type || '').trim() === 'visited').length
   const favorites = places.filter((p) => String(p.type || '').trim() === 'small').length

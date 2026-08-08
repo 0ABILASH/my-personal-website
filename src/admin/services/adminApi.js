@@ -55,6 +55,9 @@ export const adminApi = {
   deleteMedia: (id) => request('/media/' + encodeURIComponent(id), 'DELETE'),
 
   likes: () => request('/likes', 'GET'),
+  visitors: () => request('/visitors', 'GET'),
+  downloads: () => request('/downloads', 'GET'),
+  status: () => request('/status', 'GET'),
   profile: () => request('/profile', 'GET'),
   updateProfile: (data) => request('/profile', 'PUT', { data }),
 }

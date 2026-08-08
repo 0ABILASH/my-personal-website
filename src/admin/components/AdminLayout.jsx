@@ -2,9 +2,10 @@ import { useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, PenLine, MapPin,
-  User, Settings, LogOut, Menu, X, Globe,
+  User, Settings, Users, LogOut, Menu, X, Globe, AlertTriangle,
 } from 'lucide-react'
 import { useAdminAuth } from '../context/AdminAuthContext'
+import { useAdminData } from '../context/AdminDataContext'
 import { LoadingState } from './ui'
 
 const NAV = [
@@ -13,6 +14,7 @@ const NAV = [
   { to: '/admin/places', label: 'Travel Logs', icon: MapPin },
   { to: '/admin/chronicles', label: 'Blogs', icon: PenLine },
   { to: '/admin/settings', label: 'Settings', icon: Settings },
+  { to: '/admin/visitors', label: 'Visitors', icon: Users },
 ]
 
 function SidebarContent({ onNavigate }) {
@@ -82,6 +84,11 @@ export default function AdminLayout({ children }) {
   const { status } = useAdminAuth()
   const [drawer, setDrawer] = useState(false)
   const location = useLocation()
+  const { data } = useAdminData()
+  const statusRes = data.status
+  const sysStatus = statusRes && statusRes.ok ? statusRes.value : null
+  const issues = sysStatus && sysStatus.services ? sysStatus.services : null
+  const failedCount = issues ? issues.filter((s) => !s.ok).length : 0
 
   if (status === 'loading') {
     return (
@@ -131,6 +138,17 @@ export default function AdminLayout({ children }) {
       </header>
 
       <main className="lg:ml-60 min-h-screen">
+        {failedCount > 0 && (
+          <div className="lg:sticky lg:top-0 z-[2000]">
+            <Link
+              to="/admin/settings"
+              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-red-500/15 border-b border-red-500/30 text-red-300 text-[12px] font-semibold hover:bg-red-500/20 transition-colors"
+            >
+              <AlertTriangle size={13} />
+              {failedCount} backend source{failedCount === 1 ? '' : 's'} unavailable — tap to review in Settings
+            </Link>
+          </div>
+        )}
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8">{children}</div>
       </main>
     </div>

@@ -222,6 +222,7 @@ app.post('/api/admin/cache/clear', adminOnly, function (req, res) {
   likesCache.set('likes', null)
   profileCache.set('profile', null)
   adminCache.set('profile', null)
+  statusCache.set('status', null)
   res.json({ ok: true })
 })
 
@@ -249,6 +250,100 @@ app.get('/api/admin/likes', adminOnly, async function (req, res) {
   } catch (err) {
     res.status(502).json({ error: err.message })
   }
+})
+
+// Visitor analytics from the tracking sheet (type = Visitor).
+app.get('/api/admin/visitors', adminOnly, async function (req, res) {
+  var cached = adminCache.get('visitors')
+  if (cached) return res.json(cached)
+  try {
+    var data = await adminCall('adminVisitors')
+    var payload = { visitors: data.visitors || [] }
+    adminCache.set('visitors', payload)
+    res.json(payload)
+  } catch (err) {
+    res.status(502).json({ error: err.message })
+  }
+})
+
+// Data-download analytics from the tracking sheet (type = Data Download).
+app.get('/api/admin/downloads', adminOnly, async function (req, res) {
+  var cached = adminCache.get('downloads')
+  if (cached) return res.json(cached)
+  try {
+    var data = await adminCall('adminDownloads')
+    var payload = { downloads: data.downloads || [] }
+    adminCache.set('downloads', payload)
+    res.json(payload)
+  } catch (err) {
+    res.status(502).json({ error: err.message })
+  }
+})
+
+// Consolidated health check for every backend source. Each check has its own
+// short timeout so one slow/failed source never blocks the whole dashboard.
+app.get('/api/admin/status', adminOnly, async function (req, res) {
+  var cached = statusCache.get('status')
+  if (cached) return res.json(cached)
+  var started = Date.now()
+
+  function svc(name, meta) {
+    return Object.assign({ name: name }, meta)
+  }
+
+  function check(name, fn, summarize) {
+    var done = false
+    return new Promise(function (resolve) {
+      var finish = function (v) { if (!done) { done = true; resolve(v) } }
+      Promise.resolve(fn()).then(function (data) {
+        finish(svc(name, { ok: true, error: '', detail: summarize ? summarize(data) : {} }))
+      }, function (err) {
+        finish(svc(name, { ok: false, error: (err && err.message) ? err.message : String(err) }))
+      })
+      setTimeout(function () { finish(svc(name, { ok: false, error: 'timed out after 14s' })) }, 14000)
+    })
+  }
+
+  var likesFetcher = async function () {
+    var params = new URLSearchParams({ action: 'getLikes', _: Date.now().toString() })
+    var gasRes = await gasGet(params)
+    var text = await gasRes.text()
+    return JSON.parse(text)
+  }
+
+  var results = await Promise.all([
+    check('adminBackend', function () { return adminCall('adminInfo') }, function (d) {
+      return { spreadsheet: d.spreadsheet || '', sheets: (d.sheets || []).length, secretConfigured: d.secretConfigured === true }
+    }),
+    check('places', function () { return adminCall('adminPlaces') }, function (d) { return { count: (d.places || []).length } }),
+    check('chronicles', function () { return adminCall('adminChronicles') }, function (d) { return { count: (d.chronicles || []).length } }),
+    check('profile', function () { return adminCall('adminProfile') }, function (d) { return { fields: Object.keys(d || {}).length } }),
+    check('likes', likesFetcher, function (d) {
+      var l = (d && d.likes) || {}
+      var total = 0
+      for (var k in l) total += Number(l[k] || 0)
+      return { total: total, blogs: Object.keys(l).length }
+    }),
+    check('visitors', function () { return adminCall('adminVisitors') }, function (d) { return { count: (d.visitors || []).length } }),
+    check('downloads', function () { return adminCall('adminDownloads') }, function (d) { return { count: (d.downloads || []).length } }),
+  ])
+
+  var out = {
+    ok: true,
+    checkedAt: new Date().toISOString(),
+    elapsedMs: Date.now() - started,
+    env: {
+      gasUrl: !!process.env.GAS_URL,
+      gasAdminUrl: !!process.env.GAS_ADMIN_URL,
+      adminUsername: !!process.env.ADMIN_USERNAME,
+      adminPasswordHash: !!process.env.ADMIN_PASSWORD_HASH,
+      gasAdminSecret: !!process.env.GAS_ADMIN_SECRET,
+    },
+    services: results,
+  }
+  out.ok = results.every(function (r) { return r.ok })
+  statusCache.set('status', out)
+  res.json(out)
 })
 
 app.get('/api/admin/profile', adminOnly, async function (req, res) {
@@ -345,6 +440,7 @@ const likesCache = createCache(30 * 1000)
 const chroniclesCache = createCache(60 * 1000)
 const adminCache = createCache(10 * 1000)
 const profileCache = createCache(60 * 1000)
+const statusCache = createCache(20 * 1000)
 
 app.get('/api/travel', async function (req, res) {
   res.set('Cache-Control', 'no-store')

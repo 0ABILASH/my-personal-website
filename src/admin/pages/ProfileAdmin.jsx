@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { Save, User, Plus, Trash2, Heart, Link2, Tags as TagsIcon } from 'lucide-react'
 import { adminApi } from '../services/adminApi'
+import { useAdminData } from '../context/AdminDataContext'
 import { useToast } from '../context/ToastContext'
 import { PageHeader, LoadingState, ErrorState, Button, Field, TextInput, TextArea } from '../components/ui'
 import { logActivity } from '../utils'
@@ -34,8 +35,7 @@ function Section({ title, subtitle, children }) {
 
 export default function ProfileAdmin() {
   const toast = useToast()
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(true)
+  const { data, loading, reload } = useAdminData()
   const [saving, setSaving] = useState(false)
   const [savedAt, setSavedAt] = useState('')
 
@@ -55,41 +55,36 @@ export default function ProfileAdmin() {
 
   const set = (key, value) => setForm((f) => ({ ...f, [key]: value }))
 
-  const load = useCallback(async () => {
-    setLoading(true)
-    setError('')
-    try {
-      const p = await adminApi.profile()
-      setForm({
-        name: p.name || '',
-        tagline: p.tagline || '',
-        location: p.location || '',
-        locationShort: p.locationShort || '',
-        bio: p.bio || '',
-        status: p.status || '',
-        about: toListText(p.about),
-        tags: Array.isArray(p.tags) ? p.tags.join(', ') : (p.tags || ''),
-        traits: (Array.isArray(p.traits) && p.traits.length ? p.traits : [{ ...EMPTY_TRAIT }]).map((t) => ({
-          label: (t && t.label) || '',
-          sub: (t && t.sub) || '',
-        })),
-        links: (Array.isArray(p.links) && p.links.length ? p.links : [{ ...EMPTY_LINK }]).map((l) => ({
-          label: (l && l.label) || '',
-          href: (l && l.href) || '',
-        })),
-        interests: (Array.isArray(p.interests) && p.interests.length ? p.interests : [{ ...EMPTY_INTEREST }]).map((i) => ({
-          name: (i && i.name) || '',
-          sub: (i && i.sub) || '',
-        })),
-      })
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const pRes = data.profile
+  if (pRes && !pRes.ok) return <ErrorState message={pRes.error} onRetry={reload} />
+  if (loading && !pRes) return <LoadingState label="Loading profile..." />
+  const p = pRes ? pRes.value : null
 
-  useEffect(() => { load() }, [load])
+  useEffect(() => {
+    if (!p) return
+    setForm({
+      name: p.name || '',
+      tagline: p.tagline || '',
+      location: p.location || '',
+      locationShort: p.locationShort || '',
+      bio: p.bio || '',
+      status: p.status || '',
+      about: toListText(p.about),
+      tags: Array.isArray(p.tags) ? p.tags.join(', ') : (p.tags || ''),
+      traits: (Array.isArray(p.traits) && p.traits.length ? p.traits : [{ ...EMPTY_TRAIT }]).map((t) => ({
+        label: (t && t.label) || '',
+        sub: (t && t.sub) || '',
+      })),
+      links: (Array.isArray(p.links) && p.links.length ? p.links : [{ ...EMPTY_LINK }]).map((l) => ({
+        label: (l && l.label) || '',
+        href: (l && l.href) || '',
+      })),
+      interests: (Array.isArray(p.interests) && p.interests.length ? p.interests : [{ ...EMPTY_INTEREST }]).map((i) => ({
+        name: (i && i.name) || '',
+        sub: (i && i.sub) || '',
+      })),
+    })
+  }, [p])
 
   const onListChange = (key, idx, field, value) => {
     setForm((f) => ({
@@ -124,6 +119,7 @@ export default function ProfileAdmin() {
       setSavedAt(new Date().toISOString())
       logActivity('Updated site profile')
       toast.success('Profile saved. Public pages will update on next visit.')
+      reload()
     } catch (err) {
       toast.error(err.message)
     } finally {
@@ -131,8 +127,8 @@ export default function ProfileAdmin() {
     }
   }
 
-  if (loading) return <LoadingState label="Loading profile..." />
-  if (error) return <ErrorState message={error} onRetry={load} />
+  if (loading && !pRes) return <LoadingState label="Loading profile..." />
+  if (pRes && !pRes.ok) return <ErrorState message={pRes.error} onRetry={reload} />
 
   return (
     <>

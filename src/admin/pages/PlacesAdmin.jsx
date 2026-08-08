@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { MapPin, Pencil, Trash2, Plus, Search, Eye, ArrowUp, ArrowDown, RefreshCw, Upload } from 'lucide-react'
+import { MapPin, Pencil, Trash2, Plus, Eye, ArrowUp, ArrowDown, RefreshCw, Upload, GripVertical } from 'lucide-react'
 import { adminApi } from '../services/adminApi'
+import { useAdminData } from '../context/AdminDataContext'
 import { useToast } from '../context/ToastContext'
 import Modal, { ConfirmDialog } from '../components/Modal'
 import { Button, Field, TextInput, Select, TextArea, Chip, LoadingState, ErrorState, EmptyState, PageHeader, SearchInput } from '../components/ui'
@@ -22,16 +23,17 @@ function PlacesModal({ open, onClose, onSaved, place }) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    if (open) {
-      setForm(
-        place
-          ? { ...place }
-          : { city: '', country: '', lat: '', lng: '', emoji: '📍', date: '', type: 'visited', image: '', description: '' }
-      )
-      setError('')
-    }
-  }, [open, place])
+  const reset = () => {
+    if (!open) return
+    setForm(
+      place
+        ? { ...place }
+        : { city: '', country: '', lat: '', lng: '', emoji: '📍', date: '', type: 'visited', image: '', description: '' }
+    )
+    setError('')
+  }
+
+  useEffect(() => { reset() }, [open, place])
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }))
 
@@ -82,12 +84,12 @@ function PlacesModal({ open, onClose, onSaved, place }) {
         <Button onClick={handleSave} loading={busy}>{editing ? 'Save Changes' : 'Add Place'}</Button>
       </>
     }>
-      <div className="space-y-4">
+      <div className="space-y-5">
         {error && (
           <p className="text-[12px] text-red-400 bg-red-500/10 border border-red-500/30 rounded-xl px-3 py-2.5">{error}</p>
         )}
 
-        <div className="grid grid-cols-[56px_1fr] gap-3">
+        <div className="grid grid-cols-[56px_1fr] gap-4">
           <Field label="Emoji">
             <TextInput value={form.emoji} onChange={(e) => set('emoji', e.target.value)} className="!text-center !text-lg" maxLength={8} />
           </Field>
@@ -100,7 +102,7 @@ function PlacesModal({ open, onClose, onSaved, place }) {
           <TextInput value={form.country} onChange={(e) => set('country', e.target.value)} placeholder="Japan" />
         </Field>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           <Field label="Latitude" required>
             <TextInput value={form.lat} onChange={(e) => set('lat', e.target.value)} placeholder="35.6762" inputMode="decimal" />
           </Field>
@@ -109,7 +111,7 @@ function PlacesModal({ open, onClose, onSaved, place }) {
           </Field>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           <Field label="Type">
             <Select value={form.type} onChange={(e) => set('type', e.target.value)}>
               {Object.entries(TYPE_META).map(([k, v]) => (
@@ -152,30 +154,14 @@ function PlacesModal({ open, onClose, onSaved, place }) {
 export default function PlacesAdmin() {
   const toast = useToast()
   const [searchParams, setSearchParams] = useSearchParams()
-  const [places, setPlaces] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const { data, loading, reload } = useAdminData()
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState(null)
   const [deleting, setDeleting] = useState(null)
   const [deleteBusy, setDeleteBusy] = useState(false)
-
-  const load = useCallback(async () => {
-    setLoading(true)
-    setError('')
-    try {
-      const res = await adminApi.places()
-      setPlaces(res.places || [])
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => { load() }, [load])
+  const [dragIndex, setDragIndex] = useState(null)
 
   useEffect(() => {
     if (searchParams.get('new') === '1') {
@@ -186,21 +172,64 @@ export default function PlacesAdmin() {
     }
   }, [searchParams, setSearchParams])
 
-  const move = async (index, dir) => {
-    const target = index + dir
-    if (target < 0 || target >= filtered.length) return
-    const reordered = filtered.slice()
-    const tmp = reordered[index]
-    reordered[index] = reordered[target]
-    reordered[target] = tmp
+  const placesRes = data.places
+  if (placesRes && !placesRes.ok) return <ErrorState message={placesRes.error} onRetry={reload} />
+  if (loading && !placesRes) return <LoadingState label="Loading places..." />
+
+  const places = placesRes ? placesRes.value : []
+
+  const persistOrder = async (orderedFull) => {
     try {
-      await adminApi.reorderPlaces(reordered.map((p) => p.id))
+      await adminApi.reorderPlaces(orderedFull.map((p) => p.id))
       logActivity('Reordered places')
       toast.success('Order updated.')
-      load()
+      reload()
     } catch (err) {
       toast.error(err.message)
     }
+  }
+
+  const move = async (index, dir) => {
+    const target = index + dir
+    if (target < 0 || target >= filtered.length) return
+    const fromIdx = places.findIndex((p) => p.id === filtered[index].id)
+    const toIdx = places.findIndex((p) => p.id === filtered[target].id)
+    if (fromIdx < 0 || toIdx < 0) return
+    const full = places.slice()
+    const tmp = full[fromIdx]
+    full[fromIdx] = full[toIdx]
+    full[toIdx] = tmp
+    await persistOrder(full)
+  }
+
+  const onDragStart = (e, index) => {
+    if (filter !== 'all' || query) {
+      e.preventDefault()
+      toast.info('Clear search and filters to drag reorder')
+      return
+    }
+    setDragIndex(index)
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  const onDragOver = (e) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+  }
+
+  const onDrop = async (e, targetIndex) => {
+    e.preventDefault()
+    if (dragIndex === null || dragIndex === targetIndex) { setDragIndex(null); return }
+    const draggedId = filtered[dragIndex].id
+    const targetId = filtered[targetIndex].id
+    const full = places.slice()
+    const fromIdx = full.findIndex((p) => p.id === draggedId)
+    if (fromIdx < 0) { setDragIndex(null); return }
+    const item = full.splice(fromIdx, 1)[0]
+    const toIdx = full.findIndex((p) => p.id === targetId)
+    full.splice(toIdx < 0 ? full.length : toIdx, 0, item)
+    setDragIndex(null)
+    await persistOrder(full)
   }
 
   const openNew = () => { setEditing(null); setModalOpen(true) }
@@ -215,7 +244,7 @@ export default function PlacesAdmin() {
       logActivity('Deleted place "' + deleting.city + '"')
       toast.success('Place deleted.')
       setDeleting(null)
-      load()
+      reload()
     } catch (err) {
       toast.error(err.message)
     } finally {
@@ -234,10 +263,10 @@ export default function PlacesAdmin() {
     <>
       <PageHeader
         title="Travel Logs"
-        subtitle={places.length + ' places on your map'}
+        subtitle={places.length + ' places on your map — drag the handle to reorder'}
         actions={
           <>
-            <Button variant="ghost" onClick={load} disabled={loading} title="Refresh">
+            <Button variant="ghost" onClick={reload} disabled={loading} title="Refresh">
               <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
             </Button>
             <Button onClick={openNew}>
@@ -266,11 +295,7 @@ export default function PlacesAdmin() {
         </div>
       </div>
 
-      {loading ? (
-        <LoadingState label="Loading places..." />
-      ) : error ? (
-        <ErrorState message={error} onRetry={load} />
-      ) : filtered.length === 0 ? (
+      {filtered.length === 0 ? (
         <EmptyState icon={<MapPin size={18} />} title="No places found" hint={query || filter !== 'all' ? 'Try changing your search or filter.' : 'Add your first place to get started.'} />
       ) : (
         <div className="rounded-2xl bg-surface/50 backdrop-blur-sm border border-border overflow-hidden">
@@ -278,7 +303,7 @@ export default function PlacesAdmin() {
             <table className="w-full text-left">
               <thead>
                 <tr className="border-b border-border text-[10px] font-bold text-text-quaternary uppercase tracking-[0.16em] font-mono">
-                  <th className="px-4 py-3 w-8"></th>
+                  <th className="px-4 py-3 w-16"></th>
                   <th className="px-2 py-3">Place</th>
                   <th className="px-2 py-3 hidden sm:table-cell">Coordinates</th>
                   <th className="px-2 py-3 hidden md:table-cell">Date</th>
@@ -290,26 +315,40 @@ export default function PlacesAdmin() {
               <tbody className="divide-y divide-border">
                 {filtered.map((p) => {
                   const t = TYPE_META[String(p.type || '').trim()] || TYPE_META['']
+                  const idx = filtered.indexOf(p)
+                  const isDragging = dragIndex === idx
                   return (
-                    <tr key={p.id} className="hover:bg-surface transition-colors">
+                    <tr key={p.id} className={'hover:bg-surface transition-colors ' + (isDragging ? 'bg-accent-soft/40' : '')}>
                       <td className="px-4 py-3">
-                        <div className="flex flex-col gap-0.5">
-                          <button
-                            title="Move up"
-                            disabled={filtered.indexOf(p) === 0}
-                            onClick={() => move(filtered.indexOf(p), -1)}
-                            className="w-6 h-5 rounded text-text-quaternary hover:text-accent disabled:opacity-30 disabled:cursor-default flex items-center justify-center cursor-pointer transition-colors"
+                        <div className="flex items-center gap-1">
+                          <span
+                            draggable
+                            onDragStart={(e) => onDragStart(e, idx)}
+                            onDragOver={onDragOver}
+                            onDrop={(e) => onDrop(e, idx)}
+                            title="Drag to reorder"
+                            className="w-6 h-6 rounded text-text-quaternary hover:text-accent flex items-center justify-center cursor-grab active:cursor-grabbing transition-colors"
                           >
-                            <ArrowUp size={12} />
-                          </button>
-                          <button
-                            title="Move down"
-                            disabled={filtered.indexOf(p) === filtered.length - 1}
-                            onClick={() => move(filtered.indexOf(p), 1)}
-                            className="w-6 h-5 rounded text-text-quaternary hover:text-accent disabled:opacity-30 disabled:cursor-default flex items-center justify-center cursor-pointer transition-colors"
-                          >
-                            <ArrowDown size={12} />
-                          </button>
+                            <GripVertical size={13} />
+                          </span>
+                          <div className="flex flex-col gap-0.5">
+                            <button
+                              title="Move up"
+                              disabled={idx === 0}
+                              onClick={() => move(idx, -1)}
+                              className="w-6 h-5 rounded text-text-quaternary hover:text-accent disabled:opacity-30 disabled:cursor-default flex items-center justify-center cursor-pointer transition-colors"
+                            >
+                              <ArrowUp size={12} />
+                            </button>
+                            <button
+                              title="Move down"
+                              disabled={idx === filtered.length - 1}
+                              onClick={() => move(idx, 1)}
+                              className="w-6 h-5 rounded text-text-quaternary hover:text-accent disabled:opacity-30 disabled:cursor-default flex items-center justify-center cursor-pointer transition-colors"
+                            >
+                              <ArrowDown size={12} />
+                            </button>
+                          </div>
                         </div>
                       </td>
                       <td className="px-2 py-3">
@@ -373,7 +412,7 @@ export default function PlacesAdmin() {
         </div>
       )}
 
-      <PlacesModal open={modalOpen} onClose={closeModal} onSaved={load} place={editing} />
+      <PlacesModal open={modalOpen} onClose={closeModal} onSaved={reload} place={editing} />
       <ConfirmDialog
         open={!!deleting}
         onCancel={() => setDeleting(null)}
