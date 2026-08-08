@@ -9,9 +9,9 @@ import { LoadingState } from './ui'
 
 const NAV = [
   { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/admin/chronicles', label: 'Blogs', icon: PenLine },
-  { to: '/admin/places', label: 'Travel Logs', icon: MapPin },
   { to: '/admin/profile', label: 'Profile', icon: User },
+  { to: '/admin/places', label: 'Travel Logs', icon: MapPin },
+  { to: '/admin/chronicles', label: 'Blogs', icon: PenLine },
   { to: '/admin/settings', label: 'Settings', icon: Settings },
 ]
 

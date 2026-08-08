@@ -18,6 +18,18 @@ import motherBgm from "../audio/mother-bgm.mp3";
 import comingSoonBgm from "../audio/coming-soon.mp3";
 import sanitizeHtml from "../utils/sanitize";
 
+// Local bundled audio files used as a fallback for the seeded starter blogs
+// (sheet ids 1-6). Any blog with an audioSrc set in the sheet uses that URL
+// instead; audioTitle is always editable from the sheet.
+const LOCAL_AUDIO = {
+  "1": { title: "Song Aid", src: ilayarajaBgm },
+  "2": { title: "En Kanne Kalaimaane", src: kanneKalaimaane },
+  "3": { title: "SoundHelix", src: webUpdateBgm },
+  "4": { title: "Most Needed", src: fluteSoulful },
+  "5": { title: "Mom's Magic", src: motherBgm },
+  "6": { title: "Coming Soon", src: comingSoonBgm },
+};
+
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== "undefined"
@@ -32,113 +44,6 @@ function useIsMobile() {
   }, []);
   return isMobile;
 }
-
-const POSTS = [
-  {
-    id: 1,
-    title: "Beyond the Miles",
-    excerpt: "The Road Is My Therapy",
-    tag: "Experiance",
-    date: "Aug 2026",
-    read: "5 min",
-    audio: {
-      title: "Song Aid",
-      src: ilayarajaBgm,
-    },
-    content: [
-      "I have ridden More than- 5,000 km alone, and those journeys make me feel truly alive. The feeling of being on the open road, with nothing but my thoughts and the endless horizon ahead, is one of the greatest joys of my life. It is a feeling I want to carry with me until my last day.",
-      "What makes these rides even more special are the people I meet along the way. Strangers have shown me kindness, cared for me, and offered me company when I was alone. Their warmth and generosity have taught me that beautiful connections can be found anywhere.",
-      "The places I have visited have been breathtaking, each with its own beauty and memories. Every road, every sunrise, every small moment becomes a part of my story.",
-      "That is why I want to keep riding, exploring new places, meeting new people, and experiencing the freedom and peace that these journeys bring, again and again.",
-    ],
-  },
-  {
-    id: 2,
-    title: "That Broken Love",
-    excerpt: "Twice I Loved, Twice I Let Go",
-    tag: "Experiance",
-    date: "Aug 2026",
-    read: "3 min",
-    audio: {
-      title: "En Kanne Kalaimaane",
-      src: kanneKalaimaane,
-    },
-    content: [
-      "Yes, I loved with all my heart, and I lost with a heart that was left empty.",
-      "Yes, I fell in love twice, and I lost both times.",
-      "The love I had for those who once meant the world to me was genuine. I gave my heart honestly, without pretending or holding back. Even today, I don\u2019t know where I failed or what I could have done differently to hold on to those relationships.",
-      "Maybe that was simply my fate. Not every love story is meant to last forever, no matter how real it feels.",
-      "Even so, I carry no resentment. I sincerely hope they find happiness, peace, and a beautiful life ahead. My love for them was never about possession—it was about wanting the best for them, even if that future didn\u2019t include me.",
-      "Some people remain in our hearts, not because they stayed, but because they taught us how deeply we are capable of loving.  Thanks Loving !!",
-    ],
-  },
-  {
-    id: 3,
-    title: "WebSite Update",
-    excerpt: "Soon gonna a fix",
-    tag: "update",
-    date: "July 2026",
-    read: "0 min",
-    audio: {
-      title: "SoundHelix ",
-      src: webUpdateBgm,
-    },
-    content: [
-      "Im making a few improvements behind the scenes. Some pages are still under construction while I add new content and polish the overall experience. Check back soon—theres more on the way!",
-    ],
-  },
-  {
-    id: 4,
-    title: "My Kind of Peace",
-    excerpt: "This is What i need the most",
-    tag: "Voyage",
-    date: "July 2026",
-    read: "3 min",
-    audio: {
-      title: "Most Needed",
-      src: fluteSoulful,
-    },
-    content: [
-      "The way I see life is completely different from how most people do. Maybe that\u2019s why I often feel like I don\u2019t fit into society.",
-      "For me, happiness has always been simple. It\u2019s sitting quietly, watching the things I love, and finding peace in those moments. There is a quiet beauty in slowing down and simply being present.",
-      "More than anything, I want my life to be peaceful. And if protecting my peace means stepping away from the noise of society, then I\u2019m willing to do that. If necessary, I\u2019ll disappear from the crowd and choose solitude over chaos.",
-      "I love traveling alone and exploring the world at my own pace. Every journey teaches me something new, and every road brings me a sense of freedom that I can\u2019t find anywhere else. Being alone has never made me feel lonely\u2014it has made me feel alive.",
-      "That is the life I want to live: a life filled with peace, freedom, meaningful experiences, and the quiet joy of discovering both the world and myself.",
-    ],
-  },
-  {
-    id: 5,
-    title: "The Quiet Strength",
-    excerpt: "Amma - The Love That Raised Me.",
-    tag: "Voyage",
-    date: "July 2026",
-    read: "2 min",
-    audio: {
-      title: "Mom's Magic",
-      src: motherBgm,
-    },
-    content: [
-      "Amma",
-      "She is the one who taught me what life truly is. Through countless sacrifices, she shaped me into the person I am today. She is one of the greatest souls I have ever known.",
-      "Her strength, resilience, and unconditional love have guided me through every stage of my life. Every sacrifice she made became a stepping stone that helped me grow into a better person.",
-      "My greatest wish is to make her proud and to take care of her, just as she has always taken care of me. That is what matters most to me.",
-      "I may not always express my love and care in obvious ways, and others may not notice it, but deep in my heart, I will always care for her. She is, and always will be, my greatest blessing.",
-    ],
-  },
-  {
-    id: 6,
-    title: "Available Soon",
-    excerpt: "Stay tuned.",
-    tag: "Voyage",
-    date: "July 2026",
-    read: "0 min",
-    audio: {
-      title: "Coming Soon",
-      src: comingSoonBgm,
-    },
-    content: ["This blog is under construction."],
-  },
-];
 
 const TAG_COLORS = {
   Experiance: { text: "text-emerald-400", bg: "bg-emerald-500/15" },
@@ -181,21 +86,25 @@ function readTime(html) {
 }
 
 function toPost(c) {
+  const legacyId = String(c.id || "").trim();
+  // Seeded starter blogs use plain numeric ids (1-6) so their existing like
+  // counts keep working; new blogs use uuid ids and get a "sheet-" prefix.
+  const id = /^\d+$/.test(legacyId) ? legacyId : "sheet-" + legacyId;
+  const local = LOCAL_AUDIO[legacyId] || null;
+  const audioSrc = c.audioSrc || (local && local.src) || "";
   return {
-    id: "sheet-" + c.id,
+    id,
     title: c.title,
     excerpt: c.excerpt || "",
     tag: c.category || "update",
     date: formatMonth(c.date),
     read: readTime(c.content),
-    audio: c.audioSrc
-      ? { title: c.audioTitle || c.title, src: c.audioSrc }
+    audio: audioSrc
+      ? { title: c.audioTitle || (local && local.title) || c.title, src: audioSrc }
       : null,
     content: c.content || "",
   };
 }
-
-const FILTERS = ["all", "Experiance", "Voyage", "update"];
 
 export default function Writing() {
   const isMobile = useIsMobile();
@@ -463,7 +372,7 @@ export default function Writing() {
     return () => window.removeEventListener("mousemove", onMove);
   }, [openPost]);
 
-  const allPosts = useMemo(() => [...sheetPosts, ...POSTS], [sheetPosts]);
+  const allPosts = useMemo(() => sheetPosts, [sheetPosts]);
   const filters = useMemo(
     () => [
       "all",
@@ -516,53 +425,65 @@ This is more than writing. This is who I am.          </p>
           ))}
         </div>
 
-        <div className="flex flex-col gap-2">
-          {items.map((post, i) => {
-            const tc = tagColor(post.tag);
-            return (
-              <motion.button
-                key={post.id}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.025, duration: 0.2 }}
-                onClick={() => openPostWith(post)}
-                className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-surface border border-border hover:border-border-hover hover:bg-surface-hover transition-all duration-200 text-left cursor-pointer group"
-              >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <span
-                    className={`inline-flex px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${tc.text} ${tc.bg} flex-shrink-0`}
-                  >
-                    {post.tag}
-                  </span>
-                  <span className="text-[13px] font-semibold truncate">
-                    {post.title}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2.5 flex-shrink-0">
-                  <span className="flex items-center gap-1 text-[10px] font-mono text-text-quaternary">
-                    <Heart
-                      size={10}
-                      className={
-                        likes[post.id] ? "text-red-400 fill-current" : ""
-                      }
+        {items.length === 0 ? (
+          <div className="text-center py-16">
+            <span className="inline-flex w-11 h-11 rounded-xl bg-surface border border-border items-center justify-center text-text-tertiary mb-3">
+              <PenLine size={18} />
+            </span>
+            <p className="text-[13px] font-semibold text-text-secondary">No blogs yet</p>
+            <p className="text-[11.5px] text-text-quaternary mt-1">
+              Check back soon — new stories are on the way.
+            </p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {items.map((post, i) => {
+              const tc = tagColor(post.tag);
+              return (
+                <motion.button
+                  key={post.id}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.025, duration: 0.2 }}
+                  onClick={() => openPostWith(post)}
+                  className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-surface border border-border hover:border-border-hover hover:bg-surface-hover transition-all duration-200 text-left cursor-pointer group"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span
+                      className={`inline-flex px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${tc.text} ${tc.bg} flex-shrink-0`}
+                    >
+                      {post.tag}
+                    </span>
+                    <span className="text-[13px] font-semibold truncate">
+                      {post.title}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2.5 flex-shrink-0">
+                    <span className="flex items-center gap-1 text-[10px] font-mono text-text-quaternary">
+                      <Heart
+                        size={10}
+                        className={
+                          likes[post.id] ? "text-red-400 fill-current" : ""
+                        }
+                      />
+                      {likes[post.id] || 0}
+                    </span>
+                    <span className="text-[10px] text-text-quaternary font-mono hidden sm:inline">
+                      {post.read}
+                    </span>
+                    <span className="text-[10px] text-text-quaternary font-mono">
+                      {post.date}
+                    </span>
+                    <ArrowRight
+                      size={12}
+                      className="text-text-quaternary group-hover:text-accent transition-all"
                     />
-                    {likes[post.id] || 0}
-                  </span>
-                  <span className="text-[10px] text-text-quaternary font-mono hidden sm:inline">
-                    {post.read}
-                  </span>
-                  <span className="text-[10px] text-text-quaternary font-mono">
-                    {post.date}
-                  </span>
-                  <ArrowRight
-                    size={12}
-                    className="text-text-quaternary group-hover:text-accent transition-all"
-                  />
-                </div>
-              </motion.button>
-            );
-          })}
-        </div>
+                  </div>
+                </motion.button>
+              );
+            })}
+          </div>
+        )}
       </motion.div>
 
       <AnimatePresence>

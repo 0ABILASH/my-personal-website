@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { MapPin, PenLine, Heart, Compass, Star, FileText, Clock, LocateFixed } from 'lucide-react'
+import {
+  MapPin, PenLine, Heart, Compass, LocateFixed,
+  FileText, Star, Clock, ArrowUpRight, Sparkles,
+} from 'lucide-react'
 import { adminApi } from '../services/adminApi'
 import { StatCard, LoadingState, ErrorState, PageHeader, Chip } from '../components/ui'
 import { getActivity, timeAgo } from '../utils'
@@ -40,6 +43,7 @@ export default function Dashboard() {
   const places = data.places || []
   const chronicles = data.chronicles || []
   const likes = data.likes || {}
+
   const visited = places.filter((p) => String(p.type || '').trim() === 'visited').length
   const favorites = places.filter((p) => String(p.type || '').trim() === 'small').length
   const current = places.filter((p) => String(p.type || '').trim() === 'current').length
@@ -49,14 +53,19 @@ export default function Dashboard() {
 
   const chronicleById = {}
   chronicles.forEach((c) => { chronicleById[String(c.id)] = c })
-  const topLiked = Object.keys(likes)
-    .map((id) => ({
-      id,
-      count: Number(likes[id] || 0),
-      title: (chronicleById[String(id).replace(/^sheet-/, '')] || {}).title || id,
-    }))
+
+  const blogTitle = (id) => {
+    const key = String(id).replace(/^sheet-/, '')
+    const c = chronicleById[key]
+    return c && c.title ? c.title : String(id)
+  }
+
+  const likedBlogs = Object.keys(likes)
+    .map((id) => ({ id, count: Number(likes[id] || 0), title: blogTitle(id) }))
+    .filter((l) => l.count > 0)
     .sort((a, b) => b.count - a.count)
-    .slice(0, 4)
+    .slice(0, 6)
+  const maxLike = Math.max(1, ...likedBlogs.map((l) => l.count))
 
   const recentPlaces = places.slice(-4).reverse()
   const recentChronicles = chronicles
@@ -64,6 +73,8 @@ export default function Dashboard() {
     .sort((a, b) => String(b.updated || b.created || '').localeCompare(String(a.updated || a.created || '')))
     .slice(0, 4)
   const activity = getActivity()
+
+  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
 
   const quick = [
     { to: '/admin/chronicles?new=1', label: 'New Blog', icon: <PenLine size={14} /> },
@@ -91,21 +102,97 @@ export default function Dashboard() {
         }
       />
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
+      {/* Hero greeting */}
+      <div className="relative rounded-2xl bg-gradient-to-r from-accent/[0.14] via-accent/[0.05] to-transparent border border-accent/20 p-5 sm:p-6 mb-6 overflow-hidden">
+        <div className="absolute -top-16 -right-16 w-56 h-56 bg-accent/10 rounded-full blur-[80px] pointer-events-none" />
+        <div className="relative flex items-start justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono mb-2">
+              <Sparkles size={11} className="text-accent" />
+              Welcome back
+            </div>
+            <h2 className="text-lg sm:text-xl font-black tracking-tight mb-1">Hey Abilash</h2>
+            <p className="text-[12px] text-text-tertiary">{today}</p>
+          </div>
+          <div className="text-right shrink-0">
+            <div className="text-3xl font-black text-accent leading-none">{totalLikes}</div>
+            <div className="text-[10px] text-text-tertiary mt-1.5 font-mono">total likes</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Travel stats */}
+      <div className="flex items-center gap-2 mb-2.5">
+        <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">Travel</span>
+        <div className="flex-1 h-px bg-border" />
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         <StatCard label="Total Places" value={places.length} icon={<MapPin size={15} />} tone="blue" />
         <StatCard label="Visited" value={visited} icon={<Compass size={15} />} tone="green" />
         <StatCard label="Favorites" value={favorites} icon={<Heart size={15} />} tone="teal" />
         <StatCard label="Current" value={current} icon={<LocateFixed size={15} />} tone="yellow" />
-        <StatCard label="Published Blogs" value={published} icon={<FileText size={15} />} tone="green" />
-        <StatCard label="Drafts" value={drafts} icon={<Star size={15} />} tone="yellow" />
-        <StatCard label="Total Likes" value={totalLikes} icon={<Heart size={15} />} tone="red" />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      {/* Blog stats */}
+      <div className="flex items-center gap-2 mb-2.5">
+        <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">Blogs</span>
+        <div className="flex-1 h-px bg-border" />
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        <StatCard label="Published" value={published} icon={<FileText size={15} />} tone="green" />
+        <StatCard label="Drafts" value={drafts} icon={<Star size={15} />} tone="yellow" />
+        <StatCard label="Blogs With Likes" value={likedBlogs.length} icon={<Heart size={15} />} tone="red" />
+        <StatCard label="Total Likes" value={totalLikes} icon={<Heart size={15} />} tone="blue" />
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4 mb-4">
+        {/* Blog likes */}
+        <div className="rounded-2xl bg-surface/50 backdrop-blur-sm border border-border overflow-hidden">
+          <div className="flex items-center justify-between px-4 h-11 border-b border-border">
+            <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">Blog Likes</span>
+            <Heart size={12} className="text-red-400" />
+          </div>
+          <div className="p-4 space-y-3">
+            {likedBlogs.length === 0 && (
+              <p className="text-[12px] text-text-tertiary py-6 text-center">
+                No likes yet — they&apos;ll show up here once visitors love your blogs.
+              </p>
+            )}
+            {likedBlogs.map((l) => (
+              <div key={l.id} className="group">
+                <div className="flex items-center justify-between gap-2 mb-1.5">
+                  <span className="text-[12.5px] font-medium text-text-secondary truncate min-w-0">
+                    {l.title}
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-[10px] font-semibold shrink-0">
+                    <Heart size={9} className="fill-current" />
+                    {l.count} {l.count === 1 ? 'like' : 'likes'}
+                  </span>
+                </div>
+                <div className="h-1.5 rounded-full bg-bg-subtle border border-border overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-red-400 to-red-500 transition-all duration-700"
+                    style={{ width: Math.max(8, (l.count / maxLike) * 100) + '%' }}
+                  />
+                </div>
+              </div>
+            ))}
+            {likedBlogs.length > 0 && (
+              <div className="flex items-center justify-between pt-1">
+                <span className="text-[10px] text-text-quaternary font-mono">{likedBlogs.length} blog(s)</span>
+                <span className="text-[10px] text-text-quaternary font-mono">{totalLikes} likes total</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Recent blogs */}
         <div className="rounded-2xl bg-surface/50 backdrop-blur-sm border border-border overflow-hidden">
           <div className="flex items-center justify-between px-4 h-11 border-b border-border">
             <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">Recent Blogs</span>
-            <Link to="/admin/chronicles" className="text-[11px] text-accent hover:underline">View all</Link>
+            <Link to="/admin/chronicles" className="inline-flex items-center gap-1 text-[11px] text-accent hover:underline">
+              View all <ArrowUpRight size={11} />
+            </Link>
           </div>
           <div className="divide-y divide-border">
             {recentChronicles.length === 0 && (
@@ -127,11 +214,16 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
+      </div>
 
+      <div className="grid md:grid-cols-2 gap-4">
+        {/* Recent places */}
         <div className="rounded-2xl bg-surface/50 backdrop-blur-sm border border-border overflow-hidden">
           <div className="flex items-center justify-between px-4 h-11 border-b border-border">
             <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">Recent Places</span>
-            <Link to="/admin/places" className="text-[11px] text-accent hover:underline">View all</Link>
+            <Link to="/admin/places" className="inline-flex items-center gap-1 text-[11px] text-accent hover:underline">
+              View all <ArrowUpRight size={11} />
+            </Link>
           </div>
           <div className="divide-y divide-border">
             {recentPlaces.length === 0 && (
@@ -153,43 +245,27 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
-      </div>
 
-      {totalLikes > 0 && (
-        <div className="rounded-2xl bg-surface/50 backdrop-blur-sm border border-border overflow-hidden mt-4">
+        {/* Recent activity */}
+        <div className="rounded-2xl bg-surface/50 backdrop-blur-sm border border-border overflow-hidden">
           <div className="flex items-center justify-between px-4 h-11 border-b border-border">
-            <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">Most Liked</span>
-            <Heart size={12} className="text-red-400" />
+            <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">Recent Activity</span>
+            <span className="text-[10px] text-text-quaternary font-mono">This device only</span>
           </div>
           <div className="divide-y divide-border">
-            {topLiked.map((t) => (
-              <div key={t.id} className="flex items-center justify-between gap-2 px-4 py-3">
-                <span className="text-[12.5px] text-text-secondary truncate min-w-0">{t.title}</span>
-                <span className="text-[11px] font-mono text-text-quaternary shrink-0">{t.count} ♥</span>
+            {activity.length === 0 && (
+              <p className="text-[12px] text-text-tertiary px-4 py-8 text-center">
+                No admin activity yet. Actions you take will appear here.
+              </p>
+            )}
+            {activity.slice(0, 10).map((a, i) => (
+              <div key={i} className="flex items-center gap-2.5 px-4 py-3">
+                <Clock size={12} className="text-text-quaternary shrink-0" />
+                <span className="text-[12px] text-text-secondary flex-1 min-w-0 truncate">{a.text}</span>
+                <span className="text-[10px] text-text-quaternary font-mono shrink-0">{timeAgo(a.at)}</span>
               </div>
             ))}
           </div>
-        </div>
-      )}
-
-      <div className="rounded-2xl bg-surface/50 backdrop-blur-sm border border-border overflow-hidden mt-4">
-        <div className="flex items-center justify-between px-4 h-11 border-b border-border">
-          <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">Recent Activity</span>
-          <span className="text-[10px] text-text-quaternary font-mono">This device only</span>
-        </div>
-        <div className="divide-y divide-border">
-          {activity.length === 0 && (
-            <p className="text-[12px] text-text-tertiary px-4 py-8 text-center">
-              No admin activity yet. Actions you take will appear here.
-            </p>
-          )}
-          {activity.slice(0, 10).map((a, i) => (
-            <div key={i} className="flex items-center gap-2.5 px-4 py-3">
-              <Clock size={12} className="text-text-quaternary shrink-0" />
-              <span className="text-[12px] text-text-secondary flex-1 min-w-0 truncate">{a.text}</span>
-              <span className="text-[10px] text-text-quaternary font-mono shrink-0">{timeAgo(a.at)}</span>
-            </div>
-          ))}
         </div>
       </div>
     </>
