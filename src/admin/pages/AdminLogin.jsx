@@ -26,7 +26,7 @@ export default function AdminLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!username.trim() || !password) {
-      setError('Enter your username and password.')
+      setError('Enter your Username and Access code.')
       return
     }
     setBusy(true)
@@ -54,27 +54,26 @@ export default function AdminLogin() {
               <ShieldCheck size={20} />
             </span>
             <div>
-              <h1 className="text-lg font-black tracking-tight">Admin Login</h1>
+              <h1 className="text-lg font-black tracking-tight">Admin Login (Abilash)</h1>
               <p className="text-[11px] text-text-tertiary font-mono">Restricted area</p>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Field label="Username" required>
-              <TextInput
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="admin"
-                autoComplete="username"
-                autoFocus
-              />
-            </Field>
-            <Field label="Password" required>
+              <Field label="Username" required>
+                <TextInput
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Credential"
+                  autoComplete="username"
+                />
+              </Field>
+            <Field label="Access code" required>
               <TextInput
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="••••••••••••"
                 autoComplete="current-password"
               />
             </Field>
@@ -94,7 +93,7 @@ export default function AdminLogin() {
 
             <Button type="submit" loading={busy} className="w-full !py-2.5">
               <KeyRound size={13} />
-              {busy ? 'Signing in...' : 'Sign In'}
+              {busy ? 'Logging in...' : 'Login'}
             </Button>
           </form>
         </div>

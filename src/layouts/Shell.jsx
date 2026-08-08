@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowUpRight, Download } from 'lucide-react'
+import { ArrowUpRight, Download, X } from 'lucide-react'
 import headerImg from '../services/headerImg'
 
 const NAV = [
@@ -54,6 +54,8 @@ const BOTTOM_MSGS = {
 export default function Shell({ children, onCvOpen }) {
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [imgMenuOpen, setImgMenuOpen] = useState(false)
+  const [imgPreviewOpen, setImgPreviewOpen] = useState(false)
   const [nearBottom, setNearBottom] = useState(false)
   const [headerMsg, setHeaderMsg] = useState('')
   const lastMsgCtxRef = useRef(null)
@@ -63,6 +65,7 @@ export default function Shell({ children, onCvOpen }) {
   const blogNextTimerRef = useRef(null)
   const pathRef = useRef(location.pathname)
   const nearBottomRef = useRef(nearBottom)
+  const imgMenuRef = useRef(null)
   pathRef.current = location.pathname
   nearBottomRef.current = nearBottom
 
@@ -74,6 +77,14 @@ export default function Shell({ children, onCvOpen }) {
   }, [mobileOpen])
 
   useEffect(() => { setMobileOpen(false) }, [location.pathname])
+
+  useEffect(() => {
+    const onDocClick = (e) => {
+      if (imgMenuRef.current && !imgMenuRef.current.contains(e.target)) setImgMenuOpen(false)
+    }
+    document.addEventListener('mousedown', onDocClick)
+    return () => document.removeEventListener('mousedown', onDocClick)
+  }, [])
 
   useEffect(() => {
     const onScroll = () => {
@@ -160,23 +171,37 @@ export default function Shell({ children, onCvOpen }) {
       <header className="fixed top-0 left-0 right-0 z-[2000] bg-bg/80 backdrop-blur-xl border-b border-border">
         <div className="max-w-5xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            {headerImg ? (
-              <Link
-                to="/admin/login"
-                title="Admin dashboard"
+            <div className="relative" ref={imgMenuRef}>
+              <button
+                onClick={(e) => { e.stopPropagation(); setImgMenuOpen((o) => !o); }}
                 className="cursor-pointer"
+                aria-label="Profile options"
               >
-                <img src={headerImg} alt="Abilash" className="w-5 h-5 rounded-full object-cover shadow-[0_0_16px_rgba(59,130,246,0.25)]" />
-              </Link>
-            ) : (
-              <Link
-                to="/admin/login"
-                title="Admin dashboard"
-                className="cursor-pointer"
-              >
-                <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_16px_rgba(59,130,246,0.25)]">A</div>
-              </Link>
-            )}
+                {headerImg ? (
+                  <img src={headerImg} alt="Abilash" className="w-5 h-5 rounded-full object-cover shadow-[0_0_16px_rgba(59,130,246,0.25)]" />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_16px_rgba(59,130,246,0.25)]">A</div>
+                )}
+              </button>
+
+              {imgMenuOpen && (
+                <div className="absolute left-0 top-7 z-[2100] w-44 rounded-xl bg-surface border border-border shadow-2xl shadow-black/40 overflow-hidden animate-fade-in">
+                  <button
+                    onClick={() => { setImgMenuOpen(false); setImgPreviewOpen(true); }}
+                    className="w-full flex items-center gap-2 px-3.5 py-2.5 text-[12px] font-medium text-text-secondary hover:text-text hover:bg-bg transition-colors text-left cursor-pointer"
+                  >
+                    Preview Profile Image
+                  </button>
+                  <Link
+                    to="/admin/login"
+                    onClick={() => setImgMenuOpen(false)}
+                    className="w-full flex items-center gap-2 px-3.5 py-2.5 text-[12px] font-medium text-text-secondary hover:text-text hover:bg-bg transition-colors text-left border-t border-border"
+                  >
+                    🔐 Restricted Access
+                  </Link>
+                </div>
+              )}
+            </div>
 
             {/* Live status message — mobile & tablet only */}
             <AnimatePresence mode="wait">
@@ -224,13 +249,6 @@ export default function Shell({ children, onCvOpen }) {
                 {link.label}
               </Link>
             ))}
-            <Link
-              to="/admin/login"
-              className="ml-0.5 px-2 py-1.5 rounded-lg text-[10px] font-medium text-text-quaternary hover:text-text hover:bg-surface-hover transition-all duration-200"
-              title="Admin"
-            >
-              Admin
-            </Link>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -347,19 +365,6 @@ export default function Shell({ children, onCvOpen }) {
                       Download Data
                     </button>
                   </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.45, duration: 0.3 }}
-                  >
-                    <Link
-                      to="/admin/login"
-                      onClick={() => setMobileOpen(false)}
-                      className="flex items-center justify-center px-4 py-2 text-[10px] font-medium text-text-quaternary hover:text-text transition-all w-full"
-                    >
-                      Admin
-                    </Link>
-                  </motion.div>
                 </div>
               </div>
             </motion.div>
@@ -380,6 +385,40 @@ export default function Shell({ children, onCvOpen }) {
           </motion.div>
         </AnimatePresence>
       </main>
+
+      {/* Profile image preview */}
+      <AnimatePresence>
+        {imgPreviewOpen && headerImg && (
+          <motion.div
+            className="fixed inset-0 z-[3000] flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-xl" onClick={() => setImgPreviewOpen(false)} />
+            <motion.div
+              className="relative"
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <button
+                onClick={() => setImgPreviewOpen(false)}
+                className="absolute -top-3 -right-3 w-7 h-7 rounded-full bg-surface border border-border flex items-center justify-center text-text-tertiary hover:text-text hover:border-border-hover transition-all cursor-pointer z-10"
+              >
+                <X size={13} />
+              </button>
+              <img
+                src={headerImg}
+                alt="Abilash"
+                className="w-72 h-72 sm:w-80 sm:h-80 rounded-3xl object-cover shadow-[0_0_80px_rgba(59,130,246,0.25)] border border-border"
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
