@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, PenLine, MapPin,
@@ -14,36 +14,6 @@ const NAV = [
   { to: '/admin/profile', label: 'Profile', icon: User },
   { to: '/admin/settings', label: 'Settings', icon: Settings },
 ]
-
-// Phase 17 requirement: if the admin has no interaction for 5 minutes, the
-// session is invalidated server-side and the user is sent back to the login
-// screen with an explanation. Only mounted while inside the authenticated area.
-const INACTIVITY_MS = 5 * 60 * 1000
-const ACTIVITY_EVENTS = ['mousedown', 'keydown', 'touchstart', 'scroll', 'click', 'input', 'pointermove']
-
-function AdminInactivityWatcher() {
-  const { logout } = useAdminAuth()
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    let timer = null
-    const expire = () => {
-      logout().then(() => navigate('/admin/login?expired=1', { replace: true }))
-    }
-    const reset = () => {
-      if (timer) clearTimeout(timer)
-      timer = setTimeout(expire, INACTIVITY_MS)
-    }
-    ACTIVITY_EVENTS.forEach((ev) => window.addEventListener(ev, reset, { passive: true }))
-    reset()
-    return () => {
-      if (timer) clearTimeout(timer)
-      ACTIVITY_EVENTS.forEach((ev) => window.removeEventListener(ev, reset))
-    }
-  }, [logout, navigate])
-
-  return null
-}
 
 function SidebarContent({ onNavigate }) {
   const { logout } = useAdminAuth()
@@ -127,7 +97,6 @@ export default function AdminLayout({ children }) {
 
   return (
     <div className="min-h-screen bg-bg text-text">
-      <AdminInactivityWatcher />
       {/* Desktop sidebar */}
       <aside className="hidden lg:block fixed top-0 left-0 bottom-0 w-60 bg-surface/40 backdrop-blur-xl border-r border-border z-[3000]">
         <SidebarContent />

@@ -66,6 +66,17 @@ export default function App() {
     }
   }, [resetTimer, isAdmin])
 
+  // Show the Session Timeout modal when the admin area redirects here after
+  // an inactivity expiry, then clean the flag out of the URL.
+  useEffect(() => {
+    if (isAdmin) return
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('session_timeout') === '1') {
+      setTimedOut(true)
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+  }, [isAdmin])
+
   return (
     <>
       <ScrollToTop />

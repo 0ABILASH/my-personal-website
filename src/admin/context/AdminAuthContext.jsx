@@ -7,11 +7,18 @@ export function AdminAuthProvider({ children }) {
   const [status, setStatus] = useState('loading') // loading | authenticated | anonymous
   const [user, setUser] = useState(null)
 
-  // Phase 16 requirement: every full load/refresh of the admin dashboard
-  // invalidates the server-side admin session, so the user always lands on the
-  // login screen after a refresh. In-app navigation (which never remounts this
-  // provider) keeps the session alive while working.
+  // Security: the admin area must only be entered from the site's profile-image
+  // menu (which sets the admin_safe_entry marker for SPA navigation). Any full
+  // page load of an /admin URL (refresh or typing it directly) destroys the
+  // session and bounces back to the homepage.
   useEffect(() => {
+    const safeEntry = sessionStorage.getItem('admin_safe_entry')
+    sessionStorage.removeItem('admin_safe_entry')
+    if (safeEntry !== '1') {
+      adminApi.logout().catch(() => {})
+      window.location.assign('/')
+      return
+    }
     let mounted = true
     adminApi.logout()
       .catch(() => {})

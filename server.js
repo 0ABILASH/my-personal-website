@@ -190,7 +190,7 @@ app.post('/api/admin/login', async function (req, res) {
 
   if (!timingSafeStr(username, expectedUser) || !timingSafeStr(sha256(password), expectedHash)) {
     recordLoginFailure(ip)
-    return res.status(401).json({ error: 'Invalid username or password' })
+    return res.status(401).json({ error: 'Invalid Access ID or Access Code' })
   }
 
   clearLoginFailures(ip)
