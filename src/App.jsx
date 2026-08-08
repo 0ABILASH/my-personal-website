@@ -10,7 +10,7 @@ import Blogs from './pages/Blogs'
 import Profile from './pages/Profile'
 import AdminApp from './admin/AdminApp'
 import { trackVisitor } from './services/track'
-import { preloadTravel } from './services/travel'
+import { preloadAll } from './services/preload'
 
 const TIMEOUT_MS = 60 * 1000
 
@@ -51,7 +51,7 @@ export default function App() {
     if (isAdmin) return
     trackVisitor('pageview')
     resetTimer()
-    preloadTravel()
+    preloadAll()
 
     const handler = () => {
       if (!timedOut) lastActivity.current = Date.now()

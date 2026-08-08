@@ -7,22 +7,23 @@ export function AdminAuthProvider({ children }) {
   const [status, setStatus] = useState('loading') // loading | authenticated | anonymous
   const [user, setUser] = useState(null)
 
-  // Security: the admin area must only be entered from the site's profile-image
-  // menu (which sets the admin_safe_entry marker for SPA navigation). Any full
-  // page load of an /admin URL (refresh or typing it directly) destroys the
-  // session and bounces back to the homepage.
+  // Verify the session against the server on load. This makes full page
+  // reloads of /admin/* work (the HttpOnly cookie survives a refresh), so the
+  // dashboard never bounces to the homepage or shows a blank page.
   useEffect(() => {
-    const safeEntry = sessionStorage.getItem('admin_safe_entry')
-    sessionStorage.removeItem('admin_safe_entry')
-    if (safeEntry !== '1') {
-      adminApi.logout().catch(() => {})
-      window.location.assign('/')
-      return
-    }
     let mounted = true
-    adminApi.logout()
-      .catch(() => {})
-      .finally(() => {
+    adminApi.session()
+      .then((res) => {
+        if (!mounted) return
+        if (res && res.authenticated) {
+          setStatus('authenticated')
+          setUser({ username: res.username || 'admin' })
+        } else {
+          setStatus('anonymous')
+          setUser(null)
+        }
+      })
+      .catch(() => {
         if (mounted) {
           setStatus('anonymous')
           setUser(null)

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, X } from "lucide-react";
+import { getProfile } from "../services/preload";
 import teaImg from "../images/tea.webp";
 import batmanImg from "../images/batman.jpg";
 import musicImg from "../images/music.jpg";
@@ -59,15 +60,11 @@ export default function Home({ onCvOpen }) {
 
   useEffect(() => {
     let mounted = true;
-    fetch("/api/profile", { headers: { "Cache-Control": "no-cache" } })
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("bad"))))
-      .then((d) => {
-        if (mounted && d && typeof d === "object" && Object.keys(d).length) setProfile(d);
-      })
-      .catch(() => {})
-      .finally(() => {
-        if (mounted) setProfile((p) => p || {});
-      });
+    getProfile().then((d) => {
+      if (!mounted) return;
+      if (d && typeof d === "object" && Object.keys(d).length) setProfile(d);
+      setProfile((p) => p || {});
+    });
     return () => { mounted = false; };
   }, []);
 

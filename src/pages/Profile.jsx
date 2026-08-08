@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, Briefcase, MapPin, RefreshCw } from "lucide-react";
+import { getProfile } from "../services/preload";
 import profileImg from "../images/imagebg.jpeg";
 import avatar1 from "../images/99.png";
 import avatar2 from "../images/00.png";
@@ -133,15 +134,11 @@ export default function Profile() {
 
   useEffect(() => {
     let mounted = true;
-    fetch("/api/profile", { headers: { "Cache-Control": "no-cache" } })
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("bad"))))
-      .then((d) => {
-        if (mounted && d && typeof d === "object" && Object.keys(d).length) setProfile(d);
-      })
-      .catch(() => {})
-      .finally(() => {
-        if (mounted) setProfile((p) => p || {});
-      });
+    getProfile().then((d) => {
+      if (!mounted) return;
+      if (d && typeof d === "object" && Object.keys(d).length) setProfile(d);
+      setProfile((p) => p || {});
+    });
     return () => { mounted = false; };
   }, []);
 

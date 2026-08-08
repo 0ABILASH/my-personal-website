@@ -17,6 +17,7 @@ import fluteSoulful from "../audio/flute - soulful.mp3";
 import motherBgm from "../audio/mother-bgm.mp3";
 import comingSoonBgm from "../audio/coming-soon.mp3";
 import sanitizeHtml from "../utils/sanitize";
+import { getLikes, getChronicles } from "../services/preload";
 
 // Local bundled audio files used as a fallback for the seeded starter blogs
 // (sheet ids 1-6). Any blog with an audioSrc set in the sheet uses that URL
@@ -131,29 +132,23 @@ export default function Writing() {
   const openPostRef = useRef(null);
 
   useEffect(() => {
-    fetch("/api/likes")
-      .then((r) => r.json())
-      .then((d) => {
-        if (d && typeof d.likes === "object") setLikes(d.likes);
-      })
-      .catch(() => {});
+    getLikes().then((d) => {
+      if (d && typeof d.likes === "object") setLikes(d.likes);
+    });
   }, []);
 
   useEffect(() => {
-    fetch("/api/chronicles")
-      .then((r) => r.json())
-      .then((d) => {
-        const list = Array.isArray(d && d.chronicles)
-          ? d.chronicles.filter(
-              (c) =>
-                c &&
-                c.title &&
-                String(c.status).toLowerCase() === "published",
-            )
-          : [];
-        if (list.length) setSheetPosts(list.map(toPost));
-      })
-      .catch(() => {});
+    getChronicles().then((d) => {
+      const list = Array.isArray(d && d.chronicles)
+        ? d.chronicles.filter(
+            (c) =>
+              c &&
+              c.title &&
+              String(c.status).toLowerCase() === "published",
+          )
+        : [];
+      if (list.length) setSheetPosts(list.map(toPost));
+    });
   }, []);
 
   useEffect(() => {

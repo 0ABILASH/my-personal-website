@@ -194,10 +194,7 @@ export default function Shell({ children, onCvOpen }) {
                   </button>
                   <Link
                     to="/admin/login"
-                    onClick={() => {
-                      sessionStorage.setItem('admin_safe_entry', '1')
-                      setImgMenuOpen(false)
-                    }}
+                    onClick={() => setImgMenuOpen(false)}
                     className="w-full flex items-center gap-2 px-3.5 py-2.5 text-[12px] font-medium text-text-secondary hover:text-text hover:bg-bg transition-colors text-left border-t border-border"
                   >
                     🔒 Restricted Access

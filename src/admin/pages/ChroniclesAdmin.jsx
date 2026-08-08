@@ -15,7 +15,8 @@ const STATUS_META = {
   draft: { label: 'Draft', tone: 'yellow' },
 }
 
-// Tag values that the public Blogs page actually filters/colours by.
+// Existing heading values shown as suggestions on the public Blogs page.
+// The field is free-text so the admin can create any new heading.
 const CATEGORY_OPTIONS = ['Experiance', 'Voyage', 'update']
 
 function tagList(c) {
@@ -120,12 +121,18 @@ function ChronicleModal({ open, onClose, onSaved, chronicle }) {
         </div>
 
         <div className="grid sm:grid-cols-2 gap-3">
-          <Field label="Category" hint="Shown as the tag on the public Blogs page">
-            <Select value={form.category} onChange={(e) => set('category', e.target.value)}>
+          <Field label="Heading / Category" hint="Pick a suggested one or type a new heading (e.g. Experience, Voyage, Update)">
+            <TextInput
+              list="blog-heading-options"
+              value={form.category}
+              onChange={(e) => set('category', e.target.value)}
+              placeholder="Experience"
+            />
+            <datalist id="blog-heading-options">
               {CATEGORY_OPTIONS.map((c) => (
-                <option key={c} value={c}>{c}</option>
+                <option key={c} value={c} />
               ))}
-            </Select>
+            </datalist>
           </Field>
           <Field label="Status">
             <Select value={form.status} onChange={(e) => set('status', e.target.value)}>

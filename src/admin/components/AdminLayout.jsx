@@ -129,7 +129,7 @@ export default function AdminLayout({ children }) {
       <header className="lg:hidden sticky top-0 z-[3000] h-14 bg-bg/85 backdrop-blur-xl border-b border-border flex items-center justify-between px-4">
         <button
           onClick={() => setDrawer(true)}
-          className="w-9 h-9 rounded-xl bg-surface border border-border flex items-center justify-center text-text-secondary cursor-pointer"
+          className="w-9 h-9 rounded-xl bg-surface flex items-center justify-center text-text-secondary cursor-pointer"
         >
           <Menu size={16} />
         </button>
