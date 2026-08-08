@@ -1,14 +1,37 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   MapPin, PenLine, Heart, Compass, LocateFixed,
   FileText, Star, Clock, ArrowUpRight, Sparkles,
+  Users, Download, Calendar, Smartphone, Monitor,
 } from 'lucide-react'
 import { useAdminData } from '../context/AdminDataContext'
 import { StatCard, LoadingState, ErrorState, PageHeader, Chip } from '../components/ui'
 import { getActivity, timeAgo } from '../utils'
 
+// Sheet dates are stored as DD/MM/YYYY — normalise to ISO (YYYY-MM-DD) so
+// range comparisons work lexically. Returns '' when the value isn't a date.
+function toISODate(sheetDate) {
+  const m = String(sheetDate || '').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/)
+  if (!m) return ''
+  return m[3] + '-' + String(m[2]).padStart(2, '0') + '-' + String(m[1]).padStart(2, '0')
+}
+
+// Local date (YYYY-MM-DD) for a day offset from today.
+function localISODate(offsetDays) {
+  const d = new Date()
+  d.setDate(d.getDate() - offsetDays)
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  return y + '-' + m + '-' + dd
+}
+
 export default function Dashboard() {
   const { data, loading, reload } = useAdminData()
+  const [datePreset, setDatePreset] = useState('all')
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
 
   const coreFailed = ['places', 'chronicles', 'likes']
     .map((k) => data[k])
@@ -51,6 +74,42 @@ export default function Dashboard() {
   const activity = getActivity()
 
   const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
+
+  // ── Visitor & download analytics (data already loaded via AdminDataContext) ──
+  let rangeFrom = ''
+  let rangeTo = ''
+  if (datePreset === 'today') { rangeFrom = localISODate(0); rangeTo = localISODate(0) }
+  else if (datePreset === '7d') { rangeFrom = localISODate(6); rangeTo = localISODate(0) }
+  else if (datePreset === '30d') { rangeFrom = localISODate(29); rangeTo = localISODate(0) }
+  else if (datePreset === 'custom') { rangeFrom = dateFrom; rangeTo = dateTo }
+
+  const inRange = (rowDate) => {
+    const iso = toISODate(rowDate)
+    if (!iso) return !rangeFrom && !rangeTo
+    if (rangeFrom && iso < rangeFrom) return false
+    if (rangeTo && iso > rangeTo) return false
+    return true
+  }
+
+  const vRes = data.visitors
+  const dRes = data.downloads
+  const allVisitors = vRes && vRes.ok ? vRes.value : []
+  const allDownloads = dRes && dRes.ok ? dRes.value : []
+  const filteredVisitors = allVisitors.filter((v) => inRange(v.date))
+  const filteredDownloads = allDownloads.filter((d) => inRange(d.date))
+
+  const applyPreset = (k) => {
+    setDatePreset(k)
+    if (k !== 'custom') { setDateFrom(''); setDateTo('') }
+  }
+
+  const rowStamp = (r) => {
+    const d = String(r.date || '')
+    const t = String(r.time || '')
+    return (d || '—') + (t ? ' · ' + t : '')
+  }
+
+  const rangeLabel = (iso) => (iso ? iso.split('-').reverse().join('/') : '')
 
   const quick = [
     { to: '/admin/chronicles?new=1', label: 'New Blog', icon: <PenLine size={14} /> },
@@ -239,6 +298,131 @@ export default function Dashboard() {
                 <Clock size={12} className="text-text-quaternary shrink-0" />
                 <span className="text-[12px] text-text-secondary flex-1 min-w-0 truncate">{a.text}</span>
                 <span className="text-[10px] text-text-quaternary font-mono shrink-0">{timeAgo(a.at)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Analytics */}
+      <div className="flex items-center gap-2 mb-2.5 mt-8">
+        <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">Analytics</span>
+        <div className="flex-1 h-px bg-border" />
+      </div>
+
+      {/* Date filter */}
+      <div className="rounded-2xl bg-surface/50 backdrop-blur-sm border border-border p-4 mb-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono mr-1">
+            <Calendar size={11} /> Date Filter
+          </span>
+          {[['all', 'All'], ['today', 'Today'], ['7d', 'Last 7 Days'], ['30d', 'Last 30 Days'], ['custom', 'Custom']].map(([k, label]) => (
+            <button
+              key={k}
+              onClick={() => applyPreset(k)}
+              className={
+                'px-3 py-1.5 rounded-xl text-[11px] font-semibold transition-all border cursor-pointer ' +
+                (datePreset === k ? 'bg-accent-soft text-accent border-accent/20' : 'bg-surface border-border text-text-tertiary hover:text-text')
+              }
+            >
+              {label}
+            </button>
+          ))}
+          <div className="flex items-center gap-2 ml-auto">
+            <input
+              type="date"
+              value={dateFrom}
+              max={dateTo || undefined}
+              onChange={(e) => { setDateFrom(e.target.value); setDatePreset('custom') }}
+              className="h-9 rounded-xl bg-bg border border-border px-3 text-[12px] text-text-secondary font-mono outline-none focus:border-accent/40"
+            />
+            <span className="text-[10px] text-text-quaternary">→</span>
+            <input
+              type="date"
+              value={dateTo}
+              min={dateFrom || undefined}
+              onChange={(e) => { setDateTo(e.target.value); setDatePreset('custom') }}
+              className="h-9 rounded-xl bg-bg border border-border px-3 text-[12px] text-text-secondary font-mono outline-none focus:border-accent/40"
+            />
+            {(dateFrom || dateTo || datePreset !== 'all') && (
+              <button
+                onClick={() => applyPreset('all')}
+                className="px-3 py-1.5 rounded-xl text-[11px] font-semibold text-text-tertiary hover:text-text hover:bg-surface transition-all cursor-pointer"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
+        <p className="text-[10px] text-text-quaternary font-mono mt-2.5">
+          Showing {filteredVisitors.length} of {allVisitors.length} visitors · {filteredDownloads.length} of {allDownloads.length} downloads
+          {rangeFrom && ' from ' + rangeLabel(rangeFrom)}
+          {rangeTo && ' to ' + rangeLabel(rangeTo)}
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        <StatCard label="Total Visitors" value={filteredVisitors.length} icon={<Users size={15} />} tone="blue" />
+        <StatCard label="Total Downloads" value={filteredDownloads.length} icon={<Download size={15} />} tone="teal" />
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4 mb-4">
+        {/* Visitor activity */}
+        <div className="rounded-2xl bg-surface/50 backdrop-blur-sm border border-border overflow-hidden">
+          <div className="flex items-center justify-between px-4 h-11 border-b border-border">
+            <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">Visitor Activity</span>
+            <span className="text-[10px] text-text-quaternary font-mono">{filteredVisitors.length} in period</span>
+          </div>
+          <div className="max-h-[420px] overflow-y-auto divide-y divide-border">
+            {filteredVisitors.length === 0 && (
+              <p className="text-[12px] text-text-tertiary px-4 py-8 text-center">No visitors in this period.</p>
+            )}
+            {filteredVisitors.slice(0, 60).map((v, i) => (
+              <div key={i} className="px-4 py-2.5 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="w-6 h-6 rounded-md bg-bg-subtle border border-border flex items-center justify-center text-text-tertiary shrink-0">
+                    {String(v.device || '').toLowerCase() === 'mobile' ? <Smartphone size={11} /> : <Monitor size={11} />}
+                  </span>
+                  <div className="min-w-0">
+                    <div className="text-[12px] font-semibold text-text-secondary truncate flex items-center gap-1.5">
+                      {String(v.url || '/')}
+                      {String(v.action || '').trim() && <Chip tone="gray">{String(v.action).trim()}</Chip>}
+                    </div>
+                    <div className="text-[10px] text-text-quaternary font-mono truncate">
+                      {v.browser || '—'} · {v.os || '—'} · {v.device || '—'}
+                    </div>
+                  </div>
+                </div>
+                <span className="text-[10px] text-text-quaternary font-mono shrink-0">{rowStamp(v)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Download activity */}
+        <div className="rounded-2xl bg-surface/50 backdrop-blur-sm border border-border overflow-hidden">
+          <div className="flex items-center justify-between px-4 h-11 border-b border-border">
+            <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">Download Activity</span>
+            <span className="text-[10px] text-text-quaternary font-mono">{filteredDownloads.length} in period</span>
+          </div>
+          <div className="max-h-[420px] overflow-y-auto divide-y divide-border">
+            {filteredDownloads.length === 0 && (
+              <p className="text-[12px] text-text-tertiary px-4 py-8 text-center">No downloads in this period.</p>
+            )}
+            {filteredDownloads.slice(0, 60).map((d, i) => (
+              <div key={i} className="px-4 py-2.5 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="w-6 h-6 rounded-md bg-bg-subtle border border-border flex items-center justify-center text-text-tertiary shrink-0">
+                    <Download size={11} />
+                  </span>
+                  <div className="min-w-0">
+                    <div className="text-[12px] font-semibold text-text-secondary truncate">{String(d.name || 'Anonymous')}</div>
+                    <div className="text-[10px] text-text-quaternary font-mono truncate">
+                      {d.browser || '—'} · {d.device || '—'} · {d.os || '—'}
+                    </div>
+                  </div>
+                </div>
+                <span className="text-[10px] text-text-quaternary font-mono shrink-0">{rowStamp(d)}</span>
               </div>
             ))}
           </div>
