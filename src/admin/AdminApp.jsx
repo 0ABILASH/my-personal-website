@@ -9,6 +9,7 @@ import PlacesAdmin from './pages/PlacesAdmin'
 import ProfileAdmin from './pages/ProfileAdmin'
 import VisitorsAdmin from './pages/VisitorsAdmin'
 import SettingsAdmin from './pages/SettingsAdmin'
+import AboutAdmin from './pages/AboutAdmin'
 import { useAdminAuth, AdminAuthProvider } from './context/AdminAuthContext'
 import { AdminDataProvider } from './context/AdminDataContext'
 import { ToastProvider } from './context/ToastContext'
@@ -58,6 +59,7 @@ export default function AdminApp() {
             <Route path="/admin/profile" element={<AdminLayout><ProfileAdmin /></AdminLayout>} />
             <Route path="/admin/visitors" element={<AdminLayout><VisitorsAdmin /></AdminLayout>} />
             <Route path="/admin/settings" element={<AdminLayout><SettingsAdmin /></AdminLayout>} />
+            <Route path="/admin/about" element={<AdminLayout><AboutAdmin /></AdminLayout>} />
             <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
           </Routes>
           </ErrorBoundary>

@@ -2,17 +2,7 @@ import { useMemo } from 'react'
 import { Users, Download, Monitor, Smartphone, RefreshCw, Globe, Clock, MousePointerClick } from 'lucide-react'
 import { useAdminData } from '../context/AdminDataContext'
 import { StatCard, LoadingState, ErrorState, PageHeader, Button, Chip, EmptyState } from '../components/ui'
-
-function todayStr() {
-  const d = new Date()
-  const dd = String(d.getDate()).padStart(2, '0')
-  const mm = String(d.getMonth() + 1).padStart(2, '0')
-  return dd + '/' + mm + '/' + d.getFullYear()
-}
-
-function isToday(date) {
-  return String(date || '') === todayStr()
-}
+import { isToday, fmtDate, fmtTime } from '../utils'
 
 function summarize(list) {
   let mobile = 0
@@ -45,9 +35,9 @@ export default function VisitorsAdmin() {
   const dError = downloads && !downloads.ok ? downloads.error : ''
 
   const showTable = (v) => {
-    const d = String(v.date || '')
-    const t = String(v.time || '')
-    return (d ? d + ' · ' : '') + (t || '')
+    const d = fmtDate(v.date)
+    const t = fmtTime(v.time)
+    return (d || '—') + (t ? ' · ' + t : '')
   }
 
   return (

@@ -75,7 +75,7 @@ export default function SettingsAdmin() {
   return (
     <>
       <PageHeader
-        title="Settings"
+        title="Site Status"
         subtitle="Connection status of every API and data source."
         actions={
           <>

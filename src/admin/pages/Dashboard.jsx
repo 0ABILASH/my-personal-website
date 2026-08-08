@@ -3,19 +3,11 @@ import { Link } from 'react-router-dom'
 import {
   MapPin, PenLine, Heart, Compass, LocateFixed,
   FileText, Star, Clock, ArrowUpRight, Sparkles,
-  Users, Download, Calendar, Smartphone, Monitor,
+  Users, Download, Calendar, Smartphone, Monitor, Globe, Fingerprint, Cpu,
 } from 'lucide-react'
 import { useAdminData } from '../context/AdminDataContext'
 import { StatCard, LoadingState, ErrorState, PageHeader, Chip } from '../components/ui'
-import { getActivity, timeAgo } from '../utils'
-
-// Sheet dates are stored as DD/MM/YYYY — normalise to ISO (YYYY-MM-DD) so
-// range comparisons work lexically. Returns '' when the value isn't a date.
-function toISODate(sheetDate) {
-  const m = String(sheetDate || '').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/)
-  if (!m) return ''
-  return m[3] + '-' + String(m[2]).padStart(2, '0') + '-' + String(m[1]).padStart(2, '0')
-}
+import { getActivity, timeAgo, toISODate, fmtDate, fmtTime } from '../utils'
 
 // Local date (YYYY-MM-DD) for a day offset from today.
 function localISODate(offsetDays) {
@@ -104,10 +96,24 @@ export default function Dashboard() {
   }
 
   const rowStamp = (r) => {
-    const d = String(r.date || '')
-    const t = String(r.time || '')
+    const d = fmtDate(r.date)
+    const t = fmtTime(r.time)
     return (d || '—') + (t ? ' · ' + t : '')
   }
+
+  // Join non-empty tracking-sheet values with a dot separator (e.g. "Mobile · Samsung").
+  const join = (...parts) => {
+    const clean = parts.map((p) => String(p || '').trim()).filter(Boolean)
+    return clean.length ? clean.join(' · ') : '—'
+  }
+
+  const deviceIcon = (d) =>
+    String(d || '').toLowerCase() === 'mobile' ? <Smartphone size={12} /> :
+    String(d || '').toLowerCase() === 'tablet' ? <Smartphone size={12} /> :
+    <Monitor size={12} />
+
+  const thCls = 'px-4 py-2.5 text-[9px] font-bold uppercase tracking-[0.16em] text-text-quaternary whitespace-nowrap'
+  const tdCls = 'px-4 py-2.5 text-[11.5px] text-text-secondary whitespace-nowrap'
 
   const rangeLabel = (iso) => (iso ? iso.split('-').reverse().join('/') : '')
 
@@ -367,64 +373,148 @@ export default function Dashboard() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-4 mb-4">
-        {/* Visitor activity */}
+        {/* Visitor table */}
         <div className="rounded-2xl bg-surface/50 backdrop-blur-sm border border-border overflow-hidden">
           <div className="flex items-center justify-between px-4 h-11 border-b border-border">
             <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">Visitor Activity</span>
-            <span className="text-[10px] text-text-quaternary font-mono">{filteredVisitors.length} in period</span>
+            <div className="flex items-center gap-2.5">
+              <span className="text-[10px] text-text-quaternary font-mono">{filteredVisitors.length} in period</span>
+              <Link to="/admin/visitors" className="inline-flex items-center gap-1 text-[11px] text-accent hover:underline">
+                View all <ArrowUpRight size={11} />
+              </Link>
+            </div>
           </div>
-          <div className="max-h-[420px] overflow-y-auto divide-y divide-border">
-            {filteredVisitors.length === 0 && (
-              <p className="text-[12px] text-text-tertiary px-4 py-8 text-center">No visitors in this period.</p>
-            )}
-            {filteredVisitors.slice(0, 60).map((v, i) => (
-              <div key={i} className="px-4 py-2.5 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="w-6 h-6 rounded-md bg-bg-subtle border border-border flex items-center justify-center text-text-tertiary shrink-0">
-                    {String(v.device || '').toLowerCase() === 'mobile' ? <Smartphone size={11} /> : <Monitor size={11} />}
-                  </span>
-                  <div className="min-w-0">
-                    <div className="text-[12px] font-semibold text-text-secondary truncate flex items-center gap-1.5">
-                      {String(v.url || '/')}
-                      {String(v.action || '').trim() && <Chip tone="gray">{String(v.action).trim()}</Chip>}
-                    </div>
-                    <div className="text-[10px] text-text-quaternary font-mono truncate">
-                      {v.browser || '—'} · {v.os || '—'} · {v.device || '—'}
-                    </div>
-                  </div>
-                </div>
-                <span className="text-[10px] text-text-quaternary font-mono shrink-0">{rowStamp(v)}</span>
-              </div>
-            ))}
+          <div className="overflow-x-auto max-h-[520px] overflow-y-auto">
+            <table className="w-full text-left min-w-[900px]">
+              <thead className="sticky top-0 z-10 bg-bg-subtle/95 backdrop-blur-sm">
+                <tr className="border-b border-border">
+                  <th className={thCls}>Date · Time</th>
+                  <th className={thCls}>Page</th>
+                  <th className={thCls}>Action</th>
+                  <th className={thCls}>Device</th>
+                  <th className={thCls}>Software</th>
+                  <th className={thCls}>Location</th>
+                  <th className={thCls}>IP</th>
+                  <th className={thCls}>Referrer</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {filteredVisitors.length === 0 && (
+                  <tr>
+                    <td colSpan={8} className="px-4 py-12 text-center text-[12px] text-text-tertiary">
+                      No visitors in this period.
+                    </td>
+                  </tr>
+                )}
+                {filteredVisitors.slice(0, 120).map((v, i) => (
+                  <tr key={i} className="hover:bg-surface/60 transition-colors">
+                    <td className={tdCls + ' font-mono text-[11px]'}>{rowStamp(v)}</td>
+                    <td className="px-4 py-2.5 min-w-0">
+                      <span className="text-[12px] font-semibold text-text-secondary font-mono block max-w-[180px] truncate">{String(v.url || '/')}</span>
+                    </td>
+                    <td className="px-4 py-2.5">
+                      {String(v.action || '').trim()
+                        ? <Chip tone="gray">{String(v.action).trim()}</Chip>
+                        : <span className="text-[11px] text-text-quaternary">—</span>}
+                    </td>
+                    <td className={tdCls}>
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className="text-text-tertiary">{deviceIcon(v.device)}</span>
+                        {join(v.device, v.brand)}
+                      </span>
+                    </td>
+                    <td className={tdCls}>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Cpu size={12} className="text-text-tertiary" />
+                        {join(v.browser, v.os)}
+                      </span>
+                    </td>
+                    <td className={tdCls}>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Globe size={12} className="text-text-tertiary" />
+                        {join(v.city, v.region, v.country)}
+                      </span>
+                    </td>
+                    <td className={tdCls + ' font-mono text-[11px] text-text-tertiary'}>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Fingerprint size={12} className="text-text-tertiary" />
+                        {v.ip || '—'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2.5 max-w-[150px]">
+                      <span className="text-[11px] text-text-tertiary font-mono block truncate">{v.referrer || '—'}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
 
-        {/* Download activity */}
+        {/* Download table */}
         <div className="rounded-2xl bg-surface/50 backdrop-blur-sm border border-border overflow-hidden">
           <div className="flex items-center justify-between px-4 h-11 border-b border-border">
             <span className="text-[10px] font-bold text-text-quaternary uppercase tracking-[0.18em] font-mono">Download Activity</span>
             <span className="text-[10px] text-text-quaternary font-mono">{filteredDownloads.length} in period</span>
           </div>
-          <div className="max-h-[420px] overflow-y-auto divide-y divide-border">
-            {filteredDownloads.length === 0 && (
-              <p className="text-[12px] text-text-tertiary px-4 py-8 text-center">No downloads in this period.</p>
-            )}
-            {filteredDownloads.slice(0, 60).map((d, i) => (
-              <div key={i} className="px-4 py-2.5 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="w-6 h-6 rounded-md bg-bg-subtle border border-border flex items-center justify-center text-text-tertiary shrink-0">
-                    <Download size={11} />
-                  </span>
-                  <div className="min-w-0">
-                    <div className="text-[12px] font-semibold text-text-secondary truncate">{String(d.name || 'Anonymous')}</div>
-                    <div className="text-[10px] text-text-quaternary font-mono truncate">
-                      {d.browser || '—'} · {d.device || '—'} · {d.os || '—'}
-                    </div>
-                  </div>
-                </div>
-                <span className="text-[10px] text-text-quaternary font-mono shrink-0">{rowStamp(d)}</span>
-              </div>
-            ))}
+          <div className="overflow-x-auto max-h-[520px] overflow-y-auto">
+            <table className="w-full text-left min-w-[820px]">
+              <thead className="sticky top-0 z-10 bg-bg-subtle/95 backdrop-blur-sm">
+                <tr className="border-b border-border">
+                  <th className={thCls}>Date · Time</th>
+                  <th className={thCls}>Name</th>
+                  <th className={thCls}>Device</th>
+                  <th className={thCls}>Software</th>
+                  <th className={thCls}>Location</th>
+                  <th className={thCls}>IP</th>
+                  <th className={thCls}>Page</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {filteredDownloads.length === 0 && (
+                  <tr>
+                    <td colSpan={7} className="px-4 py-12 text-center text-[12px] text-text-tertiary">
+                      No downloads in this period.
+                    </td>
+                  </tr>
+                )}
+                {filteredDownloads.slice(0, 120).map((d, i) => (
+                  <tr key={i} className="hover:bg-surface/60 transition-colors">
+                    <td className={tdCls + ' font-mono text-[11px]'}>{rowStamp(d)}</td>
+                    <td className="px-4 py-2.5">
+                      <span className="text-[12px] font-semibold text-text-secondary block max-w-[180px] truncate">{String(d.name || 'Anonymous')}</span>
+                    </td>
+                    <td className={tdCls}>
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className="text-text-tertiary">{deviceIcon(d.device)}</span>
+                        {join(d.device, d.brand)}
+                      </span>
+                    </td>
+                    <td className={tdCls}>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Cpu size={12} className="text-text-tertiary" />
+                        {join(d.browser, d.os)}
+                      </span>
+                    </td>
+                    <td className={tdCls}>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Globe size={12} className="text-text-tertiary" />
+                        {join(d.city, d.region, d.country)}
+                      </span>
+                    </td>
+                    <td className={tdCls + ' font-mono text-[11px] text-text-tertiary'}>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Fingerprint size={12} className="text-text-tertiary" />
+                        {d.ip || '—'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2.5 max-w-[150px]">
+                      <span className="text-[11px] text-text-tertiary font-mono block truncate">{String(d.url || '/')}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

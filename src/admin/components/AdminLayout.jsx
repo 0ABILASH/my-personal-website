@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, PenLine, MapPin,
-  User, Settings, Users, LogOut, Menu, X, Globe, AlertTriangle,
+  User, Activity, Users, LogOut, Menu, X, Globe, AlertTriangle, Info,
 } from 'lucide-react'
 import { useAdminAuth } from '../context/AdminAuthContext'
 import { useAdminData } from '../context/AdminDataContext'
@@ -13,8 +13,9 @@ const NAV = [
   { to: '/admin/profile', label: 'Profile', icon: User },
   { to: '/admin/places', label: 'Travel Logs', icon: MapPin },
   { to: '/admin/chronicles', label: 'Blogs', icon: PenLine },
-  { to: '/admin/settings', label: 'Settings', icon: Settings },
+  { to: '/admin/settings', label: 'Site Status', icon: Activity },
   { to: '/admin/visitors', label: 'Visitors', icon: Users },
+  { to: '/admin/about', label: 'About', icon: Info },
 ]
 
 function SidebarContent({ onNavigate }) {
@@ -145,7 +146,7 @@ export default function AdminLayout({ children }) {
               className="flex items-center justify-center gap-2 px-4 py-2.5 bg-red-500/15 border-b border-red-500/30 text-red-300 text-[12px] font-semibold hover:bg-red-500/20 transition-colors"
             >
               <AlertTriangle size={13} />
-              {failedCount} backend source{failedCount === 1 ? '' : 's'} unavailable — tap to review in Settings
+              {failedCount} backend source{failedCount === 1 ? '' : 's'} unavailable — tap to review in Site Status
             </Link>
           </div>
         )}
