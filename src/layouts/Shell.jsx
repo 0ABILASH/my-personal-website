@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowUpRight, Download, X } from 'lucide-react'
+import { ArrowUpRight, Download } from 'lucide-react'
 import headerImg from '../services/headerImg'
 
 const NAV = [
@@ -54,7 +54,6 @@ const BOTTOM_MSGS = {
 export default function Shell({ children, onCvOpen }) {
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [imgOpen, setImgOpen] = useState(false)
   const [nearBottom, setNearBottom] = useState(false)
   const [headerMsg, setHeaderMsg] = useState('')
   const lastMsgCtxRef = useRef(null)
@@ -162,19 +161,21 @@ export default function Shell({ children, onCvOpen }) {
         <div className="max-w-5xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             {headerImg ? (
-              <button
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setImgOpen(true); }}
+              <Link
+                to="/admin/login"
+                title="Admin dashboard"
                 className="cursor-pointer"
               >
                 <img src={headerImg} alt="Abilash" className="w-5 h-5 rounded-full object-cover shadow-[0_0_16px_rgba(59,130,246,0.25)]" />
-              </button>
+              </Link>
             ) : (
-              <button
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setImgOpen(true); }}
+              <Link
+                to="/admin/login"
+                title="Admin dashboard"
                 className="cursor-pointer"
               >
                 <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_16px_rgba(59,130,246,0.25)]">A</div>
-              </button>
+              </Link>
             )}
 
             {/* Live status message — mobile & tablet only */}
@@ -379,40 +380,6 @@ export default function Shell({ children, onCvOpen }) {
           </motion.div>
         </AnimatePresence>
       </main>
-
-      {/* Profile image lightbox */}
-      <AnimatePresence>
-        {imgOpen && headerImg && (
-          <motion.div
-            className="fixed inset-0 z-[3000] flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-          >
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-xl" onClick={() => setImgOpen(false)} />
-            <motion.div
-              className="relative"
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <button
-                onClick={() => setImgOpen(false)}
-                className="absolute -top-3 -right-3 w-7 h-7 rounded-full bg-surface border border-border flex items-center justify-center text-text-tertiary hover:text-text hover:border-border-hover transition-all cursor-pointer z-10"
-              >
-                <X size={13} />
-              </button>
-              <img
-                src={headerImg}
-                alt="Abilash"
-                className="w-72 h-72 sm:w-80 sm:h-80 rounded-3xl object-cover shadow-[0_0_80px_rgba(59,130,246,0.25)] border border-border"
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   )
 }
